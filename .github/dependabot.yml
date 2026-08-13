@@ -7,7 +7,7 @@ updates:
     groups:
       github-actions:
         patterns:
-          - "*"
+          - '*'
     commit-message:
       prefix: chore(deps)
       include: scope
@@ -18,7 +18,7 @@ updates:
     groups:
       npm-dependencies:
         patterns:
-          - "*"
+          - '*'
     commit-message:
       prefix: chore(deps)
       include: scope
