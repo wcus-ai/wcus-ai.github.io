@@ -20,7 +20,8 @@
     "typescript/consistent-type-imports": "warn",
     "oxc/no-async-await": "off",
     "oxc/no-barrel-file": "off",
-    "oxc/no-rest-spread-properties": "off"
+    "oxc/no-rest-spread-properties": "off",
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }]
   },
   "overrides": [
     {

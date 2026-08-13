@@ -1,161 +1,93 @@
 /**
- * Cloudflare Worker — click tracking for WCUS 2026 Core AI Booth Site.
+ * Cloudflare Worker — click tracking beacon.
  *
- * Three routes (all GET, all public):
+ * Single route: POST /track
  *
- *   GET /r/:project/:target   → 302 to destination, increment click_outbound:project:target
- *   GET /feedback/:project    → 302 to Google Form, increment click_feedback:project:form
- *   GET /stats                → JSON dump of all counters
+ * Stats are viewed in the Cloudflare dashboard (Analytics Engine → WCUS_AI_Booth). Query with SQL via the Workers dashboard or GraphQL API.
  *
- * No cookies, no PII, aggregate-only. See /privacy on the static site.
- *
- * Destination URLs and Google Form config come from projects.json, which is the
- * build-time-emitted source of truth shared with the content collection.
+ * Blob layout (positional, must stay stable across all writes):
+ *   blob1 = event    ("click_outbound" | "click_internal" | "click_feedback")
+ *   blob2 = project  (one of PROJECT_SLUGS, or "site" for site-wide links)
+ *   blob3 = target   (stable identifier — e.g., "repo", "project-card", "form")
  */
 
-import PROJECTS from './projects.json';
+type ClickEventKind = 'click_outbound' | 'click_internal' | 'click_feedback';
 
-// TODO: replace with the real Google Form ID before deploy.
-const FORM_ID = 'TODO_FORM_ID';
+interface TrackPayload {
+  event: ClickEventKind;
+  project: string;
+  target?: string;
+}
 
-// KV namespace binding — set in wrangler.toml.
-const KV_BINDING = 'COUNTERS';
+interface AnalyticsEngineDataset {
+  writeDataPoint(dataPoint: {
+    indexes?: string[];
+    blobs?: string[];
+    doubles?: number[];
+    timestamp?: number;
+  }): void;
+}
 
-const CORS_HEADERS = {
+interface Env {
+  ANALYTICS: AnalyticsEngineDataset;
+}
+
+/** Single sampling key — aggregate counts span the whole dataset. */
+const INDEX = 'wcus-clicks';
+
+/** Allowed project slugs. Rejects unknown projects to keep the dataset clean. */
+const PROJECT_SLUGS: ReadonlySet<string> = new Set([
+  'abilities-api',
+  'agent-skills',
+  'ai-client',
+  'ai-plugin',
+  'mcp-adapter',
+  'wp-bench',
+  'site',
+]);
+
+const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-interface ProjectConfig {
-  name: string;
-  links: Record<string, string>;
-  feedback_entry: string;
+function isClickEventKind(value: unknown): value is ClickEventKind {
+  return value === 'click_outbound' || value === 'click_internal' || value === 'click_feedback';
 }
 
-/**
- * @param request - Fetch request
- * @param env - Worker environment, including KV bindings
- */
 export default {
-  async fetch(request: Request, env: { [key: string]: any }): Promise<Response> {
-    const url = new URL(request.url);
-
+  async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
-    // GET /stats — JSON dump of all counters
-    if (url.pathname === '/stats') {
-      return handleStats(env);
+    const url = new URL(request.url);
+    if (url.pathname !== '/track' || request.method !== 'POST') {
+      return new Response('Not found', { status: 404, headers: CORS_HEADERS });
     }
 
-    // GET /r/:project/:target — tracked outbound redirect
-    const outboundMatch = url.pathname.match(/^\/r\/([^/]+)\/([^/]+)$/);
-    if (outboundMatch) {
-      const [, projectSlug, target] = outboundMatch;
-      return handleOutbound(env, projectSlug, target);
+    let payload: TrackPayload;
+    try {
+      payload = (await request.json()) as TrackPayload;
+    } catch {
+      return new Response('Invalid JSON', { status: 400, headers: CORS_HEADERS });
     }
 
-    // GET /feedback/:project — tracked feedback redirect
-    const feedbackMatch = url.pathname.match(/^\/feedback\/([^/]+)$/);
-    if (feedbackMatch) {
-      const [, projectSlug] = feedbackMatch;
-      return handleFeedback(env, projectSlug);
+    if (
+      !isClickEventKind(payload.event) ||
+      typeof payload.project !== 'string' ||
+      !PROJECT_SLUGS.has(payload.project)
+    ) {
+      return new Response('Invalid payload', { status: 400, headers: CORS_HEADERS });
     }
 
-    return new Response('Not found', { status: 404 });
+    env.ANALYTICS.writeDataPoint({
+      indexes: [INDEX],
+      blobs: [payload.event, payload.project, payload.target ?? ''],
+      doubles: [1],
+    });
+
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
   },
 };
-
-async function handleOutbound(
-  env: { [key: string]: any },
-  projectSlug: string,
-  target: string,
-): Promise<Response> {
-  const project = (PROJECTS as Record<string, ProjectConfig>)[projectSlug];
-  if (!project) {
-    return new Response(`Unknown project: ${projectSlug}`, { status: 404 });
-  }
-
-  const destination = project.links[target];
-  if (!destination) {
-    return new Response(`Unknown target: ${target}`, { status: 404 });
-  }
-
-  await incrementCounter(env, `click_outbound:${projectSlug}:${target}`);
-  return Response.redirect(destination, 302);
-}
-
-async function handleFeedback(env: { [key: string]: any }, projectSlug: string): Promise<Response> {
-  const project = (PROJECTS as Record<string, ProjectConfig>)[projectSlug];
-  if (!project) {
-    return new Response(`Unknown project: ${projectSlug}`, { status: 404 });
-  }
-
-  if (FORM_ID === 'TODO_FORM_ID') {
-    return new Response('Feedback form not yet configured', { status: 503 });
-  }
-
-  const destination = buildFeedbackUrl(project);
-  await incrementCounter(env, `click_feedback:${projectSlug}:form`);
-  return Response.redirect(destination, 302);
-}
-
-async function handleStats(env: { [key: string]: any }): Promise<Response> {
-  const kv = env[KV_BINDING];
-  if (!kv) {
-    return new Response('KV namespace not bound', { status: 500 });
-  }
-
-  const listResult = await kv.list();
-  const entries = await Promise.all(
-    listResult.keys.map(async (key: { name: string }) => {
-      const value = await kv.get(key.name);
-      return [key.name, parseInt(value || '0', 10)] as const;
-    }),
-  );
-
-  const stats = assembleStats(entries);
-
-  return new Response(JSON.stringify(stats, null, 2), {
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'public, max-age=60',
-      ...CORS_HEADERS,
-    },
-  });
-}
-
-async function incrementCounter(env: { [key: string]: any }, key: string): Promise<void> {
-  const kv = env[KV_BINDING];
-  if (!kv) return;
-  const current = parseInt((await kv.get(key)) || '0', 10);
-  await kv.put(key, String(current + 1));
-}
-
-function buildFeedbackUrl(project: ProjectConfig): string {
-  const base = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
-  const params = new URLSearchParams({
-    [project.feedback_entry]: project.name,
-  });
-  return `${base}?${params.toString()}`;
-}
-
-/**
- * Convert flat KV keys like "click_outbound:abilities-api:repo" into a nested
- * structure: { click_outbound: { "abilities-api": { repo: 47, docs: 12 } }, ... }
- */
-function assembleStats(
-  entries: ReadonlyArray<readonly [string, number]>,
-): Record<string, Record<string, Record<string, number>>> {
-  const stats: Record<string, Record<string, Record<string, number>>> = {};
-  for (const [key, count] of entries) {
-    const [eventKind, project, target] = key.split(':');
-    if (!eventKind || !project || !target) continue;
-    if (!stats[eventKind]) stats[eventKind] = {};
-    if (!stats[eventKind][project]) stats[eventKind][project] = {};
-    stats[eventKind][project][target] = count;
-  }
-  return stats;
-}

@@ -15,54 +15,81 @@ import ShareFeedback from '../components/ShareFeedback.astro';
   <main id="main" class="privacy">
     <h1>Privacy Policy</h1>
 
-    <p><strong>This site measures aggregate, anonymous interaction.</strong> It does not
-    use cookies, does not identify you, and does not store any personal information.</p>
+    <p><strong>This site measures aggregate, anonymous interaction.</strong> It does
+    not use cookies and does not attempt to identify you.</p>
 
-    <h2>What we collect</h2>
-    <p>Two event kinds only:</p>
+    <h2>What we measure</h2>
+    <p>Three event kinds only:</p>
     <ul>
-      <li><code>click_outbound</code> — when you follow a link to a project repo, docs, or demo.</li>
-      <li><code>click_feedback</code> — when you tap the feedback CTA.</li>
+      <li><code>click_outbound</code> — when you follow any link to another site (a project repo, the team blog, Slack, etc.).</li>
+      <li><code>click_internal</code> — when you navigate between pages on this site (a project card, the privacy page, the back link, etc.).</li>
+      <li><code>click_feedback</code> — when you open the feedback form.</li>
     </ul>
-    <p>Each event is a single integer counter, keyed by project. No timestamp, no IP, no
-    user agent, no referrer, no device info.</p>
+    <p>Each event records three things: the event kind, the project or page it
+    relates to (one of the six project slugs, or <code>site</code> for site-wide
+    links), and a stable identifier for the specific link. The time of the click
+    is also recorded automatically. That is the entire payload.</p>
 
-    <h2>What we don't collect</h2>
+    <h2>How it works</h2>
+    <p>When you click a tracked link, your browser fires a small JSON payload to
+    a Cloudflare Worker via
+    <a
+      href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon"
+      data-track-event="click_outbound"
+      data-track-project="site"
+      data-track-target="mdn-sendbeacon"
+    ><code>navigator.sendBeacon</code></a>.
+    The worker writes the event to Cloudflare Analytics Engine as a single
+    counter increment and returns immediately. The link opens its real
+    destination directly — there is no redirect through the worker.</p>
+
+    <p>If JavaScript is disabled, links still work normally; the click simply
+    isn't counted.</p>
+
+    <p>The worker's source code is open and readable in the
+    <a
+      href="https://github.com/wcus-ai/wcus-ai.github.io/tree/main/worker"
+      data-track-event="click_outbound"
+      data-track-project="site"
+      data-track-target="worker-source"
+    ><code>/worker/</code> directory</a>
+    of this site's repository.</p>
+
+    <h2>What we **do not** track</h2>
     <ul>
-      <li>Cookies of any kind (no analytics cookies, no session cookies, nothing)</li>
+      <li>Cookies of any kind (this site sets none)</li>
       <li>IP addresses</li>
       <li>User agents</li>
       <li>Referrers</li>
       <li>Any identifier that could be tied to you or your device</li>
     </ul>
 
-    <h2>How</h2>
-    <p>Tracking is implemented as a single Cloudflare Worker that increments counters in
-    a Cloudflare KV namespace. Outbound and feedback links on this site point to
-    <code>/r/&lt;project&gt;/&lt;target&gt;</code> or
-    <code>/feedback/&lt;project&gt;</code>; the worker increments the appropriate counter
-    and then redirects you to the real destination.</p>
-
-    <p>The worker's source code is open and readable in the
-    <a href="https://github.com/wcus-ai/wcus-ai.github.io/tree/main/worker"><code>/worker/</code> directory</a>
-    of this site's repository.</p>
+    <p>Cloudflare, as the Worker's host, receives your IP address and user agent
+    as part of normal HTTP routing for every request the Worker processes — the
+    same as any web host. Their
+    <a
+      href="https://www.cloudflare.com/privacypolicy/"
+      data-track-event="click_outbound"
+      data-track-project="site"
+      data-track-target="cloudflare-privacy"
+    >privacy policy</a> applies
+    to that routing data. We do not receive or store that information in our
+    analytics dataset; we only see aggregate counts.</p>
 
     <h2>Why</h2>
-    <p>Aggregate counts of which projects drew interest at WordCamp US 2026 will inform
-    the WordPress Core AI Team's post-event report. The data helps the team decide where
-    to focus future WordCamp content and project roadmap investment.</p>
-
-    <h2>Public stats</h2>
-    <p>The raw counters are public. View them at <a href="/stats"><code>/stats</code></a>.</p>
+    <p>Aggregate counts of which projects drew interest at WordCamp US 2026 will
+    inform the WordPress Core AI Team's post-event report. The data helps the
+    team decide where to focus future WordCamp content, dev-rel, and community efforts.</p>
 
     <h2>Retention</h2>
-    <p>Counter values will be incorporated into the post-WCUS report. After the report is
-    published, the Cloudflare KV namespace will be deleted.</p>
+    <p>Event data is retained in Cloudflare Analytics Engine for 3 months (we're using the <a href="https://developers.cloudflare.com/analytics/analytics-engine/limits/">free tier</a>). The aggregate counts will be
+    incorporated into the post-WCUS report. The dataset can be deleted earlier
+    on request to the Core AI Team.</p>
 
     <h2>Feedback form</h2>
-    <p>The feedback form is hosted by Google Forms, which has its own privacy policy.
-    This site sends only the project name as a URL parameter; Google may collect
-    additional information per their policy.</p>
+    <p>The feedback form is hosted by Google Forms, which has its own privacy
+    policy. This site sends only the project name as a URL parameter; Google may
+    collect additional information per their policy.</p>
   </main>
   <ShareFeedback />
   <SiteFooter />

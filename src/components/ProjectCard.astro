@@ -17,6 +17,9 @@ const { project } = Astro.props;
   href={`/p/${project.slug}/`}
   class="project-card"
   style={`--card-accent: ${project.accent_color};`}
+  data-track-event="click_internal"
+  data-track-project={project.slug}
+  data-track-target="project-card"
 >
   <div class="project-card__body">
     <h2 class="project-card__name">{project.name}</h2>

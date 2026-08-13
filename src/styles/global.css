@@ -783,6 +783,11 @@ h2 {
   color: #ffffff;
   text-decoration: none;
 }
+.share-feedback__btn--pending {
+  background: var(--color-header-bg);
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 /* ==========================================================================
    Footer — one continuous plum zone (no cream gap before it)

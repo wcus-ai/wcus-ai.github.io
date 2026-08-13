@@ -10,7 +10,7 @@ import ShareFeedback from '../components/ShareFeedback.astro';
 type ProjectEntry = CollectionEntry<'projects'>;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const projects = (await getCollection('projects')).sort(
+const projects = (await getCollection('projects')).toSorted(
   (a: ProjectEntry, b: ProjectEntry) => a.data.order - b.data.order
 );
 ---
@@ -25,7 +25,13 @@ const projects = (await getCollection('projects')).sort(
       <div class="projects__heading-block">
         <h2 id="projects-heading">What We're Working On</h2>
         <p class="projects__lead">
-          Six projects, six pages. Each has its own page and QR code at the booth.
+          AI moves fast, and so do we. The Core AI Team takes a <a
+            href="https://make.wordpress.org/ai/2025/07/17/ai-building-blocks/"
+            rel="noopener noreferrer"
+            data-track-event="click_outbound"
+            data-track-project="site"
+            data-track-target="building-blocks-post"
+          >building blocks</a> approach, ensuring work stays lean and future-proof for whatever comes next.
         </p>
       </div>
       <div class="project-grid">
@@ -40,13 +46,23 @@ const projects = (await getCollection('projects')).sort(
           <span class="who__eyebrow">Who we are</span>
           <h2 id="who-heading" class="who__title">The WordPress Core AI Team</h2>
           <p class="who__body">
-            We're the working group bringing AI functionality into WordPress
-            core. We maintain these six projects, write the AI guidelines, and
-            shape how AI integrates with the WordPress ecosystem.
+            The booth is an initiative of the WordPress Core AI Team, the working group tasked with bringing AI functionality to WordPress, and staffed by team members, contributors, and community volunteers. Come by and say hello - we'd love to meet you!
           </p>
           <ul class="who__links">
-            <li><a href="https://make.wordpress.org/ai/" rel="noopener noreferrer">Team blog</a></li>
-            <li><a href="https://make.wordpress.org/ai/handbook/" rel="noopener noreferrer">Handbook</a></li>
+            <li><a
+              href="https://make.wordpress.org/ai/"
+              rel="noopener noreferrer"
+              data-track-event="click_outbound"
+              data-track-project="site"
+              data-track-target="team-blog"
+            >Team blog</a></li>
+            <li><a
+              href="https://make.wordpress.org/ai/handbook/"
+              rel="noopener noreferrer"
+              data-track-event="click_outbound"
+              data-track-project="site"
+              data-track-target="handbook"
+            >Handbook</a></li>
           </ul>
         </div>
         <div class="who__image">
@@ -68,8 +84,8 @@ const projects = (await getCollection('projects')).sort(
         <h2 id="slack-heading">Keep the conversation going.</h2>
         <p class="slack-cta__lead">
           The Core AI Team hangs out in the <strong>#core-ai</strong> channel on
-          WordPress Slack, holds a contributor call every other week, and runs
-          open office hours. Join us to ask questions, share what you're
+          WordPress Slack, holds a weekly contributor call, and runs
+          open office hours every other week. Join us to ask questions, share what you're
           building, or follow along with what we're up to.
         </p>
         <div class="slack-cta__actions">
@@ -77,6 +93,9 @@ const projects = (await getCollection('projects')).sort(
             class="slack-cta__outline"
             href="https://make.wordpress.org/meetings/#ai"
             rel="noopener noreferrer"
+            data-track-event="click_outbound"
+            data-track-project="site"
+            data-track-target="meetings"
           >
             Upcoming Meetings
           </a>
@@ -84,6 +103,9 @@ const projects = (await getCollection('projects')).sort(
             class="slack-cta__primary"
             href="https://wordpress.slack.com/archives/C08TJ8BPULS"
             rel="noopener noreferrer"
+            data-track-event="click_outbound"
+            data-track-project="site"
+            data-track-target="slack"
           >
             Open #core-ai <span aria-hidden="true">→</span>
           </a>
@@ -92,6 +114,9 @@ const projects = (await getCollection('projects')).sort(
           class="slack-cta__secondary"
           href="https://make.wordpress.org/contribute/join/"
           rel="noopener noreferrer"
+          data-track-event="click_outbound"
+          data-track-project="site"
+          data-track-target="contribute"
         >
           Not on Slack? Join here →
         </a>

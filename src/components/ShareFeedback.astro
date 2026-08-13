@@ -6,13 +6,28 @@
 interface Props {
   projectName?: string;
   projectSlug?: string;
+  // Google Form entry field ID (e.g., "entry.123456") for preselecting.
+  feedbackEntry?: string;
 }
 
-const { projectName, projectSlug } = Astro.props;
+const { projectName, projectSlug, feedbackEntry } = Astro.props;
 
 const title = projectName ? `Got feedback on ${projectName}?` : 'Got feedback about WordPress + AI?';
 const subject = projectName ?? 'AI in WordPress';
-const feedbackHref = projectSlug ? `/feedback/${projectSlug}/` : '/feedback/';
+
+// Google Form ID.
+const FORM_ID = import.meta.env.PUBLIC_FEEDBACK_FORM_ID;
+
+let feedbackHref: string | undefined;
+if (FORM_ID) {
+  const base = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
+  if (feedbackEntry && projectName) {
+    const params = new URLSearchParams({ [feedbackEntry]: projectName });
+    feedbackHref = `${base}?${params.toString()}`;
+  } else {
+    feedbackHref = base;
+  }
+}
 ---
 
 <section
@@ -27,8 +42,21 @@ const feedbackHref = projectSlug ? `/feedback/${projectSlug}/` : '/feedback/';
       not worked the way you expected, the Core AI Team wants to hear it. The
       roadmap is shaped by conversations like yours.
     </p>
-    <a class="share-feedback__btn" href={feedbackHref} rel="noopener noreferrer">
-      Open feedback form →
-    </a>
+    {feedbackHref ? (
+      <a
+        class="share-feedback__btn"
+        href={feedbackHref}
+        data-track-event="click_feedback"
+        data-track-project={projectSlug ?? 'site'}
+        data-track-target="form"
+        rel="noopener noreferrer"
+      >
+        Open feedback form →
+      </a>
+    ) : (
+      <span class="share-feedback__btn share-feedback__btn--pending" aria-disabled="true">
+        Feedback form opening soon
+      </span>
+    )}
   </div>
 </section>

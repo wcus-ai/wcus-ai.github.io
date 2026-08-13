@@ -51,6 +51,11 @@ const canonical = Astro.site
         });
       }
     </script>
+    <script>
+      // Click tracking beacon.
+      import { initTracking } from '../scripts/track.ts';
+      initTracking();
+    </script>
   </head>
   <body style={accentColor ? `--accent: ${accentColor};` : undefined}>
     <slot />

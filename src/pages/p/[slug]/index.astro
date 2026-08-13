@@ -22,7 +22,7 @@ interface Props {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const { name, tagline, links, accent_color, slug } = project.data;
+const { name, tagline, links, accent_color, slug, feedback_entry } = project.data;
 ---
 
 <Base
@@ -36,7 +36,14 @@ const { name, tagline, links, accent_color, slug } = project.data;
   <main id="main" style={`--accent: ${accent_color};`}>
     <section class="project-detail__hero">
       <div class="container">
-        <a href="/" class="project-detail__back" data-astro-transition-persist="back-link">← All projects</a>
+        <a
+          href="/"
+          class="project-detail__back"
+          data-astro-transition-persist="back-link"
+          data-track-event="click_internal"
+          data-track-project={slug}
+          data-track-target="back-to-projects"
+        >← All projects</a>
         <h1 class="project-detail__name">{name}</h1>
         <p class="project-detail__tagline">{tagline}</p>
       </div>
@@ -55,7 +62,10 @@ const { name, tagline, links, accent_color, slug } = project.data;
                 ? 'project-detail__link project-detail__link--primary'
                 : 'project-detail__link project-detail__link--secondary'
             }
-            href={`/r/${slug}/${link.type}`}
+            href={link.url}
+            data-track-event="click_outbound"
+            data-track-project={slug}
+            data-track-target={link.type}
             rel="noopener noreferrer"
           >
             {link.label}
@@ -67,6 +77,7 @@ const { name, tagline, links, accent_color, slug } = project.data;
     <ShareFeedback
       projectName={name}
       projectSlug={slug}
+      feedbackEntry={feedback_entry}
     />
   </main>
 

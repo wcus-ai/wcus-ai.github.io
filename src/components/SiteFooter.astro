@@ -25,16 +25,36 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         class="site-footer__team-link"
         href="https://make.wordpress.org/ai/"
         rel="noopener noreferrer"
+        data-track-event="click_outbound"
+        data-track-project="site"
+        data-track-target="team-blog"
       >
         Core AI Team
       </a>
     </div>
     <p class="site-footer__meta">
-      <a href="https://us.wordcamp.org/2026/schedule/" rel="noopener noreferrer">WCUS 2026 Schedule</a>
+      <a
+        href="https://us.wordcamp.org/2026/schedule/"
+        rel="noopener noreferrer"
+        data-track-event="click_outbound"
+        data-track-project="site"
+        data-track-target="schedule"
+      >WCUS 2026 Schedule</a>
       ·
-      <a href="https://us.wordcamp.org/2026/code-of-conduct/" rel="noopener noreferrer">Code of Conduct</a>
+      <a
+        href="https://us.wordcamp.org/2026/code-of-conduct/"
+        rel="noopener noreferrer"
+        data-track-event="click_outbound"
+        data-track-project="site"
+        data-track-target="code-of-conduct"
+      >Code of Conduct</a>
       ·
-      <a href="/privacy/">Privacy</a>
+      <a
+        href="/privacy/"
+        data-track-event="click_internal"
+        data-track-project="site"
+        data-track-target="privacy"
+      >Privacy</a>
     </p>
   </div>
 </footer>

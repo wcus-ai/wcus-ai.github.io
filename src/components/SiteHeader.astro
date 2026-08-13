@@ -4,7 +4,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <header class="site-header" id="site-header" data-collapsed="false" inert aria-hidden="true">
   <div class="site-header__inner">
-    <a class="site-header__brand" href="/" aria-label="Core AI Prompt Bar — home">
+    <a
+      class="site-header__brand"
+      href="/"
+      aria-label="Core AI Prompt Bar — home"
+      data-track-event="click_internal"
+      data-track-project="site"
+      data-track-target="home"
+    >
       <img
         class="site-header__logo"
         src={`${base}/images/wcus-main.png`}
@@ -15,7 +22,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       />
       <span class="site-header__title">Core AI Prompt Bar</span>
     </a>
-    <a class="site-header__feedback" href="#share-feedback">
+    <a
+      class="site-header__feedback"
+      href="#share-feedback"
+      data-track-event="click_internal"
+      data-track-project="site"
+      data-track-target="share-feedback"
+    >
       Share Feedback →
     </a>
   </div>
