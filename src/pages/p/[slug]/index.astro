@@ -1,0 +1,74 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import SiteHeader from '../../../components/SiteHeader.astro';
+import SiteFooter from '../../../components/SiteFooter.astro';
+import ShareFeedback from '../../../components/ShareFeedback.astro';
+
+type Project = CollectionEntry<'projects'>;
+type ProjectLink = Project['data']['links'][number];
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((project: Project) => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { name, tagline, links, accent_color, slug } = project.data;
+---
+
+<Base
+  title={`${name} — WordPress Core AI`}
+  description={tagline}
+  accentColor={accent_color}
+>
+  <a href="#main" class="skip-link">Skip to content</a>
+  <SiteHeader />
+
+  <main id="main" style={`--accent: ${accent_color};`}>
+    <section class="project-detail__hero">
+      <div class="container">
+        <a href="/" class="project-detail__back" data-astro-transition-persist="back-link">← All projects</a>
+        <h1 class="project-detail__name">{name}</h1>
+        <p class="project-detail__tagline">{tagline}</p>
+      </div>
+    </section>
+
+    <article class="project-detail__body">
+      <div class="project-detail__description">
+        <Content />
+      </div>
+
+      <nav class="project-detail__links" aria-label="Project links">
+        {links.map((link: ProjectLink, i: number) => (
+          <a
+            class={
+              i === 0
+                ? 'project-detail__link project-detail__link--primary'
+                : 'project-detail__link project-detail__link--secondary'
+            }
+            href={`/r/${slug}/${link.type}`}
+            rel="noopener noreferrer"
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </article>
+
+    <ShareFeedback
+      projectName={name}
+      projectSlug={slug}
+    />
+  </main>
+
+  <SiteFooter />
+</Base>

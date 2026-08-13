@@ -1,0 +1,23 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<section class="hero" id="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    <img
+      class="hero__logo"
+      src={`${base}/images/wcus-main.png`}
+      alt="WordCamp US 2026"
+      width="120"
+      height="120"
+      decoding="async"
+    />
+    <span class="hero__eyebrow">Welcome to the</span>
+    <h1 class="hero__title" id="hero-title">Core AI Prompt Bar</h1>
+    <p class="hero__meta">Aug 18 – 19 · Sponsor Hall</p>
+    <p class="hero__lead">
+      Stop by the booth to talk shop with the people building them — or tap any
+      project to take it with you.
+    </p>
+  </div>
+</section>

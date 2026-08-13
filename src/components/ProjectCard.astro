@@ -1,0 +1,27 @@
+---
+interface ProjectSummary {
+  slug: string;
+  name: string;
+  tagline: string;
+  accent_color: string;
+}
+
+interface Props {
+  project: ProjectSummary;
+}
+
+const { project } = Astro.props;
+---
+
+<a
+  href={`/p/${project.slug}/`}
+  class="project-card"
+  style={`--card-accent: ${project.accent_color};`}
+>
+  <div class="project-card__body">
+    <h2 class="project-card__name">{project.name}</h2>
+    <p class="project-card__tagline">{project.tagline}</p>
+    <span class="project-card__cta" aria-hidden="true">Learn more →</span>
+  </div>
+  <span class="project-card__chev" aria-hidden="true">›</span>
+</a>

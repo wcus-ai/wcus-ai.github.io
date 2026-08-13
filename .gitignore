@@ -1,0 +1,26 @@
+# dot files
+.*/
+!.github/
+
+# build output
+dist/
+
+# dependencies
+node_modules/
+
+# logs
+*.log*
+
+# environment variables
+.env
+.env.production
+.dev.vars
+
+# macOS-specific files
+.DS_Store
+
+# editor
+*.swp
+
+# cloudflare / wrangler
+.wrangler/

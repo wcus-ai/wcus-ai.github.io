@@ -1,0 +1,28 @@
+{
+  "name": "wcus-site",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy --config worker/wrangler.toml"
+  },
+  "dependencies": {
+    "astro": "^6.4.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "oxfmt": "^0.63.0",
+    "oxlint": "^1.78.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.122.0"
+  }
+}

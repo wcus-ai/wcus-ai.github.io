@@ -1,0 +1,58 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  accentColor?: string;
+}
+
+const {
+  title,
+  description = 'WordPress Core AI Team projects — WCUS 2026',
+  accentColor,
+} = Astro.props;
+
+// Canonical URL — Astro.site is set in astro.config.mjs
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString().replace(/\/$/, '')
+  : Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content={accentColor ?? '#4a1a3c'} />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Core AI" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <ClientRouter />
+    <script is:inline>
+      // Service worker registration — fire and forget.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            /* swallow — SW is a progressive enhancement */
+          });
+        });
+      }
+    </script>
+  </head>
+  <body style={accentColor ? `--accent: ${accentColor};` : undefined}>
+    <slot />
+  </body>
+</html>

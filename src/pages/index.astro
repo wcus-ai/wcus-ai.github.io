@@ -1,0 +1,105 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import ShareFeedback from '../components/ShareFeedback.astro';
+
+type ProjectEntry = CollectionEntry<'projects'>;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const projects = (await getCollection('projects')).sort(
+  (a: ProjectEntry, b: ProjectEntry) => a.data.order - b.data.order
+);
+---
+
+<Base title="WordPress Core AI @ WCUS 2026">
+  <a href="#main" class="skip-link">Skip to content</a>
+  <Hero />
+  <SiteHeader />
+
+  <main id="main">
+    <section class="projects" aria-labelledby="projects-heading">
+      <div class="projects__heading-block">
+        <h2 id="projects-heading">What We're Working On</h2>
+        <p class="projects__lead">
+          Six projects, six pages. Each has its own page and QR code at the booth.
+        </p>
+      </div>
+      <div class="project-grid">
+        {projects.map((project: ProjectEntry) => <ProjectCard project={project.data} />)}
+      </div>
+    </section>
+
+    <section class="who" aria-labelledby="who-heading">
+      <div class="who__bg" aria-hidden="true"></div>
+      <div class="who__inner">
+        <div class="who__content">
+          <span class="who__eyebrow">Who we are</span>
+          <h2 id="who-heading" class="who__title">The WordPress Core AI Team</h2>
+          <p class="who__body">
+            We're the working group bringing AI functionality into WordPress
+            core. We maintain these six projects, write the AI guidelines, and
+            shape how AI integrates with the WordPress ecosystem.
+          </p>
+          <ul class="who__links">
+            <li><a href="https://make.wordpress.org/ai/" rel="noopener noreferrer">Team blog</a></li>
+            <li><a href="https://make.wordpress.org/ai/handbook/" rel="noopener noreferrer">Handbook</a></li>
+          </ul>
+        </div>
+        <div class="who__image">
+          <img
+            src={`${base}/images/ai-booth.png`}
+            alt="The Core AI Prompt Bar booth graphic — a pixel-art Erlenmeyer flask."
+            width="1250"
+            height="697"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="slack-cta" aria-labelledby="slack-heading">
+      <div class="slack-cta__inner">
+        <span class="slack-cta__eyebrow">Stay in touch</span>
+        <h2 id="slack-heading">Keep the conversation going.</h2>
+        <p class="slack-cta__lead">
+          The Core AI Team hangs out in the <strong>#core-ai</strong> channel on
+          WordPress Slack, holds a contributor call every other week, and runs
+          open office hours. Join us to ask questions, share what you're
+          building, or follow along with what we're up to.
+        </p>
+        <div class="slack-cta__actions">
+          <a
+            class="slack-cta__outline"
+            href="https://make.wordpress.org/meetings/#ai"
+            rel="noopener noreferrer"
+          >
+            Upcoming Meetings
+          </a>
+          <a
+            class="slack-cta__primary"
+            href="https://wordpress.slack.com/archives/C08TJ8BPULS"
+            rel="noopener noreferrer"
+          >
+            Open #core-ai <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <a
+          class="slack-cta__secondary"
+          href="https://make.wordpress.org/contribute/join/"
+          rel="noopener noreferrer"
+        >
+          Not on Slack? Join here →
+        </a>
+      </div>
+    </section>
+
+    <ShareFeedback />
+  </main>
+
+  <SiteFooter />
+</Base>

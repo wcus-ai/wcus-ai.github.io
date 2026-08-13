@@ -1,0 +1,12 @@
+name = "wcus-site"
+main = "index.ts"
+compatibility_date = "2026-01-01"
+
+# KV namespace binding.
+# Create with: wrangler kv namespace create COUNTERS
+# Then paste the returned `id` below. Create a preview namespace for local dev:
+#   wrangler kv namespace create COUNTERS --preview
+[[kv_namespaces]]
+binding = "COUNTERS"
+id = "TODO_KV_NAMESPACE_ID"
+preview_id = "TODO_KV_PREVIEW_ID"

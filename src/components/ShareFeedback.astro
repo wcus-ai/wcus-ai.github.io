@@ -1,0 +1,34 @@
+---
+// Site-wide Share Feedback CTA. Same component across home, project detail,
+// and privacy pages. Card design with peach accent.
+// Sticky header's "Share Feedback →" link anchors to #share-feedback.
+
+interface Props {
+  projectName?: string;
+  projectSlug?: string;
+}
+
+const { projectName, projectSlug } = Astro.props;
+
+const title = projectName ? `Got feedback on ${projectName}?` : 'Got feedback about WordPress + AI?';
+const subject = projectName ?? 'AI in WordPress';
+const feedbackHref = projectSlug ? `/feedback/${projectSlug}/` : '/feedback/';
+---
+
+<section
+  class="share-feedback"
+  id="share-feedback"
+  aria-labelledby="share-feedback-heading"
+>
+  <div class="share-feedback__card">
+    <h2 id="share-feedback-heading">{title}</h2>
+    <p class="share-feedback__lead">
+      If something about {subject} has delighted you, frustrated you, or just
+      not worked the way you expected, the Core AI Team wants to hear it. The
+      roadmap is shaped by conversations like yours.
+    </p>
+    <a class="share-feedback__btn" href={feedbackHref} rel="noopener noreferrer">
+      Open feedback form →
+    </a>
+  </div>
+</section>

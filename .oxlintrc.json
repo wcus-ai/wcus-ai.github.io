@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn",
+    "pedantic": "off",
+    "style": "off",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "plugins": ["typescript", "oxc", "unicorn", "import"],
+  "rules": {
+    "typescript/no-explicit-any": "warn",
+    "typescript/no-non-null-assertion": "warn",
+    "typescript/no-unused-vars": "warn",
+    "typescript/no-empty-interface": "warn",
+    "typescript/no-inferrable-types": "warn",
+    "typescript/prefer-as-const": "warn",
+    "typescript/consistent-type-imports": "warn",
+    "oxc/no-async-await": "off",
+    "oxc/no-barrel-file": "off",
+    "oxc/no-rest-spread-properties": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.astro"],
+      "rules": {
+        "typescript/no-unused-vars": "off"
+      }
+    }
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  }
+}

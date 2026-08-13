@@ -1,0 +1,18 @@
+{
+  "name": "WordPress Core AI @ WCUS 2026",
+  "short_name": "Core AI",
+  "description": "Scannable index of WordPress Core AI Team projects.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a1a3c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
