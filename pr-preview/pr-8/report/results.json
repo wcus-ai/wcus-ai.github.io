@@ -6,8 +6,22 @@
     "dir": "home",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 3523
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 3523
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 3531
+      }
+    ]
   },
   {
     "name": "Abilities Api",
@@ -16,8 +30,22 @@
     "dir": "p-abilities-api",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1658
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1658
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1583
+      }
+    ]
   },
   {
     "name": "Agent Skills",
@@ -26,8 +54,22 @@
     "dir": "p-agent-skills",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1689
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1689
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1613
+      }
+    ]
   },
   {
     "name": "Ai Client",
@@ -36,8 +78,22 @@
     "dir": "p-ai-client",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1571
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1571
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1583
+      }
+    ]
   },
   {
     "name": "Ai Plugin",
@@ -46,8 +102,22 @@
     "dir": "p-ai-plugin",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1596
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1596
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1583
+      }
+    ]
   },
   {
     "name": "Mcp Adapter",
@@ -56,8 +126,22 @@
     "dir": "p-mcp-adapter",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1592
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1592
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1583
+      }
+    ]
   },
   {
     "name": "Wp Bench",
@@ -66,8 +150,22 @@
     "dir": "p-wp-bench",
     "diffRatio": 0,
     "diffPixels": 0,
-    "width": 390,
-    "height": 1571
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1571
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1552
+      }
+    ]
   },
   {
     "name": "Privacy",
@@ -76,7 +174,21 @@
     "dir": "privacy",
     "diffRatio": 0.0011076559911024355,
     "diffPixels": 1464,
-    "width": 390,
-    "height": 3389
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0.0011076559911024355,
+        "diffPixels": 1464,
+        "width": 390,
+        "height": 3389
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0.00035453216374269005,
+        "diffPixels": 1455,
+        "width": 1440,
+        "height": 2850
+      }
+    ]
   }
 ]
