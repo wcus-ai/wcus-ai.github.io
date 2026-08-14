@@ -14,13 +14,9 @@
 | Ai Plugin | `/p/ai-plugin/` | 0.00% ✅ |
 | Mcp Adapter | `/p/mcp-adapter/` | 0.00% ✅ |
 | Wp Bench | `/p/wp-bench/` | 0.00% ✅ |
-| Privacy | `/privacy/` | 0.11% 🔴 |
+| Privacy | `/privacy/` | 0.11% ✅ |
 
-### 📸 Privacy — 0.11% of pixels changed
-
-| Before (production) | After (this PR) | Diff |
-| --- | --- | --- |
-| ![Privacy before](https://wcus-ai.github.io/pr-preview/pr-6/report/privacy/before.png) | ![Privacy after](https://wcus-ai.github.io/pr-preview/pr-6/report/privacy/after.png) | ![Privacy diff](https://wcus-ai.github.io/pr-preview/pr-6/report/privacy/diff.png) |
+### ✅ No visual differences detected
 
 
-Built from `ec2fa263d79d1d9c2d8274483197d16876e7a1ac` · [workflow run](https://github.com/wcus-ai/wcus-ai.github.io/actions/runs/31801294624) · This comment updates automatically on every push.
+Built from `ee039ba57f303d8ca4c199ee0bc666e7045e3f37` · [workflow run](https://github.com/wcus-ai/wcus-ai.github.io/actions/runs/31813026039) · This comment updates automatically on every push.
