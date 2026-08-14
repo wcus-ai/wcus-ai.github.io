@@ -1,0 +1,119 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to build a preview for (works for fork PRs)'
+        required: true
+        type: string
+
+# Untrusted job: fork PR code builds here with a read-only token and no
+# secrets. Publishing (gh-pages push, PR comment) happens in the trusted
+# PR Preview Publish workflow, which only ever handles this run's artifact
+# as inert static data.
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number || inputs.pr_number }}
+  cancel-in-progress: true
+
+env:
+  PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+  PRODUCTION_URL: https://wcus-ai.github.io
+  PREVIEW_BASE: /pr-preview/pr-${{ github.event.pull_request.number || inputs.pr_number }}
+
+jobs:
+  build:
+    name: Build preview & visual report
+    runs-on: ubuntu-latest
+    if: github.event.action != 'closed'
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || format('refs/pull/{0}/head', inputs.pr_number) }}
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+        with:
+          version: 11
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # The tracking endpoint env var is deliberately never set here: the
+      # preview bundle tree-shakes the beacon out, so preview clicks are untracked.
+      - name: Build preview site
+        run: pnpm exec astro build --base "$PREVIEW_BASE/"
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Serve preview build locally
+        run: |
+          mkdir -p serve-root/pr-preview
+          cp -r dist "serve-root/pr-preview/pr-$PR_NUMBER"
+          python3 -m http.server 4326 --directory serve-root &
+          echo $! > /tmp/preview-server.pid
+
+      - name: Run visual regression against production
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/visual-report.mjs \
+            --prod "$PRODUCTION_URL" \
+            --preview "http://localhost:4326/pr-preview/pr-$PR_NUMBER" \
+            --out preview-out/report \
+            --pr-number "$PR_NUMBER" \
+            --sha "$HEAD_SHA" \
+            --public-preview-url "$PRODUCTION_URL/pr-preview/pr-$PR_NUMBER/" \
+            --public-report-url "$PRODUCTION_URL/pr-preview/pr-$PR_NUMBER/report/" \
+            --run-url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+      - name: Stop preview server
+        if: always()
+        run: kill $(cat /tmp/preview-server.pid) 2>/dev/null || true
+
+      - name: Assemble artifact
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          mkdir -p preview-out
+          cp -r dist preview-out/site
+          jq -n --argjson number "$PR_NUMBER" --arg sha "$HEAD_SHA" \
+            '{number: $number, sha: $sha, action: "deploy"}' > preview-out/meta.json
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: pr-preview-${{ env.PR_NUMBER }}-${{ github.run_id }}
+          path: preview-out
+          retention-days: 7
+
+  removed:
+    name: Mark preview for removal
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+    steps:
+      - name: Write removal marker
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          mkdir -p preview-out
+          jq -n --argjson number "$PR_NUMBER" --arg sha "$HEAD_SHA" \
+            '{number: $number, sha: $sha, action: "removed"}' > preview-out/meta.json
+
+      - name: Upload removal marker artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: pr-preview-${{ env.PR_NUMBER }}-${{ github.run_id }}
+          path: preview-out
+          retention-days: 7
