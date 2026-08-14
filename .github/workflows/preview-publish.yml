@@ -1,0 +1,162 @@
+# Trusted publisher.
+# Runs in the default-branch context after the untrusted PR Preview workflow finishes.
+# Preview artifacts are never executed.
+name: PR Preview Publish
+
+on:
+  workflow_run:
+    workflows: [PR Preview]
+    types: [completed]
+
+permissions:
+  contents: write # push to gh-pages
+  pull-requests: write # upsert the report comment
+  actions: write # delete superseded artifacts
+
+concurrency:
+  group: pr-preview-publish-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish preview & report
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download preview artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+        run: |
+          set -euo pipefail
+          artifacts=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts?per_page=100")
+          artifact_id=$(echo "$artifacts" | jq -r '[.artifacts[] | select(.name | startswith("pr-preview-"))][0].id')
+          test -n "$artifact_id" && test "$artifact_id" != "null"
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip" \
+            -o preview.zip
+          unzip -q preview.zip -d preview-artifact
+          echo "artifact_id=$artifact_id" >> "$GITHUB_ENV"
+
+      - name: Read preview metadata
+        run: |
+          jq -e '.number and .sha and (.action == "deploy" or .action == "removed")' preview-artifact/meta.json
+          echo "pr_number=$(jq -r .number preview-artifact/meta.json)" >> "$GITHUB_ENV"
+          echo "pr_action=$(jq -r .action preview-artifact/meta.json)" >> "$GITHUB_ENV"
+
+      - name: Deploy preview to gh-pages
+        if: env.pr_action == 'deploy'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git clone --quiet --branch gh-pages \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" gh-pages
+          cd gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf "pr-preview/pr-$pr_number"
+          mkdir -p "pr-preview/pr-$pr_number"
+          cp -r ../preview-artifact/site/. "pr-preview/pr-$pr_number/"
+          cp -r ../preview-artifact/report "pr-preview/pr-$pr_number/report"
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "preview unchanged"
+          else
+            git commit -qm "Deploy preview for PR #$pr_number"
+            git push -q origin gh-pages || {
+              git pull --rebase -q origin gh-pages && git push -q origin gh-pages
+            }
+          fi
+
+      - name: Delete superseded PR artifacts
+        if: env.pr_action == 'deploy'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100" \
+            | jq -r --arg prefix "pr-preview-$pr_number-" --argjson keep "$artifact_id" \
+              '.artifacts[] | select(.name | startswith($prefix)) | select(.id != $keep) | .id' \
+            | while read -r id; do
+                curl -fsSL -X DELETE -H "Authorization: Bearer $GH_TOKEN" \
+                  "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$id"
+                echo "deleted artifact $id"
+              done
+
+      - name: Upsert PR comment
+        if: env.pr_action == 'deploy'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          body=$(jq -Rs . preview-artifact/report/comment.md)
+          comments=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$pr_number/comments?per_page=100")
+          comment_id=$(echo "$comments" | jq -r '.[] | select(.body | contains("<!-- pr-preview-report -->")) | .id' | head -1)
+          if [ -n "$comment_id" ] && [ "$comment_id" != "null" ]; then
+            curl -fsSL -X PATCH \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/comments/$comment_id" \
+              -d "{\"body\": $body}"
+          else
+            curl -fsSL -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/$pr_number/comments" \
+              -d "{\"body\": $body}"
+          fi
+
+      - name: Remove preview from gh-pages
+        if: env.pr_action == 'removed'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git clone --quiet --branch gh-pages \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" gh-pages
+          cd gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -rq "pr-preview/pr-$pr_number" || rm -rf "pr-preview/pr-$pr_number"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing to remove"
+          else
+            git commit -qm "Remove preview for PR #$pr_number"
+            git push -q origin gh-pages || {
+              git pull --rebase -q origin gh-pages && git push -q origin gh-pages
+            }
+          fi
+
+      - name: Delete PR comment
+        if: env.pr_action == 'removed'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          comments=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/issues/$pr_number/comments?per_page=100")
+          comment_id=$(echo "$comments" | jq -r '.[] | select(.body | contains("<!-- pr-preview-report -->")) | .id' | head -1)
+          if [ -n "$comment_id" ] && [ "$comment_id" != "null" ]; then
+            curl -fsSL -X DELETE -H "Authorization: Bearer $GH_TOKEN" \
+              "https://api.github.com/repos/${{ github.repository }}/issues/comments/$comment_id"
+          fi
+
+      - name: Delete all PR preview artifacts
+        if: env.pr_action == 'removed'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts?per_page=100" \
+            | jq -r --arg prefix "pr-preview-$pr_number-" \
+              '.artifacts[] | select(.name | startswith($prefix)) | .id' \
+            | while read -r id; do
+                curl -fsSL -X DELETE -H "Authorization: Bearer $GH_TOKEN" \
+                  "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$id"
+              done
