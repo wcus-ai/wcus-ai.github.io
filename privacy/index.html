@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Privacy — WordPress Core AI</title><meta name="description" content="How this site measures aggregate, anonymous interaction."><link rel="canonical" href="https://wcus-ai.github.io/privacy"><meta name="theme-color" content="#4a1a3c"><link rel="manifest" href="/manifest.webmanifest"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="32x32"><link rel="apple-touch-icon" href="/favicon.ico"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Core AI"><meta property="og:title" content="Privacy — WordPress Core AI"><meta property="og:description" content="How this site measures aggregate, anonymous interaction."><meta property="og:type" content="website"><meta property="og:url" content="https://wcus-ai.github.io/privacy"><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.CAqDO0tx.js"></script><script>
+      // Service worker registration — fire and forget.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            /* swallow — SW is a progressive enhancement */
+          });
+        });
+      }
+    </script><script type="module">const c="https://wcus-site.wcus-site.workers.dev/track";function i(t){return!(t.defaultPrevented||t.button!==0&&t.button!==1)}function s(t){const e=t.dataset.trackEvent,n=t.dataset.trackProject;if(!e||!n)return null;const r={event:e,project:n},a=t.dataset.trackTarget;return a&&(r.target=a),r}function o(t){if(!i(t))return;const e=t.target?.closest("[data-track-event]");if(!e)return;const n=s(e);if(n)try{navigator.sendBeacon(c,JSON.stringify(n))}catch{}}function u(){document.addEventListener("click",o)}u();</script><link rel="stylesheet" href="/_astro/ShareFeedback.DKyOEyBP.css"></head> <body>  <a href="#main" class="skip-link">Skip to content</a> <header class="site-header" id="site-header" data-collapsed="false" inert aria-hidden="true"> <div class="site-header__inner"> <a class="site-header__brand" href="/" aria-label="Core AI Prompt Bar — home" data-track-event="click_internal" data-track-project="site" data-track-target="home"> <img class="site-header__logo" src="/images/wcus-main.png" alt="" width="32" height="32" decoding="async"> <span class="site-header__title">Core AI Prompt Bar</span> </a> <a class="site-header__feedback" href="#share-feedback" data-track-event="click_internal" data-track-project="site" data-track-target="share-feedback">
+Share Feedback →
+</a> </div> </header> <script type="module">let n=null;const i=()=>{n&&(n(),n=null);const e=document.getElementById("site-header"),s=document.getElementById("hero");if(!e)return;let o=!1;const d=()=>{const r=(s?s.getBoundingClientRect().bottom:-1)<0;e.style.transform=r?"translateY(0)":"",e.toggleAttribute("inert",!r),r?e.removeAttribute("aria-hidden"):e.setAttribute("aria-hidden","true"),o=!1},t=()=>{o||(requestAnimationFrame(d),o=!0)};window.addEventListener("scroll",t,{passive:!0}),window.addEventListener("resize",t,{passive:!0}),d(),n=()=>{window.removeEventListener("scroll",t),window.removeEventListener("resize",t)}};document.addEventListener("astro:page-load",i);document.readyState==="loading"?document.addEventListener("DOMContentLoaded",i):i();</script> <main id="main" class="privacy"> <h1>Privacy Policy</h1> <p><strong>This site measures aggregate, anonymous interaction.</strong> It does
+    not use cookies and does not attempt to identify you.</p> <h2>What we measure</h2> <p>Three event kinds only:</p> <ul> <li><code>click_outbound</code> — when you follow any link to another site (a project repo, the team blog, Slack, etc.).</li> <li><code>click_internal</code> — when you navigate between pages on this site (a project card, the privacy page, the back link, etc.).</li> <li><code>click_feedback</code> — when you open the feedback form.</li> </ul> <p>Each event records three things: the event kind, the project or page it
+    relates to (one of the six project slugs, or <code>site</code> for site-wide
+    links), and a stable identifier for the specific link. The time of the click
+    is also recorded automatically. That is the entire payload.</p> <h2>How it works</h2> <p>When you click a tracked link, your browser fires a small JSON payload to
+    a Cloudflare Worker via
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon" data-track-event="click_outbound" data-track-project="site" data-track-target="mdn-sendbeacon"><code>navigator.sendBeacon</code></a>.
+    The worker writes the event to Cloudflare Analytics Engine as a single
+    counter increment and returns immediately. The link opens its real
+    destination directly — there is no redirect through the worker.</p> <p>If JavaScript is disabled, links still work normally; the click simply
+    isn't counted.</p> <p>The worker's source code is open and readable in the
+<a href="https://github.com/wcus-ai/wcus-ai.github.io/tree/main/worker" data-track-event="click_outbound" data-track-project="site" data-track-target="worker-source"><code>/worker/</code> directory</a>
+of this site's repository.</p> <h2>What we **do not** track</h2> <ul> <li>Cookies of any kind (this site sets none)</li> <li>IP addresses</li> <li>User agents</li> <li>Referrers</li> <li>Any identifier that could be tied to you or your device</li> </ul> <p>Cloudflare, as the Worker's host, receives your IP address and user agent
+    as part of normal HTTP routing for every request the Worker processes — the
+    same as any web host. Their
+<a href="https://www.cloudflare.com/privacypolicy/" data-track-event="click_outbound" data-track-project="site" data-track-target="cloudflare-privacy">privacy policy</a> applies
+    to that routing data. We do not receive or store that information in our
+    analytics dataset; we only see aggregate counts.</p> <h2>Why</h2> <p>Aggregate counts of which projects drew interest at WordCamp US 2026 will
+    inform the WordPress Core AI Team's post-event report. The data helps the
+    team decide where to focus future WordCamp content, dev-rel, and community efforts.</p> <h2>Retention</h2> <p>Event data is retained in Cloudflare Analytics Engine for 3 months (we're using the <a href="https://developers.cloudflare.com/analytics/analytics-engine/limits/">free tier</a>). The aggregate counts will be
+    incorporated into the post-WCUS report. The dataset can be deleted earlier
+    on request to the Core AI Team.</p> <h2>Feedback form</h2> <p>The feedback form is hosted by Google Forms, which has its own privacy
+    policy. This site sends only the project name as a URL parameter; Google may
+    collect additional information per their policy.</p> </main> <section class="share-feedback" id="share-feedback" aria-labelledby="share-feedback-heading"> <div class="share-feedback__card"> <h2 id="share-feedback-heading">Got feedback about WordPress + AI?</h2> <p class="share-feedback__lead">
+If something about AI in WordPress has delighted you, frustrated you, or just
+      not worked the way you expected, the Core AI Team wants to hear it. The
+      roadmap is shaped by conversations like yours.
+</p> <span class="share-feedback__btn share-feedback__btn--pending" aria-disabled="true">
+Feedback form opening soon
+</span> </div> </section> <footer class="site-footer"> <div class="site-footer__inner"> <div class="site-footer__brand"> <img class="site-footer__logo" src="/images/wcus-2026-white.png" alt="WordCamp US 2026" width="48" height="48" decoding="async"> <img class="site-footer__logo site-footer__logo--wmark" src="/images/wp-wmark-white.png" alt="WordPress" width="28" height="28" decoding="async"> <a class="site-footer__team-link" href="https://make.wordpress.org/ai/" rel="noopener noreferrer" data-track-event="click_outbound" data-track-project="site" data-track-target="team-blog">
+Core AI Team
+</a> </div> <p class="site-footer__meta"> <a href="https://us.wordcamp.org/2026/schedule/" rel="noopener noreferrer" data-track-event="click_outbound" data-track-project="site" data-track-target="schedule">WCUS 2026 Schedule</a>
+·
+<a href="https://us.wordcamp.org/2026/code-of-conduct/" rel="noopener noreferrer" data-track-event="click_outbound" data-track-project="site" data-track-target="code-of-conduct">Code of Conduct</a>
+·
+<a href="/privacy/" data-track-event="click_internal" data-track-project="site" data-track-target="privacy">Privacy</a> </p> </div> </footer>  </body></html>
