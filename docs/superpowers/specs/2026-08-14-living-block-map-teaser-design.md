@@ -1,6 +1,6 @@
 # Living Block Map Teaser Design
 
-**Status:** Approved direction; implementation pending
+**Status:** Approved direction; implementation in PR #9
 
 **Date:** August 14, 2026
 
@@ -53,16 +53,16 @@ Use this exact visible copy:
 
 **Heading**
 
-> See how it all fits together
+> See how WordPress and AI connect
 
 **Description**
 
-> Follow four guided flows across the Core AI projects and the supporting
-> building blocks around them.
+> Choose from four interactive flows. Follow the numbered path, then tap a
+> highlighted component to understand the role it plays.
 
 **CTA**
 
-> Launch the Living Block Map
+> Explore the Living Block Map
 
 **Operational disclosure**
 
@@ -89,7 +89,7 @@ tracking endpoint is unavailable:
   data-track-target="living-block-map"
   aria-describedby="living-map-disclosure"
 >
-  Launch the Living Block Map
+  Explore the Living Block Map
   <span aria-hidden="true">→</span>
   <span class="living-map-teaser__new-tab"> (opens in a new tab)</span>
 </a>

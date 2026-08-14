@@ -34,12 +34,12 @@ test('home build renders the Living Block Map teaser as a lightweight external h
       .replace(/<[^>]+>/g, ' ')
       .replace(/\s+/g, ' ')
       .trim();
-    assert.match(teaser, /<h3[^>]*>See how it all fits together<\/h3>/);
+    assert.match(teaser, /<h3[^>]*>See how WordPress and AI connect<\/h3>/);
     assert.ok(
       teaserText.includes(
-        'Follow four guided flows across the Core AI projects and the supporting building blocks around them.',
+        'Choose from four interactive flows. Follow the numbered path, then tap a highlighted component to understand the role it plays.',
       ),
-      'teaser must explain the map without claiming a one-to-one project taxonomy',
+      'teaser must explain how to use the interactive map',
     );
 
     const link = /<a class="living-map-teaser__link"[\s\S]*?<\/a>/.exec(teaser)?.[0];
@@ -51,7 +51,7 @@ test('home build renders the Living Block Map teaser as a lightweight external h
     assert.match(link, /data-track-project="site"/);
     assert.match(link, /data-track-target="living-block-map"/);
     assert.match(link, /aria-describedby="living-map-disclosure"/);
-    assert.ok(link.includes('Launch the Living Block Map'));
+    assert.ok(link.includes('Explore the Living Block Map'));
     assert.ok(link.includes('opens in a new tab'));
 
     assert.ok(
