@@ -92,6 +92,7 @@ Target vocabulary (group by this in SQL):
 | `click_outbound` | `team-blog`                                           | footer "Core AI Team", home "Team blog" |
 | `click_outbound` | `handbook`                                            | home "Handbook"                         |
 | `click_outbound` | `building-blocks-post`                                | home inline "building blocks" link      |
+| `click_outbound` | `living-block-map`                                    | home Living Block Map teaser            |
 | `click_outbound` | `slack` `meetings` `contribute`                       | home Slack CTA section                  |
 | `click_outbound` | `schedule` `code-of-conduct`                          | footer                                  |
 | `click_outbound` | `mdn-sendbeacon` `worker-source` `cloudflare-privacy` | privacy page                            |

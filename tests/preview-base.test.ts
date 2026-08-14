@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const root = new URL('../', import.meta.url);
+const root = fileURLToPath(new URL('../', import.meta.url));
 const dist = new URL('../dist/', import.meta.url);
+const astro = fileURLToPath(new URL('../node_modules/astro/bin/astro.mjs', import.meta.url));
 
 /**
  * Builds the site exactly the way the PR preview workflow does — under a base
@@ -15,8 +17,8 @@ const dist = new URL('../dist/', import.meta.url);
  */
 
 async function buildPreview(): Promise<void> {
-  execFileSync('pnpm', ['exec', 'astro', 'build', '--base', '/pr-preview/pr-99/'], {
-    cwd: root.pathname,
+  execFileSync(process.execPath, [astro, 'build', '--base', '/pr-preview/pr-99/'], {
+    cwd: root,
     stdio: 'pipe',
     env: { ...process.env }, // deliberately no PUBLIC_TRACKING_ENDPOINT
   });

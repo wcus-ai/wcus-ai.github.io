@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '@layouts/Base.astro';
 import Hero from '@components/Hero.astro';
+import LivingBlockMapTeaser from '@components/LivingBlockMapTeaser.astro';
 import ProjectCard from '@components/ProjectCard.astro';
 import SiteHeader from '@components/SiteHeader.astro';
 import SiteFooter from '@components/SiteFooter.astro';
@@ -37,6 +38,7 @@ const projects = (await getCollection('projects')).toSorted(
       <div class="project-grid">
         {projects.map((project: ProjectEntry) => <ProjectCard project={project.data} />)}
       </div>
+      <LivingBlockMapTeaser />
     </section>
 
     <section class="who" aria-labelledby="who-heading">

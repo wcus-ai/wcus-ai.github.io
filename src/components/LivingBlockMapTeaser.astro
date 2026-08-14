@@ -1,0 +1,44 @@
+---
+import { base } from '@lib/config';
+---
+
+<section class="living-map-teaser" aria-labelledby="living-map-heading">
+  <div class="living-map-teaser__preview">
+    <img
+      src={`${base}/images/living-block-map-preview.webp`}
+      alt="Simplified Living Block Map path from AI Plugin through AI Client and a provider layer to an external AI service."
+      width="1366"
+      height="1024"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+
+  <div class="living-map-teaser__content">
+    <h3 id="living-map-heading">See how it all fits together</h3>
+    <p>
+      Follow four guided flows across the Core AI projects and the supporting building blocks around
+      them.
+    </p>
+  </div>
+
+  <div class="living-map-teaser__action">
+    <a
+      class="living-map-teaser__link"
+      href="https://wcus.hperkins.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      data-track-event="click_outbound"
+      data-track-project="site"
+      data-track-target="living-block-map"
+      aria-describedby="living-map-disclosure"
+    >
+      Launch the Living Block Map <span aria-hidden="true">→</span>
+      <span class="visually-hidden"> (opens in a new tab)</span>
+    </a>
+    <p id="living-map-disclosure" class="living-map-teaser__disclosure">
+      Runs a real WordPress 7.0 site in your browser. The first load can take a minute or more. Best
+      viewed in landscape.
+    </p>
+  </div>
+</section>
