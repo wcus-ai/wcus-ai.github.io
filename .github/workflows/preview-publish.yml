@@ -34,10 +34,10 @@ jobs:
             "https://api.github.com/repos/${{ github.repository }}/actions/runs/$RUN_ID/artifacts?per_page=100")
           artifact_id=$(echo "$artifacts" | jq -r '[.artifacts[] | select(.name | startswith("pr-preview-"))][0].id')
           test -n "$artifact_id" && test "$artifact_id" != "null"
-          zip_url=$(curl -fsSL -o /dev/null -w '%{redirect_url}' \
+          curl -fsSL \
             -H "Authorization: Bearer $GH_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip")
-          curl -fsSL "$zip_url" -o preview.zip
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip" \
+            -o preview.zip
           unzip -q preview.zip -d preview-artifact
           echo "artifact_id=$artifact_id" >> "$GITHUB_ENV"
 
