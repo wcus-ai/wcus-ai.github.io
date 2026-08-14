@@ -10,11 +10,13 @@ interface Props {
   project: ProjectSummary;
 }
 
+import { base } from '@lib/config';
+
 const { project } = Astro.props;
 ---
 
 <a
-  href={`/p/${project.slug}/`}
+  href={`${base}/p/${project.slug}/`}
   class="project-card"
   style={`--card-accent: ${project.accent_color};`}
   data-track-event="click_internal"
