@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-import '../styles/global.css';
+import '@styles/global.css';
 
 interface Props {
   title: string;
@@ -14,10 +14,13 @@ const {
   accentColor,
 } = Astro.props;
 
-// Canonical URL — Astro.site is set in astro.config.mjs
+import { base } from '@lib/config';
+
+// Canonical URL — Astro.site is set in astro.config.mjs while previews point to production.
+const canonicalPath = Astro.url.pathname.replace(/^\/pr-preview\/pr-\d+/, '') || '/';
 const canonical = Astro.site
-  ? new URL(Astro.url.pathname, Astro.site).toString().replace(/\/$/, '')
-  : Astro.url.pathname;
+  ? new URL(canonicalPath, Astro.site).toString().replace(/\/$/, '')
+  : canonicalPath;
 ---
 
 <!doctype html>
@@ -29,10 +32,10 @@ const canonical = Astro.site
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content={accentColor ?? '#4a1a3c'} />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/favicon.ico" />
+    <link rel="manifest" href={`${base}/manifest.webmanifest`} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <link rel="icon" href={`${base}/favicon.ico`} sizes="32x32" />
+    <link rel="apple-touch-icon" href={`${base}/favicon.ico`} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Core AI" />
@@ -41,11 +44,11 @@ const canonical = Astro.site
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <ClientRouter />
-    <script is:inline>
+    <script is:inline define:vars={{ swPath: `${base}/sw.js` }}>
       // Service worker registration — fire and forget.
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {
+          navigator.serviceWorker.register(swPath).catch(() => {
             /* swallow — SW is a progressive enhancement */
           });
         });
@@ -53,7 +56,7 @@ const canonical = Astro.site
     </script>
     <script>
       // Click tracking beacon.
-      import { initTracking } from '../scripts/track.ts';
+      import { initTracking } from '@scripts/track.ts';
       initTracking();
     </script>
   </head>

@@ -1,9 +1,9 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
-import Base from '../../../layouts/Base.astro';
-import SiteHeader from '../../../components/SiteHeader.astro';
-import SiteFooter from '../../../components/SiteFooter.astro';
-import ShareFeedback from '../../../components/ShareFeedback.astro';
+import Base from '@layouts/Base.astro';
+import SiteHeader from '@components/SiteHeader.astro';
+import SiteFooter from '@components/SiteFooter.astro';
+import ShareFeedback from '@components/ShareFeedback.astro';
 
 type Project = CollectionEntry<'projects'>;
 type ProjectLink = Project['data']['links'][number];
