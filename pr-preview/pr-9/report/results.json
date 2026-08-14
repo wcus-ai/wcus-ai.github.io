@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Home",
+    "path": "/",
+    "urlPath": "/",
+    "dir": "home",
+    "diffRatio": 0.1914024967075365,
+    "diffPixels": 309561,
+    "width": 390,
+    "height": 4147
+  },
+  {
+    "name": "Abilities Api",
+    "path": "/p/abilities-api/",
+    "urlPath": "/p/abilities-api/",
+    "dir": "p-abilities-api",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1658
+  },
+  {
+    "name": "Agent Skills",
+    "path": "/p/agent-skills/",
+    "urlPath": "/p/agent-skills/",
+    "dir": "p-agent-skills",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1689
+  },
+  {
+    "name": "Ai Client",
+    "path": "/p/ai-client/",
+    "urlPath": "/p/ai-client/",
+    "dir": "p-ai-client",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1571
+  },
+  {
+    "name": "Ai Plugin",
+    "path": "/p/ai-plugin/",
+    "urlPath": "/p/ai-plugin/",
+    "dir": "p-ai-plugin",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1596
+  },
+  {
+    "name": "Mcp Adapter",
+    "path": "/p/mcp-adapter/",
+    "urlPath": "/p/mcp-adapter/",
+    "dir": "p-mcp-adapter",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1592
+  },
+  {
+    "name": "Wp Bench",
+    "path": "/p/wp-bench/",
+    "urlPath": "/p/wp-bench/",
+    "dir": "p-wp-bench",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 1571
+  },
+  {
+    "name": "Privacy",
+    "path": "/privacy/",
+    "urlPath": "/privacy/",
+    "dir": "privacy",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "width": 390,
+    "height": 3389
+  }
+]
