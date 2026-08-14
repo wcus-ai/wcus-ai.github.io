@@ -37,6 +37,7 @@ import {
 
 const VIEWPORT = { width: 390, height: 844, deviceScaleFactor: 2 };
 const SETTLE_MS = 500;
+const SETTLE_BUDGET_MS = 5000;
 
 function parseArgs(argv: string[]): Record<string, string> {
   const args: Record<string, string> = {};
@@ -76,6 +77,33 @@ function dirFor(routePath: string): string {
 
 async function capture(page: Page, url: string): Promise<Buffer> {
   await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+  // Lazy images below the fold never load until scrolled into view.
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve) => {
+      let last = -1;
+      const step = () => {
+        window.scrollTo(0, document.documentElement.scrollHeight);
+        if (window.scrollY === last) return resolve();
+        last = window.scrollY;
+        setTimeout(step, 100);
+      };
+      step();
+    });
+    window.scrollTo(0, 0);
+  });
+  // Race-settle fonts and image decode: decode() pends forever for images
+  // that never entered the viewport, and page.evaluate has no timeout.
+  await page.evaluate(
+    (budget) =>
+      Promise.race([
+        Promise.all([
+          document.fonts.ready,
+          ...[...document.images].map((i) => i.decode().catch(() => {})),
+        ]),
+        new Promise((resolve) => setTimeout(resolve, budget)),
+      ]),
+    SETTLE_BUDGET_MS,
+  );
   await page.waitForTimeout(SETTLE_MS);
   return page.screenshot({ fullPage: true });
 }
@@ -88,8 +116,12 @@ const context = await browser.newContext({
   reducedMotion: 'reduce',
 });
 const page = await context.newPage();
-await page.addStyleTag({
-  content: '*, *::before, *::after { animation: none !important; transition: none !important; }',
+// addInitScript re-runs on every navigation — addStyleTag would only style
+// the first document and leave animations live on later routes.
+await context.addInitScript(() => {
+  const style = document.createElement('style');
+  style.textContent = '* { animation: none !important; transition: none !important; }';
+  document.documentElement.prepend(style);
 });
 
 const results: PageResult[] = [];
@@ -151,3 +183,6 @@ await writeFile(path.join(args.out, 'index.html'), generateHtml(contextForReport
 await writeFile(path.join(args.out, 'comment.md'), generateComment(contextForReport));
 await writeFile(path.join(args.out, 'results.json'), JSON.stringify(results, null, 2));
 console.log(`report written to ${args.out}`);
+// A crashed browser leaves its pipe handles holding the event loop open;
+// never let a dead transport wedge the CI step after the report is written.
+process.exit(0);
