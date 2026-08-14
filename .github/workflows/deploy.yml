@@ -6,17 +6,16 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write # push the build to the gh-pages branch
 
-# Allow one concurrent deployment
+# Production deploys never cancel in flight; PR previews live under
+# pr-preview/ on the same branch and are preserved by the copy step below.
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: gh-pages-production
+  cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -36,16 +35,27 @@ jobs:
         env:
           PUBLIC_TRACKING_ENDPOINT: https://wcus-site.wcus-site.workers.dev/track
 
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
+      - name: Publish to gh-pages (preserving PR previews)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git clone --quiet --branch gh-pages \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" gh-pages-tmp
+          cd gh-pages-tmp
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Replace production content but keep the PR preview umbrella and .nojekyll.
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name .git ! -name pr-preview ! -name .nojekyll -exec rm -rf {} +
+          cp -r ../dist/. .
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "production site unchanged"
+          else
+            git commit -qm "Deploy production site from ${{ github.sha }}"
+            git push -q origin gh-pages || {
+              git pull --rebase -q origin gh-pages && git push -q origin gh-pages
+            }
+          fi
