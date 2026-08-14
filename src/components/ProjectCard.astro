@@ -11,10 +11,11 @@ interface Props {
 }
 
 const { project } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <a
-  href={`/p/${project.slug}/`}
+  href={`${base}/p/${project.slug}/`}
   class="project-card"
   style={`--card-accent: ${project.accent_color};`}
   data-track-event="click_internal"

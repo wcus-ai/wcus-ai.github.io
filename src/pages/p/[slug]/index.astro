@@ -23,6 +23,7 @@ interface Props {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const { name, tagline, links, accent_color, slug, feedback_entry } = project.data;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <Base
@@ -37,7 +38,7 @@ const { name, tagline, links, accent_color, slug, feedback_entry } = project.dat
     <section class="project-detail__hero">
       <div class="container">
         <a
-          href="/"
+          href={`${base}/`}
           class="project-detail__back"
           data-astro-transition-persist="back-link"
           data-track-event="click_internal"
