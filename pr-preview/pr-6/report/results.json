@@ -24,8 +24,8 @@
     "path": "/p/agent-skills/",
     "urlPath": "/p/agent-skills/",
     "dir": "p-agent-skills",
-    "diffRatio": 0.001015621441909186,
-    "diffPixels": 669,
+    "diffRatio": 0,
+    "diffPixels": 0,
     "width": 390,
     "height": 1689
   },
@@ -74,8 +74,8 @@
     "path": "/privacy/",
     "urlPath": "/privacy/",
     "dir": "privacy",
-    "diffRatio": 0.0016138184624463763,
-    "diffPixels": 2133,
+    "diffRatio": 0.0011076559911024355,
+    "diffPixels": 1464,
     "width": 390,
     "height": 3389
   }
