@@ -21,14 +21,12 @@ order: 1
 ## What becomes possible
 
 **AI agent:** Imagine asking, “Back up my site, find the posts that need the most SEO
-help, improve their metadata, optimize their featured images, clear the affected cache,
+help, improve their metadata, optimize their featured images,
 and report what changed.” An agent can discover the available abilities, chain the
 right ones across plugins, and act only within the current user permissions.
 
-**Automation:** When a new SaaS subscription is approved, a workflow could create the
-customer, membership, and tenant site in Ultimate Multisite; enroll the team in a
-LearnPress onboarding course; populate structured site data; verify that the new
-frontend is reachable; and surface mail diagnostics if the welcome email fails. Each
+**Automation:** When a new order is created in Woocommerce, a workflow could enroll the customer in a
+LearnPress onboarding course then add the customer to a mailing list without any code needed. Each
 step uses a documented, permission-checked ability instead of a bespoke integration.
 
 The Abilities API makes these workflows possible by giving WordPress one discoverable
@@ -50,8 +48,7 @@ automation ecosystem.
 
 ## Plugins already shipping abilities
 
-These examples are taken from public plugin source as of August 2026. Availability may
-depend on the plugin version, edition, or enabled features.
+Here are some popular plugins that have added abilities already and some ideas of what they could be used for.
 
 - **[All in One SEO](https://github.com/awesomemotive/all-in-one-seo-pack)** — Reads and updates post SEO data, finds missing metadata and low TruSEO scores, manages robots.txt rules, and returns site audits. **Use it to:** let an agent find under-optimized content and apply a focused SEO cleanup.
 - **[Rank Math SEO](https://github.com/rankmath/seo-by-rank-math)** — Audits and fixes site SEO, inspects post metadata, and exposes schema, analytics, content-analysis, link, and AI-visibility tools. **Use it to:** turn a site audit into a prioritized remediation plan with supported fixes applied automatically.
