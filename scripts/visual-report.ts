@@ -1,14 +1,12 @@
 #!/usr/bin/env node
-/* eslint-disable no-await-in-loop -- route captures share one page and must stay sequential for deterministic screenshots */
+/* eslint-disable no-await-in-loop -- captures share one page and run sequentially by design */
 /**
  * Visual regression driver for PR previews.
  *
  * Screenshots every route on the production site and on a locally served
- * preview build at a fixed mobile viewport, diffs them with pixelmatch, and
- * writes a self-contained report (images + index.html + comment.md).
- *
- * This is a reporting tool, not a gate: it always exits 0 so the PR preview
- * comment can surface whatever it found, including per-page load errors.
+ * preview build, diffs them with pixelmatch, and writes a self-contained
+ * report (images + index.html + comment.md). Always exits 0: findings,
+ * including per-page errors, surface in the PR comment.
  *
  * Usage:
  *   node scripts/visual-report.ts \
@@ -33,9 +31,15 @@ import {
   normalizeHeights,
   routesFor,
   type PageResult,
+  type ViewportDiff,
+  type ViewportName,
 } from './lib/report.ts';
 
-const VIEWPORT = { width: 390, height: 844, deviceScaleFactor: 2 };
+// CSS-pixel scale keeps comparisons deterministic across runners.
+const VIEWPORTS: { name: ViewportName; width: number; height: number }[] = [
+  { name: 'mobile', width: 390, height: 844 },
+  { name: 'desktop', width: 1440, height: 900 },
+];
 const SETTLE_MS = 500;
 const SETTLE_BUDGET_MS = 5000;
 
@@ -91,8 +95,8 @@ async function capture(page: Page, url: string): Promise<Buffer> {
     });
     window.scrollTo(0, 0);
   });
-  // Race-settle fonts and image decode: decode() pends forever for images
-  // that never entered the viewport, and page.evaluate has no timeout.
+  // decode() can pend forever on images that never reached the viewport,
+  // and page.evaluate has no timeout — hence the budget.
   await page.evaluate(
     (budget) =>
       Promise.race([
@@ -111,37 +115,36 @@ async function capture(page: Page, url: string): Promise<Buffer> {
 const routes = routesFor(await projectSlugs());
 const browser = await chromium.launch();
 const context = await browser.newContext({
-  viewport: VIEWPORT,
+  viewport: { width: VIEWPORTS[0].width, height: VIEWPORTS[0].height },
   serviceWorkers: 'block',
   reducedMotion: 'reduce',
 });
 const page = await context.newPage();
-// addInitScript re-runs on every navigation — addStyleTag would only style
-// the first document and leave animations live on later routes.
+// Init script, not addStyleTag: it must re-apply on every navigation.
 await context.addInitScript(() => {
   const style = document.createElement('style');
   style.textContent = '* { animation: none !important; transition: none !important; }';
   document.documentElement.prepend(style);
 });
 
-const results: PageResult[] = [];
-for (const route of routes) {
-  const dir = path.join(args.out, dirFor(route.path));
+async function diffViewport(
+  routePath: string,
+  viewport: (typeof VIEWPORTS)[number],
+): Promise<ViewportDiff> {
+  const dir = path.join(args.out, dirFor(routePath), viewport.name);
   await mkdir(dir, { recursive: true });
-  const entry: PageResult = {
-    name: route.name,
-    path: route.path,
-    urlPath: route.path,
-    dir: dirFor(route.path),
+  await page.setViewportSize({ width: viewport.width, height: viewport.height });
+  const entry: ViewportDiff = {
+    name: viewport.name,
     diffRatio: 0,
     diffPixels: 0,
-    width: 0,
-    height: 0,
+    width: viewport.width,
+    height: viewport.height,
   };
   try {
-    const beforeBuf = await capture(page, args.prod + route.path);
+    const beforeBuf = await capture(page, args.prod + routePath);
     // eslint-disable-next-line no-await-in-loop
-    const afterBuf = await capture(page, args.preview + route.path);
+    const afterBuf = await capture(page, args.preview + routePath);
     let before: PNG = PNG.sync.read(beforeBuf);
     let after: PNG = PNG.sync.read(afterBuf);
     [before, after] = normalizeHeights(before, after);
@@ -159,13 +162,33 @@ for (const route of routes) {
       diffRatio: diffPixels / (before.width * before.height),
     });
     console.log(
-      `${route.path}: ${entry.diffRatio * 100 > 0.1 ? 'CHANGED' : 'identical'} (${diffPixels} px)`,
+      `${routePath} [${viewport.name}]: ${diffPixels} px (${(entry.diffRatio * 100).toFixed(3)}%)`,
     );
   } catch (error) {
     entry.error = String(error);
-    console.error(`${route.path}: capture failed — ${error}`);
+    console.error(`${routePath} [${viewport.name}]: capture failed — ${error}`);
   }
-  results.push(entry);
+  return entry;
+}
+
+const results: PageResult[] = [];
+for (const route of routes) {
+  const viewports: ViewportDiff[] = [];
+  for (const viewport of VIEWPORTS) {
+    // eslint-disable-next-line no-await-in-loop
+    viewports.push(await diffViewport(route.path, viewport));
+  }
+  const worst = viewports.reduce((a, b) => (b.diffRatio > a.diffRatio ? b : a));
+  results.push({
+    name: route.name,
+    path: route.path,
+    urlPath: route.path,
+    dir: dirFor(route.path),
+    diffRatio: worst.diffRatio,
+    diffPixels: worst.diffPixels,
+    viewports,
+    error: viewports.every((v) => v.error) ? viewports.map((v) => v.error).join('; ') : undefined,
+  });
 }
 await browser.close();
 
@@ -183,6 +206,5 @@ await writeFile(path.join(args.out, 'index.html'), generateHtml(contextForReport
 await writeFile(path.join(args.out, 'comment.md'), generateComment(contextForReport));
 await writeFile(path.join(args.out, 'results.json'), JSON.stringify(results, null, 2));
 console.log(`report written to ${args.out}`);
-// A crashed browser leaves its pipe handles holding the event loop open;
-// never let a dead transport wedge the CI step after the report is written.
+// A dead browser's pipes can hold the event loop open.
 process.exit(0);
