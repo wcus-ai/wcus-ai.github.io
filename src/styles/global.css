@@ -607,7 +607,6 @@ h2 {
       'preview content'
       'action action';
     grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr);
-    padding: var(--space-lg);
   }
   .living-map-teaser__action {
     align-items: flex-start;
@@ -620,9 +619,15 @@ h2 {
 @media (min-width: 900px) {
   .living-map-teaser {
     grid-template-areas: 'preview content action';
-    grid-template-columns: minmax(210px, 0.85fr) minmax(0, 1.35fr) minmax(220px, 0.9fr);
+    grid-template-columns: minmax(190px, 210px) minmax(0, 1fr) minmax(220px, 0.9fr);
     gap: var(--space-lg);
     align-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .living-map-teaser__link {
+    white-space: nowrap;
   }
 }
 
