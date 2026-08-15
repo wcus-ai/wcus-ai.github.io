@@ -4,7 +4,7 @@ name: MCP Adapter
 tagline: Connects WordPress abilities to external AI tools over the Model Context Protocol.
 links:
   - { type: repo, label: GitHub, url: 'https://github.com/WordPress/mcp-adapter' }
-feedback_entry: entry.TBD
+feedback_entry: entry.1564689905
 accent_color: '#d85a1f'
 order: 3
 ---

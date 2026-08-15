@@ -4,7 +4,7 @@ name: Agent Skills
 tagline: Portable bundles that teach AI coding assistants how to build WordPress correctly.
 links:
   - { type: repo, label: GitHub, url: 'https://github.com/WordPress/agent-skills' }
-feedback_entry: entry.TBD
+feedback_entry: entry.1564689905
 accent_color: '#5b2a8c'
 order: 5
 ---
