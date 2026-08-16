@@ -12,7 +12,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 3523
+        "height": 3495
       },
       {
         "name": "desktop",
@@ -36,7 +36,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1658
+        "height": 1630
       },
       {
         "name": "desktop",
@@ -60,7 +60,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1689
+        "height": 1661
       },
       {
         "name": "desktop",
@@ -84,7 +84,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1571
+        "height": 1543
       },
       {
         "name": "desktop",
@@ -108,7 +108,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1596
+        "height": 1569
       },
       {
         "name": "desktop",
@@ -132,7 +132,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1592
+        "height": 1564
       },
       {
         "name": "desktop",
@@ -156,7 +156,7 @@
         "diffRatio": 0,
         "diffPixels": 0,
         "width": 390,
-        "height": 1571
+        "height": 1543
       },
       {
         "name": "desktop",
@@ -172,15 +172,15 @@
     "path": "/privacy/",
     "urlPath": "/privacy/",
     "dir": "privacy",
-    "diffRatio": 0.0011076559911024355,
+    "diffRatio": 0.0011165515032261018,
     "diffPixels": 1464,
     "viewports": [
       {
         "name": "mobile",
-        "diffRatio": 0.0011076559911024355,
+        "diffRatio": 0.0011165515032261018,
         "diffPixels": 1464,
         "width": 390,
-        "height": 3389
+        "height": 3362
       },
       {
         "name": "desktop",
