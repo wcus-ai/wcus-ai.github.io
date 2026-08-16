@@ -4,8 +4,8 @@
     "path": "/",
     "urlPath": "/",
     "dir": "home",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.036840687933506554,
+    "diffPixels": 50618,
     "width": 390,
     "height": 3523
   },
@@ -14,8 +14,8 @@
     "path": "/p/abilities-api/",
     "urlPath": "/p/abilities-api/",
     "dir": "p-abilities-api",
-    "diffRatio": 0.001034610745105317,
-    "diffPixels": 669,
+    "diffRatio": 0.0799789675543596,
+    "diffPixels": 51716,
     "width": 390,
     "height": 1658
   },
@@ -24,8 +24,8 @@
     "path": "/p/agent-skills/",
     "urlPath": "/p/agent-skills/",
     "dir": "p-agent-skills",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.07789467292131591,
+    "diffPixels": 51310,
     "width": 390,
     "height": 1689
   },
@@ -34,8 +34,8 @@
     "path": "/p/ai-client/",
     "urlPath": "/p/ai-client/",
     "dir": "p-ai-client",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.0829913985865609,
+    "diffPixels": 50848,
     "width": 390,
     "height": 1571
   },
@@ -44,8 +44,8 @@
     "path": "/p/ai-plugin/",
     "urlPath": "/p/ai-plugin/",
     "dir": "p-ai-plugin",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.08240954951481268,
+    "diffPixels": 51295,
     "width": 390,
     "height": 1596
   },
@@ -54,8 +54,8 @@
     "path": "/p/mcp-adapter/",
     "urlPath": "/p/mcp-adapter/",
     "dir": "p-mcp-adapter",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.08327051926298157,
+    "diffPixels": 51701,
     "width": 390,
     "height": 1592
   },
@@ -64,8 +64,8 @@
     "path": "/p/wp-bench/",
     "urlPath": "/p/wp-bench/",
     "dir": "p-wp-bench",
-    "diffRatio": 0,
-    "diffPixels": 0,
+    "diffRatio": 0.0837519789779497,
+    "diffPixels": 51314,
     "width": 390,
     "height": 1571
   },
@@ -74,8 +74,8 @@
     "path": "/privacy/",
     "urlPath": "/privacy/",
     "dir": "privacy",
-    "diffRatio": 0.0005061624713439408,
-    "diffPixels": 669,
+    "diffRatio": 0.037891821957918154,
+    "diffPixels": 50082,
     "width": 390,
     "height": 3389
   }
