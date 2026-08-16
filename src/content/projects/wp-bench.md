@@ -4,7 +4,6 @@ name: WP Bench
 tagline: Benchmarks how well AI models handle WordPress-specific tasks.
 links:
   - { type: repo, label: GitHub, url: 'https://github.com/WordPress/wp-bench' }
-feedback_entry: entry.TBD
 accent_color: '#a67828'
 order: 6
 ---

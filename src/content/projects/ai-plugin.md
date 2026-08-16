@@ -4,7 +4,6 @@ name: AI Plugin
 tagline: Brings AI-powered features directly into the WordPress admin and editing experience.
 links:
   - { type: repo, label: GitHub, url: 'https://github.com/WordPress/ai' }
-feedback_entry: entry.TBD
 accent_color: '#0e7a6a'
 order: 4
 ---
