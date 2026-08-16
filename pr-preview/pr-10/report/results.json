@@ -34,8 +34,8 @@
     "path": "/p/ai-client/",
     "urlPath": "/p/ai-client/",
     "dir": "p-ai-client",
-    "diffRatio": 0.0829913985865609,
-    "diffPixels": 50848,
+    "diffRatio": 0.0837519789779497,
+    "diffPixels": 51314,
     "width": 390,
     "height": 1571
   },
@@ -74,8 +74,8 @@
     "path": "/privacy/",
     "urlPath": "/privacy/",
     "dir": "privacy",
-    "diffRatio": 0.037891821957918154,
-    "diffPixels": 50082,
+    "diffRatio": 0.038397984429262094,
+    "diffPixels": 50751,
     "width": 390,
     "height": 3389
   }
