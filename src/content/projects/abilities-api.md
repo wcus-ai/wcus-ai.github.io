@@ -4,7 +4,6 @@ name: Abilities API
 tagline: A central registry that lets a WordPress site describe what it can do.
 links:
   - { type: repo, label: Trac, url: 'https://core.trac.wordpress.org/component/abilities-api' }
-feedback_entry: entry.TBD
 accent_color: '#9d246b'
 order: 1
 ---
