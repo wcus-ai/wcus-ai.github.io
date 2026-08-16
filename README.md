@@ -122,13 +122,11 @@ Astro exposes any `PUBLIC_*` var to client code at build time. Vite inlines the 
   e.g., `https://wcus-site.<account>.workers.dev/track`. Required for click
   tracking.
 - `PUBLIC_FEEDBACK_FORM_ID` — Google Form ID for the shared feedback form.
-  Optional until the form exists; when unset, the feedback CTA renders as a
-  non-interactive placeholder.
+  When unset, the feedback CTA renders as a non-interactive placeholder.
 
 For local dev, place these in `.env` (gitignored). For GitHub Pages deploys,
-`PUBLIC_TRACKING_ENDPOINT` is hardcoded in `.github/workflows/deploy.yml`
-because the URL is public (it ends up in the client bundle anyway).
-`PUBLIC_FEEDBACK_FORM_ID` can be added the same way once the form exists.
+both vars are hardcoded in `.github/workflows/deploy.yml` because their values
+are public (they end up in the client bundle anyway).
 
 ### Querying the data
 
@@ -143,9 +141,10 @@ GROUP BY event, project, target
 ORDER BY clicks DESC;
 ```
 
-### Per-project feedback entry IDs
+### Feedback form
 
-Each project's `src/content/projects/*.md` frontmatter has a `feedback_entry`
-field (Google Form's `entry.XYZ` parameter). When the form exists, fill these
-in so the feedback CTA preselects the project on click. Until then, the field
-can stay `entry.TBD` and the feedback CTA renders as a placeholder.
+The feedback CTA (`src/components/ShareFeedback.astro`) links to a shared
+Google Form whose ID is set via the `PUBLIC_FEEDBACK_FORM_ID` env var (see
+`.env`). Clicks are tracked with the `click_feedback` event; the `project`
+field records the page the visitor clicked from (the project slug, or `site`
+for the home/privacy pages).

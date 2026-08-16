@@ -1,21 +1,33 @@
 /**
- * Uses playwright to capture screenshots and compare diffs for visual regression.
+ * Report and comment generation for the visual regression pipeline.
  */
 
 import { PNG } from 'pngjs';
 
-// Less than this the diff is considered identical.
-const DEFAULT_THRESHOLD = 0.005;
+// Cutoff between identical and changed: measured noise is 0 px, and the
+// smallest real change so far (a one-word heading edit) diffs at 0.035%.
+const DEFAULT_THRESHOLD = 0.0002;
+
+export type ViewportName = 'mobile' | 'desktop';
+
+export interface ViewportDiff {
+  name: ViewportName;
+  diffRatio: number;
+  diffPixels: number;
+  width: number;
+  height: number;
+  error?: string;
+}
 
 export interface PageResult {
   name: string;
   path: string;
   urlPath: string;
   dir: string;
+  /** Worst viewport ratio; drives the page-level changed/identical badge. */
   diffRatio: number;
   diffPixels: number;
-  width: number;
-  height: number;
+  viewports: ViewportDiff[];
   error?: string;
 }
 
@@ -84,6 +96,19 @@ export function routesFor(projectSlugs: Iterable<string>): Route[] {
   ];
 }
 
+const VIEWPORT_LABELS: Record<ViewportName, string> = {
+  mobile: '📱 Mobile',
+  desktop: '🖥️ Desktop',
+};
+
+/** Per-viewport cell for the comment table; blank when that viewport failed. */
+function viewportCell(result: PageResult, name: ViewportName): string {
+  const vp = result.viewports.find((v) => v.name === name);
+  if (!vp) return '—';
+  if (vp.error) return '⚠️ capture failed';
+  return `${pct(vp.diffRatio)} ${diffStatus(vp) === 'changed' ? '🔴' : '✅'}`;
+}
+
 /**
  * PR comment body.
  */
@@ -96,25 +121,30 @@ export function generateComment({
   baseUrl,
 }: ReportContext): string {
   const rows = results
-    .map((r) => {
-      const status = diffStatus(r);
-      const badge = status === 'changed' ? '🔴' : '✅';
-      return `| ${r.name} | \`${r.path}\` | ${pct(r.diffRatio)} ${badge} |`;
-    })
+    .map(
+      (r) =>
+        `| ${r.name} | \`${r.path}\` | ${viewportCell(r, 'mobile')} | ${viewportCell(r, 'desktop')} |`,
+    )
     .join('\n');
 
   const changed = results.filter((r) => diffStatus(r) === 'changed');
 
   const sections = changed.map((r) => {
-    const img = (kind: string) => `![${r.name} ${kind}](${baseUrl}/${r.dir}/${kind}.png)`;
-    return [
-      `### 📸 ${r.name} — ${pct(r.diffRatio)} of pixels changed`,
-      '',
-      '| Before (production) | After (this PR) | Diff |',
-      '| --- | --- | --- |',
-      `| ${img('before')} | ${img('after')} | ${img('diff')} |`,
-      '',
-    ].join('\n');
+    const blocks = r.viewports
+      .map((vp) => {
+        const img = (kind: string) =>
+          `![${r.name} ${vp.name} ${kind}](${baseUrl}/${r.dir}/${vp.name}/${kind}.png)`;
+        return [
+          `**${VIEWPORT_LABELS[vp.name]} — ${pct(vp.diffRatio)}**`,
+          '',
+          '| Before (production) | After (this PR) | Diff |',
+          '| --- | --- | --- |',
+          `| ${img('before')} | ${img('after')} | ${img('diff')} |`,
+          '',
+        ].join('\n');
+      })
+      .join('\n');
+    return [`### 📸 ${r.name} — ${pct(r.diffRatio)} of pixels changed`, '', blocks, ''].join('\n');
   });
 
   return `<!-- pr-preview-report -->
@@ -124,8 +154,8 @@ export function generateComment({
 **Full visual report:** ${reportUrl}
 **Tracking is disabled on the preview** — clicks there never reach Analytics Engine.
 
-| Page | Path | Diff |
-| --- | --- | --- |
+| Page | Path | Mobile | Desktop |
+| --- | --- | --- | --- |
 ${rows}
 
 ${changed.length > 0 ? sections.join('\n') : '### ✅ No visual differences detected\n'}
@@ -138,13 +168,21 @@ Built from \`${sha}\` · [workflow run](${runUrl}) · This comment updates autom
 export function generateHtml({ results, previewUrl, runUrl, baseUrl }: ReportContext): string {
   const cards = results
     .map((r) => {
-      const status = diffStatus(r);
-      const color = status === 'changed' ? '#b3261e' : '#1b7f3b';
-      const img = (kind: string) =>
-        `<img src="${baseUrl}/${r.dir}/${kind}.png" alt="${r.name} ${kind}" loading="lazy">`;
-      return `<section class="page">
-  <h2>${r.name} <code>${r.path}</code> <span class="badge" style="color:${color}">${pct(r.diffRatio)} · ${status}</span></h2>
+      const blocks = r.viewports
+        .map((vp) => {
+          const status = diffStatus(vp);
+          const color = status === 'changed' ? '#b3261e' : '#1b7f3b';
+          const img = (kind: string) =>
+            `<img src="${baseUrl}/${r.dir}/${vp.name}/${kind}.png" alt="${r.name} ${vp.name} ${kind}" loading="lazy">`;
+          return `<div class="viewport">
+  <h3>${VIEWPORT_LABELS[vp.name]} <span class="badge" style="color:${color}">${pct(vp.diffRatio)} · ${status}</span></h3>
   <div class="triptych">${img('before')}${img('after')}${img('diff')}</div>
+</div>`;
+        })
+        .join('\n');
+      return `<section class="page">
+  <h2>${r.name} <code>${r.path}</code></h2>
+${blocks}
 </section>`;
     })
     .join('\n');
@@ -158,6 +196,8 @@ export function generateHtml({ results, previewUrl, runUrl, baseUrl }: ReportCon
 <style>
   body { font-family: system-ui, sans-serif; margin: 0 auto; max-width: 1400px; padding: 1rem; }
   h1 a { color: #4a1a3c; }
+  h3 { margin-bottom: .3rem; }
+  .viewport { margin-bottom: 1.2rem; }
   .triptych { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; align-items: start; }
   .triptych img { width: 100%; height: auto; border: 1px solid #ccc; }
   .badge { font-size: .8em; border: 1px solid currentColor; border-radius: 1em; padding: .1em .6em; }
