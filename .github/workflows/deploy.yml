@@ -32,6 +32,7 @@ jobs:
       - run: pnpm build
         env:
           PUBLIC_TRACKING_ENDPOINT: https://wcus-site.wcus-site.workers.dev/track
+          PUBLIC_FEEDBACK_FORM_ID: 1FAIpQLSfs2LeNn7M_L66d57sXLnD1bAh28vgEoQfTx90AYkuFsVT4gA
 
       - name: Publish to gh-pages (preserving PR previews)
         env:

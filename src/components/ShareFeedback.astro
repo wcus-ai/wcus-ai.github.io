@@ -6,11 +6,9 @@
 interface Props {
   projectName?: string;
   projectSlug?: string;
-  // Google Form entry field ID (e.g., "entry.123456") for preselecting.
-  feedbackEntry?: string;
 }
 
-const { projectName, projectSlug, feedbackEntry } = Astro.props;
+const { projectName, projectSlug } = Astro.props;
 
 const title = projectName ? `Got feedback on ${projectName}?` : 'Got feedback about WordPress + AI?';
 const subject = projectName ?? 'AI in WordPress';
@@ -18,16 +16,7 @@ const subject = projectName ?? 'AI in WordPress';
 // Google Form ID.
 const FORM_ID = import.meta.env.PUBLIC_FEEDBACK_FORM_ID;
 
-let feedbackHref: string | undefined;
-if (FORM_ID) {
-  const base = `https://docs.google.com/forms/d/e/${FORM_ID}/viewform`;
-  if (feedbackEntry && projectName) {
-    const params = new URLSearchParams({ [feedbackEntry]: projectName });
-    feedbackHref = `${base}?${params.toString()}`;
-  } else {
-    feedbackHref = base;
-  }
-}
+const feedbackHref = FORM_ID ? `https://docs.google.com/forms/d/e/${FORM_ID}/viewform` : null;
 ---
 
 <section

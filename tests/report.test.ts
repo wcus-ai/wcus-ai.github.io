@@ -6,30 +6,43 @@ import {
   generateHtml,
   normalizeHeights,
   diffStatus,
+  type PageResult,
   type ReportContext,
 } from '../scripts/lib/report.ts';
 
-const results: ReportContext['results'] = [
-  {
+function page(partial: Partial<PageResult>): PageResult {
+  return {
     name: 'Home',
     path: '/',
     urlPath: '/',
     dir: 'home',
     diffRatio: 0,
     diffPixels: 0,
-    width: 780,
-    height: 1688,
-  },
-  {
-    name: 'Abilities API',
-    path: '/p/abilities-api/',
-    urlPath: 'p/abilities-api',
-    dir: 'p-abilities-api',
-    diffRatio: 0.0231,
-    diffPixels: 30123,
-    width: 780,
-    height: 2201,
-  },
+    viewports: [],
+    ...partial,
+  };
+}
+
+const results: PageResult[] = [
+  page({
+    name: 'Home',
+    dir: 'home',
+    viewports: [
+      { name: 'mobile', diffRatio: 0, diffPixels: 0, width: 390, height: 3523 },
+      { name: 'desktop', diffRatio: 0, diffPixels: 0, width: 1440, height: 2000 },
+    ],
+  }),
+  page({
+    name: 'Privacy',
+    path: '/privacy/',
+    dir: 'privacy',
+    diffRatio: 0.0011,
+    diffPixels: 1464,
+    viewports: [
+      { name: 'mobile', diffRatio: 0.0011, diffPixels: 1464, width: 390, height: 3389 },
+      { name: 'desktop', diffRatio: 0.0004, diffPixels: 1150, width: 1440, height: 2000 },
+    ],
+  }),
 ];
 
 const commentContext: ReportContext = {
@@ -41,9 +54,15 @@ const commentContext: ReportContext = {
   baseUrl: 'https://wcus-ai.github.io/pr-preview/pr-99/report',
 };
 
+test('diffStatus default threshold: catches a single-heading-size change on any viewport', () => {
+  assert.equal(diffStatus({ diffRatio: 0.00111 }), 'changed', 'mobile-scale change must flag');
+  assert.equal(diffStatus({ diffRatio: 0.00035 }), 'changed', 'desktop-scale change must flag');
+  assert.equal(diffStatus({ diffRatio: 0 }), 'identical', 'no diff is identical');
+  assert.equal(diffStatus({ diffRatio: 0.0002 }), 'identical');
+});
+
 test('generateComment: carries the stable marker so upsert can find it', () => {
-  const comment = generateComment(commentContext);
-  assert.ok(comment.includes('<!-- pr-preview-report -->'));
+  assert.ok(generateComment(commentContext).includes('<!-- pr-preview-report -->'));
 });
 
 test('generateComment: links the preview site and the full report', () => {
@@ -53,44 +72,40 @@ test('generateComment: links the preview site and the full report', () => {
 });
 
 test('generateComment: notes that tracking is disabled on the preview', () => {
-  const comment = generateComment(commentContext);
-  assert.ok(/tracking (is )?disabled/i.test(comment));
+  assert.ok(/tracking (is )?disabled/i.test(generateComment(commentContext)));
 });
 
-test('generateComment: summarizes every page with a diff ratio', () => {
+test('generateComment: table shows a per-viewport column for mobile and desktop', () => {
   const comment = generateComment(commentContext);
-  assert.ok(comment.includes('Home'));
-  assert.ok(comment.includes('Abilities API'));
-  assert.ok(comment.includes('0.00%'));
-  assert.ok(comment.includes('2.31%'));
+  assert.ok(comment.includes('| Page | Path | Mobile | Desktop |'));
+  assert.ok(comment.includes('0.11%'));
+  assert.ok(comment.includes('0.04%'));
 });
 
-test('generateComment: embeds before/after/diff images for changed pages only', () => {
+test('generateComment: embeds before/after/diff per viewport for changed pages only', () => {
   const comment = generateComment(commentContext);
-  assert.ok(comment.includes('p-abilities-api/before.png'));
-  assert.ok(comment.includes('p-abilities-api/after.png'));
-  assert.ok(comment.includes('p-abilities-api/diff.png'));
-  assert.ok(!comment.includes('home/before.png'), 'identical pages must not embed images');
+  for (const vp of ['mobile', 'desktop']) {
+    assert.ok(comment.includes(`privacy/${vp}/before.png`), `${vp} before image`);
+    assert.ok(comment.includes(`privacy/${vp}/after.png`), `${vp} after image`);
+    assert.ok(comment.includes(`privacy/${vp}/diff.png`), `${vp} diff image`);
+  }
+  assert.ok(!comment.includes('home/mobile/before.png'), 'identical pages must not embed images');
 });
 
 test('generateComment: identifies the commit the preview was built from', () => {
-  const comment = generateComment(commentContext);
-  assert.ok(comment.includes('abc1234'));
+  assert.ok(generateComment(commentContext).includes('abc1234'));
 });
 
-test('generateHtml: renders before/after/diff for every page', () => {
+test('generateHtml: renders both viewports for every page', () => {
   const html = generateHtml(commentContext);
-  assert.ok(html.includes('home/before.png'));
-  assert.ok(html.includes('home/after.png'));
-  assert.ok(html.includes('home/diff.png'));
-  assert.ok(html.includes('p-abilities-api/diff.png'));
-  assert.ok(html.includes('2.31%'));
-});
-
-test('diffStatus: classifies pages against the threshold', () => {
-  assert.equal(diffStatus({ diffRatio: 0 }, { threshold: 0.001 }), 'identical');
-  assert.equal(diffStatus({ diffRatio: 0.0005 }, { threshold: 0.001 }), 'identical');
-  assert.equal(diffStatus({ diffRatio: 0.0231 }, { threshold: 0.001 }), 'changed');
+  for (const dir of ['home', 'privacy']) {
+    for (const vp of ['mobile', 'desktop']) {
+      assert.ok(html.includes(`${dir}/${vp}/before.png`), `${dir}/${vp} before`);
+      assert.ok(html.includes(`${dir}/${vp}/diff.png`), `${dir}/${vp} diff`);
+    }
+  }
+  assert.ok(html.includes('0.11%'));
+  assert.ok(/desktop/i.test(html));
 });
 
 test('normalizeHeights: pads the shorter PNG with white to match heights', () => {
@@ -101,12 +116,10 @@ test('normalizeHeights: pads the shorter PNG with white to match heights', () =>
   const [a, b] = normalizeHeights(short, tall);
   assert.equal(a.height, 4);
   assert.equal(b.height, 4);
-  // padding rows in `a` must be white (255,255,255,255)
   const padStart = a.width * 2 * 4;
   assert.equal(a.data[padStart], 255);
   assert.equal(a.data[padStart + 1], 255);
   assert.equal(a.data[padStart + 3], 255);
-  // original content preserved
   assert.equal(a.data[0], 255);
   assert.equal(b.data[0], 0);
 });
