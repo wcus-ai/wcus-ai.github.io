@@ -49,6 +49,9 @@ jobs:
       # The tracking endpoint env var is deliberately never set here, to keep preview clicks from poluting the dataset.
       - name: Build preview site
         run: pnpm exec astro build --base "$PREVIEW_BASE/"
+        env:
+          PUBLIC_FEEDBACK_FORM_ID: 1FAIpQLSfs2LeNn7M_L66d57sXLnD1bAh28vgEoQfTx90AYkuFsVT4gA
+
 
       - name: Install Playwright browser
         run: pnpm exec playwright install --with-deps chromium
