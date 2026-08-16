@@ -7,20 +7,20 @@
 
 | Page | Path | Diff |
 | --- | --- | --- |
-| Home | `/` | 0.05% ✅ |
+| Home | `/` | 0.00% ✅ |
 | Abilities Api | `/p/abilities-api/` | 0.00% ✅ |
 | Agent Skills | `/p/agent-skills/` | 0.00% ✅ |
 | Ai Client | `/p/ai-client/` | 0.00% ✅ |
 | Ai Plugin | `/p/ai-plugin/` | 0.00% ✅ |
-| Mcp Adapter | `/p/mcp-adapter/` | 0.11% ✅ |
-| Wp Bench | `/p/wp-bench/` | 0.11% ✅ |
-| Privacy | `/privacy/` | 0.90% 🔴 |
+| Mcp Adapter | `/p/mcp-adapter/` | 0.00% ✅ |
+| Wp Bench | `/p/wp-bench/` | 0.00% ✅ |
+| Privacy | `/privacy/` | 0.91% 🔴 |
 
-### 📸 Privacy — 0.90% of pixels changed
+### 📸 Privacy — 0.91% of pixels changed
 
 | Before (production) | After (this PR) | Diff |
 | --- | --- | --- |
 | ![Privacy before](https://wcus-ai.github.io/pr-preview/pr-11/report/privacy/before.png) | ![Privacy after](https://wcus-ai.github.io/pr-preview/pr-11/report/privacy/after.png) | ![Privacy diff](https://wcus-ai.github.io/pr-preview/pr-11/report/privacy/diff.png) |
 
 
-Built from `b2475955f0cf61f8796e8f53a16543a772c885ef` · [workflow run](https://github.com/wcus-ai/wcus-ai.github.io/actions/runs/31876988228) · This comment updates automatically on every push.
+Built from `98fdb3ff2e24a1292a0694bff9125be8b9757e1c` · [workflow run](https://github.com/wcus-ai/wcus-ai.github.io/actions/runs/31929594351) · This comment updates automatically on every push.

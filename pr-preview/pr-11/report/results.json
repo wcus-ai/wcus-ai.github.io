@@ -4,10 +4,10 @@
     "path": "/",
     "urlPath": "/",
     "dir": "home",
-    "diffRatio": 0.00048691019454573245,
-    "diffPixels": 669,
+    "diffRatio": 0,
+    "diffPixels": 0,
     "width": 390,
-    "height": 3523
+    "height": 3495
   },
   {
     "name": "Abilities Api",
@@ -17,7 +17,7 @@
     "diffRatio": 0,
     "diffPixels": 0,
     "width": 390,
-    "height": 1658
+    "height": 1630
   },
   {
     "name": "Agent Skills",
@@ -27,7 +27,7 @@
     "diffRatio": 0,
     "diffPixels": 0,
     "width": 390,
-    "height": 1689
+    "height": 1661
   },
   {
     "name": "Ai Client",
@@ -37,7 +37,7 @@
     "diffRatio": 0,
     "diffPixels": 0,
     "width": 390,
-    "height": 1571
+    "height": 1543
   },
   {
     "name": "Ai Plugin",
@@ -47,36 +47,36 @@
     "diffRatio": 0,
     "diffPixels": 0,
     "width": 390,
-    "height": 1596
+    "height": 1569
   },
   {
     "name": "Mcp Adapter",
     "path": "/p/mcp-adapter/",
     "urlPath": "/p/mcp-adapter/",
     "dir": "p-mcp-adapter",
-    "diffRatio": 0.0010775028991109393,
-    "diffPixels": 669,
+    "diffRatio": 0,
+    "diffPixels": 0,
     "width": 390,
-    "height": 1592
+    "height": 1564
   },
   {
     "name": "Wp Bench",
     "path": "/p/wp-bench/",
     "urlPath": "/p/wp-bench/",
     "dir": "p-wp-bench",
-    "diffRatio": 0.0010919061842040835,
-    "diffPixels": 669,
+    "diffRatio": 0,
+    "diffPixels": 0,
     "width": 390,
-    "height": 1571
+    "height": 1543
   },
   {
     "name": "Privacy",
     "path": "/privacy/",
     "urlPath": "/privacy/",
     "dir": "privacy",
-    "diffRatio": 0.008990625780239235,
+    "diffRatio": 0.009062828902210223,
     "diffPixels": 11883,
     "width": 390,
-    "height": 3389
+    "height": 3362
   }
 ]
