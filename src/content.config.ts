@@ -19,7 +19,6 @@ const projects = defineCollection({
         }),
       )
       .min(1),
-    feedback_entry: z.string(), // Google Form entry.XYZ field ID
     accent_color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
     order: z.number().int().positive(),
   }),

@@ -147,10 +147,3 @@ Google Form whose ID is set via the `PUBLIC_FEEDBACK_FORM_ID` env var (see
 `.env`). Clicks are tracked with the `click_feedback` event; the `project`
 field records the page the visitor clicked from (the project slug, or `site`
 for the home/privacy pages).
-
-The form includes a "Which project is this about?" checkbox question
-(`entry.1564689905`). Each project's `src/content/projects/*.md` frontmatter
-sets `feedback_entry` to that field ID, so when a visitor clicks the feedback
-CTA from a project page the matching project checkbox is pre-selected
-automatically. The home and privacy pages link to the plain form URL without
-a pre-selection.

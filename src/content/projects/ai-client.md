@@ -9,7 +9,6 @@ links:
       label: Handbook,
       url: 'https://make.wordpress.org/core/2026/03/24/introducing-the-ai-client-in-wordpress-7-0/',
     }
-feedback_entry: entry.1564689905
 accent_color: '#3f3dc4'
 order: 2
 ---

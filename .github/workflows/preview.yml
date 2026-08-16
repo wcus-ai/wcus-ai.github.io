@@ -52,7 +52,6 @@ jobs:
         env:
           PUBLIC_FEEDBACK_FORM_ID: 1FAIpQLSfs2LeNn7M_L66d57sXLnD1bAh28vgEoQfTx90AYkuFsVT4gA
 
-
       - name: Install Playwright browser
         run: pnpm exec playwright install --with-deps chromium
 
