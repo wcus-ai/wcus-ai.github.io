@@ -188,6 +188,9 @@ test('native route builds a complete semantic first paint', async () => {
     const qrImages = html.match(/<img[^>]*data-map-qr[^>]*>/g) ?? [];
     assert.equal(qrImages.length, 7);
     assert.ok(qrImages.every((image) => /src="\/_astro\/[^"/]+\.[^"/]+\.svg"/.test(image)));
+    const qrLinks = html.match(/<a[^>]*class="core-ai-map__qr-url"[^>]*>/g) ?? [];
+    assert.equal(qrLinks.length, 7);
+    assert.ok(qrLinks.every((link) => /href="https:\/\//.test(link)));
 
     assert.match(html, /aria-live="polite"/);
     assert.match(html, /data-map-panel="abilities"[^>]*\bhidden\b/);

@@ -171,6 +171,11 @@ test('derived view makes only flow participants operable and browse enables ever
   assert.equal(flowView.cards.plugin.active, true);
   assert.equal(flowView.cards.client.active, true);
   assert.equal(flowView.cards['provider-plugin'].active, true);
+  assert.equal(
+    flowView.cards['provider-plugin'].transform,
+    'translate(-88px, -186px)',
+    'provider plugin uses its authored flow placement',
+  );
   assert.equal(flowView.cards.connectors.active, true, 'sidecar remains a participant');
   assert.equal(flowView.cards.abilities.disabled, true);
   assert.equal(flowView.cards.abilities.dimmed, true);

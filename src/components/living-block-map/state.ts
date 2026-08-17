@@ -300,6 +300,10 @@ const cardTransform = (
   }
 
   if (!layout) return '';
+  if (cardId === 'provider-plugin' && layout.providerPlugin) {
+    const [x, y] = layout.providerPlugin.position;
+    return `translate(${x - neutral[0]}px, ${y - neutral[1]}px)`;
+  }
   const place = layout.place[cardId];
   if (place) return `translate(${place[0] - neutral[0]}px, ${place[1] - neutral[1]}px)`;
   const slot = layout.park.indexOf(cardId);
