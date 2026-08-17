@@ -93,6 +93,27 @@ test('preview build: Living Block Map assets respect the base while canonical st
     'every QR image must use the preview base',
   );
 
+  const stylesheetHrefs = [...map.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const compiledCss = (
+    await Promise.all(
+      stylesheetHrefs.map((href) =>
+        readFile(new URL(`_astro/${href.split('/').at(-1)}`, dist), 'utf8'),
+      ),
+    )
+  ).join('\n');
+  const builtMapFonts = [
+    ...compiledCss.matchAll(
+      /url\(([^)]*(?:inter-latin-wght-normal|eb-garamond-latin-wght-normal|ibm-plex-mono-latin-(?:400|500|600|700)-normal)\.[A-Za-z0-9_-]+\.woff2)\)/g,
+    ),
+  ].map((match) => match[1].replaceAll('"', ''));
+  assert.equal(builtMapFonts.length, 6);
+  assert.ok(
+    builtMapFonts.every((url) => url.startsWith('/pr-preview/pr-99/_astro/')),
+    'compiled map fonts must use the preview base',
+  );
+
   for (const asset of map.matchAll(/(?:href|src)="([^"]+\.(?:css|js))"/g)) {
     assert.ok(
       asset[1].startsWith('/pr-preview/pr-99/_astro/'),

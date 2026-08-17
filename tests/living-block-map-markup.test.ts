@@ -9,6 +9,7 @@ import { withAstroBuildLock } from './helpers/astro-build-lock.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const astro = join(root, 'node_modules', 'astro', 'bin', 'astro.mjs');
+const mapCssPath = join(root, 'src', 'components', 'living-block-map', 'living-block-map.css');
 
 test('native route builds a complete semantic first paint', async () => {
   const outDir = await mkdtemp(join(tmpdir(), 'wcus-living-map-route-'));
@@ -23,6 +24,7 @@ test('native route builds a complete semantic first paint', async () => {
     );
 
     const html = await readFile(join(outDir, 'living-block-map', 'index.html'), 'utf8');
+    const sourceCss = await readFile(mapCssPath, 'utf8');
 
     assert.match(
       html,
@@ -37,6 +39,69 @@ test('native route builds a complete semantic first paint', async () => {
     assert.equal(fontPreloads.length, 6);
     assert.ok(fontPreloads.every((link) => /href="\/_astro\/[^"/]+\.woff2"/.test(link)));
     assert.ok(fontPreloads.every((link) => link.includes('crossorigin')));
+
+    const stylesheetHrefs = [...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+    const stylesheets = await Promise.all(
+      stylesheetHrefs.map((href) => {
+        const filename = href.split('/').at(-1);
+        assert.ok(filename, `stylesheet href must end in a filename: ${href}`);
+        return readFile(join(outDir, '_astro', filename), 'utf8');
+      }),
+    );
+    const compiledCss = stylesheets.join('\n');
+    const foundationPosition = compiledCss.search(/--color-bg:\s*#faf6f4/);
+    const mapPosition = compiledCss.search(/--core-ai-blue:\s*#3858e9/);
+    assert.ok(foundationPosition >= 0, 'compiled route must contain the site foundation');
+    assert.ok(mapPosition > foundationPosition, 'site foundation must load before map styles');
+
+    const builtMapFonts = [
+      ...compiledCss.matchAll(
+        /url\(([^)]*(?:inter-latin-wght-normal|eb-garamond-latin-wght-normal|ibm-plex-mono-latin-(?:400|500|600|700)-normal)\.[A-Za-z0-9_-]+\.woff2)\)/g,
+      ),
+    ].map((match) => match[1].replaceAll('"', ''));
+    assert.equal(builtMapFonts.length, 6);
+    assert.ok(builtMapFonts.every((url) => url.startsWith('/_astro/')));
+
+    assert.equal((sourceCss.match(/@font-face/g) ?? []).length, 6);
+    for (const fontContract of [
+      /font-family: Core AI Inter;[\s\S]*?font-weight: 100 900;/,
+      /font-family: Core AI EB Garamond;[\s\S]*?font-weight: 400 800;/,
+      /font-family: Core AI IBM Plex Mono;[\s\S]*?font-weight: 400;/,
+      /font-family: Core AI IBM Plex Mono;[\s\S]*?font-weight: 500;/,
+      /font-family: Core AI IBM Plex Mono;[\s\S]*?font-weight: 600;/,
+      /font-family: Core AI IBM Plex Mono;[\s\S]*?font-weight: 700;/,
+    ]) {
+      assert.match(sourceCss, fontContract);
+    }
+    for (const neutralizer of [
+      /\.core-ai-map :where\(h1, h2, h3, h4, h5, h6, p\)/,
+      /\.core-ai-map button/,
+      /\.core-ai-map img/,
+      /\.core-ai-map a\s*\{/,
+    ]) {
+      assert.match(sourceCss, neutralizer);
+    }
+    assert.match(sourceCss, /--cai-scale: 1;/);
+    assert.match(
+      sourceCss,
+      /\.core-ai-map__stage\s*\{[\s\S]*?height: 1024px;[\s\S]*?scale\(var\(--cai-scale\)\)[\s\S]*?width: 1366px;/,
+    );
+    assert.ok(!/100d?vw/.test(sourceCss), 'map sizing must not rely on viewport-width units');
+    assert.ok(!sourceCss.includes('.core-ai-map__offline'));
+    assert.ok(!/\/wp-content\/|wcus\.hperkins\.com|\/_astro\//.test(sourceCss));
+    assert.match(sourceCss, /@media \(prefers-contrast: more\)/);
+    const reducedMotion = sourceCss.slice(sourceCss.indexOf('@media (prefers-reduced-motion'));
+    for (const selector of [
+      '.core-ai-map__flow path',
+      '.core-ai-map__preview-flow path',
+      '.core-ai-map__spark',
+      '.core-ai-map__token',
+    ]) {
+      assert.ok(reducedMotion.includes(selector), `reduced motion must cover ${selector}`);
+    }
+    assert.match(reducedMotion, /animation: none !important;/);
 
     assert.ok(!html.includes('data-wp-'));
     assert.ok(!html.includes('<header class="site-header"'));
