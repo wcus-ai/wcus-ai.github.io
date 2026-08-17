@@ -1,0 +1,9 @@
+{
+	"abilities": "https://developer.wordpress.org/apis/abilities-api/",
+	"client": "https://developer.wordpress.org/reference/functions/wp_ai_client_prompt/",
+	"connectors": "https://make.wordpress.org/core/2026/03/18/introducing-the-connectors-api-in-wordpress-7-0/",
+	"plugin": "https://wordpress.org/plugins/ai/",
+	"mcp": "https://github.com/WordPress/mcp-adapter",
+	"bench": "https://github.com/WordPress/wp-bench",
+	"skills": "https://github.com/WordPress/agent-skills"
+}

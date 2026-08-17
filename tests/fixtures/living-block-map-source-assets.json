@@ -1,0 +1,96 @@
+{
+  "sourceCommit": "c24af9f473fcc7be97715da2c99f3d6b9e81c533",
+  "compiledCssSha256": "4943b52f1e88ddd060dfd71431045aa5d7384c9c8839dfa3a757b2d2b0cfc094",
+  "files": [
+    {
+      "source": "assets/fonts/inter-latin-wght-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/inter-latin-wght-normal.woff2",
+      "sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62"
+    },
+    {
+      "source": "assets/fonts/eb-garamond-latin-wght-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/eb-garamond-latin-wght-normal.woff2",
+      "sha256": "88603384163d301aebd5bd769832a8bfe3c9004ec24178417b9817f0ad32c63b"
+    },
+    {
+      "source": "assets/fonts/ibm-plex-mono-latin-400-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/ibm-plex-mono-latin-400-normal.woff2",
+      "sha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7"
+    },
+    {
+      "source": "assets/fonts/ibm-plex-mono-latin-500-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/ibm-plex-mono-latin-500-normal.woff2",
+      "sha256": "01d285447409c8a588692162439a038b8cbd7871309ee20267b0d2d91c6e8e22"
+    },
+    {
+      "source": "assets/fonts/ibm-plex-mono-latin-600-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/ibm-plex-mono-latin-600-normal.woff2",
+      "sha256": "0d1f0b8d0722224e32e9f28261bdc86c79115be73444ae5eceb73976a1bcdf83"
+    },
+    {
+      "source": "assets/fonts/ibm-plex-mono-latin-700-normal.woff2",
+      "destination": "src/assets/living-block-map/fonts/ibm-plex-mono-latin-700-normal.woff2",
+      "sha256": "4f84d86cfd060f4ded334358ff8a4c81d4db2ed5addd568359d693f44a87765a"
+    },
+    {
+      "source": "assets/fonts/LICENSE-INTER.txt",
+      "destination": "public/licenses/living-block-map/LICENSE-INTER.txt",
+      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
+    },
+    {
+      "source": "assets/fonts/LICENSE-EB-GARAMOND.txt",
+      "destination": "public/licenses/living-block-map/LICENSE-EB-GARAMOND.txt",
+      "sha256": "f03c8eda63076cd52317dcd40aa04db8472d4cb592dfaafa385129dfdafc7f9c"
+    },
+    {
+      "source": "assets/fonts/LICENSE-IBM-PLEX-MONO.txt",
+      "destination": "public/licenses/living-block-map/LICENSE-IBM-PLEX-MONO.txt",
+      "sha256": "23b0a9d0c6d3f140a0b77e483c5cfa6bba574325ef5cb189ed9f2fec4884533f"
+    },
+    {
+      "source": "assets/qr/abilities.svg",
+      "destination": "src/assets/living-block-map/qr/abilities.svg",
+      "sha256": "e646b1318f130ff9335dabbf5b1af56e35d4f6018ebe6064658a584531cc542f"
+    },
+    {
+      "source": "assets/qr/bench.svg",
+      "destination": "src/assets/living-block-map/qr/bench.svg",
+      "sha256": "a05af346631534ac07964b89b63de1c8f7dc289b7286bc8ada40cbec356b7c69"
+    },
+    {
+      "source": "assets/qr/client.svg",
+      "destination": "src/assets/living-block-map/qr/client.svg",
+      "sha256": "03d67a730bff24be85624587d6bd95a0bd224ab6324b3018688e41b298b9a27d"
+    },
+    {
+      "source": "assets/qr/connectors.svg",
+      "destination": "src/assets/living-block-map/qr/connectors.svg",
+      "sha256": "cc7e145296f276b7697ccf3e810989efb666b60ddc4560d2890a95b2899e0afa"
+    },
+    {
+      "source": "assets/qr/mcp.svg",
+      "destination": "src/assets/living-block-map/qr/mcp.svg",
+      "sha256": "6d438ac925dfd982cb29fd0f27e4f7bbdaa6ee3cdae16daebf9faac91b6a2876"
+    },
+    {
+      "source": "assets/qr/plugin.svg",
+      "destination": "src/assets/living-block-map/qr/plugin.svg",
+      "sha256": "0f7ff01c098bf0d8d0c9ba7b1bfccd511c61402289ee5cfffb4f5f8419bb4753"
+    },
+    {
+      "source": "assets/qr/skills.svg",
+      "destination": "src/assets/living-block-map/qr/skills.svg",
+      "sha256": "76929fe4697a098e3e3079d818438a3b03c2269ae5ba07ed54fc4bf38535dc76"
+    },
+    {
+      "source": "assets/qr/manifest.json",
+      "destination": "src/assets/living-block-map/qr/manifest.json",
+      "sha256": "2e4b62ff8df3901d41218d01dd7e1fb6836c5a947446803ba8bf4a107d3064e4"
+    },
+    {
+      "source": "assets/icon.svg",
+      "destination": "src/assets/living-block-map/icon.svg",
+      "sha256": "1a66dc174623e24ef23076dbe68d4d495794f92306c81d3aedd4923fbf171cf3"
+    }
+  ]
+}

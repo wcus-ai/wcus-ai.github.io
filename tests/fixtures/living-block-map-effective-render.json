@@ -1,0 +1,1208 @@
+{
+  "sourceVersion": "3.2.3",
+  "runtimeOverrides": {
+    "offlineEnabled": false
+  },
+  "content": {
+    "title": "What is WordPress Core AI?",
+    "eyebrow": "WordPress Core AI",
+    "reviewedDate": "Reviewed 14 Aug 2026",
+    "intro": [
+      "WordPress Core AI is a set of open building blocks that let WordPress use AI services and work with outside assistants—without tying WordPress to one provider.",
+      "Explore four flows to see what happens inside WordPress, what happens outside it, and how the projects connect."
+    ],
+    "labels": {
+      "railEmptyLabel": "Choose a flow",
+      "railActiveLabel": "Choose another flow",
+      "browseLabel": "Browse all components",
+      "browseDescription": "Every component on one canvas, with no flow selected.",
+      "takeawayHeading": "What this flow shows",
+      "roleHeading": "Its role in this flow",
+      "lessonHeading": "Why that matters",
+      "definitionHeading": "What it is",
+      "technicalHeading": "Under the hood",
+      "exploreHeading": "Keep exploring",
+      "tapCue": "Tap for its role",
+      "receivesLabel": "Receives",
+      "doesLabel": "Does",
+      "returnsLabel": "Passes on"
+    },
+    "guidance": {
+      "attract": "Choose a flow to begin.",
+      "flow": "Follow %1$s. Highlighted components take part in this flow. Tap one to learn what it contributes.",
+      "inspect": "You are viewing this component’s role in “%1$s.”",
+      "browse": "Tap any component to learn what it is and where it belongs.",
+      "cardAction": "%1$s — view its role in “%2$s.”",
+      "cardActionStep": "Step %1$s: %2$s — view its role in “%3$s.”",
+      "cardInactive": "%1$s — not part of this flow.",
+      "cardActionBrowse": "%1$s — open its details."
+    },
+    "announcements": {
+      "flowSelected": "%1$s.",
+      "flowReplayed": "%1$s replayed.",
+      "takeaway": "%1$s: %2$s",
+      "browse": "Every component is on the canvas with no flow selected. Tap any component to learn what it is and where it belongs.",
+      "nextSuggestion": "The AI Plugin shows the next suggestion.",
+      "detailsInFlow": "%1$s details open in %2$s.",
+      "detailsBrowse": "%1$s details open."
+    },
+    "blocks": [
+      {
+        "id": "plugin",
+        "name": "AI Plugin",
+        "tagline": "Turn the foundations into useful features",
+        "badge": "Experimental reference plugin"
+      },
+      {
+        "id": "client",
+        "name": "AI Client",
+        "tagline": "Request AI through one common interface",
+        "badge": "Core API · 7.0"
+      },
+      {
+        "id": "connectors",
+        "name": "Connectors",
+        "tagline": "Configure provider plugins and credentials",
+        "badge": "Core API · 7.0"
+      },
+      {
+        "id": "mcp",
+        "name": "MCP Adapter",
+        "tagline": "Let authorized assistants work with WordPress",
+        "badge": "WordPress plugin · not in Core"
+      },
+      {
+        "id": "abilities",
+        "name": "Abilities API",
+        "tagline": "Describe what WordPress can do",
+        "badge": "Core API · 6.9"
+      },
+      {
+        "id": "bench",
+        "name": "WP-Bench",
+        "tagline": "See whether the code an agent writes actually runs",
+        "badge": "Early benchmark"
+      }
+    ],
+    "actors": [
+      {
+        "id": "assistant",
+        "name": "AI assistant",
+        "tagline": "Speaks MCP",
+        "badge": "Not WordPress"
+      },
+      {
+        "id": "skills",
+        "name": "Agent Skills",
+        "tagline": "Instruction bundles",
+        "badge": "Guidance"
+      },
+      {
+        "id": "agent",
+        "name": "Coding agent",
+        "tagline": "Writes the code",
+        "badge": "Not WordPress"
+      },
+      {
+        "id": "task",
+        "name": "A WordPress task",
+        "tagline": "Plugin or theme work",
+        "badge": "Not WordPress"
+      },
+      {
+        "id": "provider",
+        "name": "External AI service",
+        "tagline": "Selected from site configuration",
+        "badge": "Not WordPress"
+      }
+    ],
+    "flows": [
+      {
+        "id": "uses-ai",
+        "title": "WordPress uses AI",
+        "copy": "A plugin asks the AI Client for a capability. The Client routes through a configured provider plugin to an external AI service; Connectors supplies discovery, configuration, and credentials beside the request path.",
+        "situation": "A feature inside WordPress needs an AI-generated result.",
+        "takeaway": "A WordPress feature uses a common AI interface instead of integrating directly with every provider. Provider configuration supports the request, while the AI service remains outside WordPress.",
+        "outcome": "WordPress requests an AI result"
+      },
+      {
+        "id": "uses-wp",
+        "title": "AI uses WordPress",
+        "copy": "An authorized assistant calls in through the MCP Adapter, which translates the call into a WordPress ability. Permission still belongs to WordPress.",
+        "situation": "An outside assistant asks WordPress to perform an allowed action.",
+        "takeaway": "The assistant does not bypass WordPress. The MCP Adapter translates the request, and the selected ability still applies WordPress permissions.",
+        "outcome": "An assistant requests a WordPress action"
+      },
+      {
+        "id": "learns",
+        "title": "An agent learns WordPress",
+        "copy": "Agent Skills attaches current WordPress guidance to a coding agent, which then starts the task. All of this happens outside the site — nothing inside WordPress runs.",
+        "situation": "A coding agent receives WordPress-specific guidance before writing code.",
+        "takeaway": "Agent Skills changes the information available to the coding agent. Nothing runs on the WordPress site during this flow.",
+        "outcome": "A coding agent receives WordPress guidance"
+      },
+      {
+        "id": "tests",
+        "title": "WordPress tests the result",
+        "copy": "WP-Bench runs what the agent produced inside a sandboxed WordPress, and WordPress itself decides whether it passed. Evidence, not vibes.",
+        "situation": "Code written by an agent needs to be tested against real WordPress behavior.",
+        "takeaway": "The generated code runs in a disposable WordPress environment and is judged by WordPress tests, not by another model's opinion.",
+        "outcome": "WordPress evaluates generated code"
+      }
+    ],
+    "panels": [
+      {
+        "id": "abilities",
+        "badge": "Core API · 6.9",
+        "title": "Abilities API",
+        "lede": "Abilities are the list of things this site can do. Each one declares its inputs, its outputs, who is allowed to run it, and what happens when it runs.",
+        "roles": {
+          "uses-wp": {
+            "receives": "The translated request, naming the WordPress action and supplying its inputs.",
+            "does": "Validates the inputs, checks whether the current user is allowed to perform the action, then runs its registered callback.",
+            "returns": "A typed result, or a refusal.",
+            "lesson": "Connecting an outside assistant does not give it unrestricted access. WordPress still controls execution."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "Input"
+          },
+          {
+            "label": "Permission"
+          },
+          {
+            "label": "Run"
+          },
+          {
+            "label": "Typed output",
+            "accent": true
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "The PHP API landed in WordPress 6.9. WordPress 7.0 added a client-side counterpart for editor actions such as navigation and block insertion. A public default for client exposure, filtering in wp_get_abilities(), and filters around execution arrive in WordPress 7.1 on August 19, 2026. This exhibit runs a 7.1 release candidate, so the Anatomy panel describes the version you are looking at."
+          }
+        ],
+        "href": "https://developer.wordpress.org/apis/abilities-api/",
+        "linkLabel": "developer.wordpress.org/apis/abilities-api",
+        "qr": "qr/abilities.svg"
+      },
+      {
+        "id": "client",
+        "badge": "Core API · 7.0",
+        "title": "AI Client",
+        "lede": "A plugin asks for a capability and the kind of result it needs. The AI Client routes through an installed provider plugin to a compatible external service; Connectors supplies that plugin’s configuration and credentials.",
+        "roles": {
+          "uses-ai": {
+            "receives": "A capability request from a WordPress feature.",
+            "does": "Sends the request through a compatible configured provider plugin.",
+            "returns": "The provider’s response in a consistent WordPress format.",
+            "lesson": "WordPress features can request AI capabilities without integrating every external provider separately."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "Text, image, speech or video request"
+          },
+          {
+            "label": "AI Client",
+            "accent": true
+          },
+          {
+            "label": "Normalized result"
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "A WordPress wrapper around the provider-agnostic PHP AI Client, which handles provider communication, model selection, and normalized results. Consuming plugins never integrate a provider directly. There is a JavaScript prompt API too, but it is administrator-gated and can send any prompt to any configured provider — so for editor features, register a REST endpoint scoped to that one feature. Check support before showing any AI interface — the checks are free, and a 7.0 site may have no provider configured at all."
+          },
+          {
+            "heading": "Calling back into WordPress",
+            "text": "A request can name registered abilities the model is allowed to call. When it calls one, WordPress runs that ability — permission check and all — and folds the result back into the same request. This is where the two halves of the map meet: WordPress asking AI for something can end with WordPress doing the work itself."
+          }
+        ],
+        "href": "https://developer.wordpress.org/reference/functions/wp_ai_client_prompt/",
+        "linkLabel": "developer.wordpress.org/reference/functions/wp_ai_client_prompt",
+        "qr": "qr/client.svg"
+      },
+      {
+        "id": "connectors",
+        "badge": "Core API · 7.0",
+        "title": "Connectors",
+        "lede": "Where a site owner installs provider plugins, supplies credentials, and sees connection status — one setup shared by every plugin that needs it. It supports the request path; it is not the request executor.",
+        "roles": {
+          "uses-ai": {
+            "receives": "Nothing in the request path — it sits beside it.",
+            "does": "Provides provider-plugin installation, credentials, configuration, and connection status beside the active request path.",
+            "returns": "The provider configuration the AI Client uses when it chooses a route.",
+            "lesson": "Provider setup is centralized instead of being rebuilt inside every AI-powered feature. Connectors supports the path; it does not execute the request."
+          }
+        },
+        "connectHeading": "Connection states",
+        "connectLayout": "grid",
+        "connect": [
+          {
+            "label": "Available"
+          },
+          {
+            "label": "Needs plugin"
+          },
+          {
+            "label": "Needs credentials",
+            "tone": "warning"
+          },
+          {
+            "label": "Connected",
+            "accent": true
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Providers",
+            "text": "Provider plugins register with the AI Client. Connectors auto-discovers them, and one button installs and activates the plugin before asking for its key. Keys are read from an environment variable first, then a wp-config constant, then the database — where they sit unencrypted by default. The map stays vendor-neutral: no provider owns a position on the canvas."
+          },
+          {
+            "heading": "Under the hood",
+            "text": "Introduced in WordPress 7.0 as a standardized framework for registering and managing connections to external services. AI providers are the first users of it, not the only intended ones — the framework is built for outside connections generally."
+          }
+        ],
+        "href": "https://make.wordpress.org/core/2026/03/18/introducing-the-connectors-api-in-wordpress-7-0/",
+        "linkLabel": "make.wordpress.org/core → Connectors API in 7.0",
+        "qr": "qr/connectors.svg"
+      },
+      {
+        "id": "plugin",
+        "badge": "Experimental reference plugin",
+        "title": "AI Plugin",
+        "lede": "Where the foundations become things people can use: alt text, summaries, titles, editorial notes, image generation. Nothing is on by default: you enable one experiment at a time.",
+        "roles": {
+          "uses-ai": {
+            "receives": "A person’s request in the editor — alt text, a summary, a title.",
+            "does": "Turns it into a capability request and hands that to the AI Client.",
+            "returns": "A suggestion the person reviews before anything is applied.",
+            "lesson": "The feature decides what to ask for. A person still decides what to keep."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "Request"
+          },
+          {
+            "label": "Preview"
+          },
+          {
+            "label": "A person reviews",
+            "accent": true
+          },
+          {
+            "label": "Apply"
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "Also a reference implementation: it shows plugin authors how Abilities, the AI Client, and Connectors fit together. Requires WordPress 7.0. Connector approvals, request logging, and encrypting provider keys at rest are experimental governance features of this plugin, not of Connectors itself."
+          }
+        ],
+        "href": "https://wordpress.org/plugins/ai/",
+        "linkLabel": "wordpress.org/plugins/ai",
+        "qr": "qr/plugin.svg"
+      },
+      {
+        "id": "mcp",
+        "badge": "WordPress plugin · not in Core",
+        "title": "MCP Adapter",
+        "lede": "Translation at the edge of the site. It exposes the abilities their authors marked public to authorized outside assistants — as MCP resources and prompts automatically, and as individual tools on a custom server — and translates their calls back into WordPress work.",
+        "roles": {
+          "uses-wp": {
+            "receives": "An MCP tool call from an authorized outside assistant.",
+            "does": "Translates the call into a WordPress ability and hands it to WordPress to run.",
+            "returns": "The ability’s typed result, translated back into MCP.",
+            "lesson": "The adapter is a translator at the edge of the site. It does not create the action, and it does not grant the permission."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "MCP tool call"
+          },
+          {
+            "label": "Transport check"
+          },
+          {
+            "label": "Meta-tool"
+          },
+          {
+            "label": "Permission"
+          },
+          {
+            "label": "Run",
+            "accent": true
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "An official WordPress package installed as a plugin, not part of Core: HTTP and STDIO transports, configurable servers, validation, permission checks, error handling, and observability. The default server supports multiple MCP protocol versions; its HTTP transport implements MCP 2025-11-25. Today it answers calls; it does not make them. It does not create the underlying action, and it is not the model — WordPress still owns execution."
+          }
+        ],
+        "href": "https://github.com/WordPress/mcp-adapter",
+        "linkLabel": "github.com/WordPress/mcp-adapter",
+        "qr": "qr/mcp.svg"
+      },
+      {
+        "id": "bench",
+        "badge": "Early benchmark",
+        "title": "WP-Bench",
+        "lede": "A test bench, not part of any live request. It measures whether the code an agent writes for WordPress actually runs.",
+        "roles": {
+          "tests": {
+            "receives": "The code the agent produced.",
+            "does": "Runs it inside a real WordPress created for this one test, then throws that install away.",
+            "returns": "Pass or fail, decided by WordPress assertions rather than by another model.",
+            "lesson": "Generated code is judged by WordPress tests, not by another AI model."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "Task"
+          },
+          {
+            "label": "Sandbox"
+          },
+          {
+            "label": "Lint and runtime checks"
+          },
+          {
+            "label": "Evidence",
+            "accent": true
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "One suite, one dimension: code generation tasks graded by static checks and runtime assertions in a real WordPress environment. WordPress itself runs the assertions. Passing is all-or-nothing: a partially correct result still fails. Run --check-reference-solution first to prove the grader accepts the canonical solution, then --check-exploits to prove trivial stubs fail."
+          }
+        ],
+        "href": "https://github.com/WordPress/wp-bench",
+        "linkLabel": "github.com/WordPress/wp-bench",
+        "qr": "qr/bench.svg"
+      },
+      {
+        "id": "skills",
+        "badge": "Contributor guidance",
+        "title": "Agent Skills",
+        "lede": "Portable instruction bundles — guidance, checklists, references — that help a coding assistant follow current WordPress practice. Nothing here runs on a live site.",
+        "roles": {
+          "learns": {
+            "receives": "A selection of WordPress guidance — checklists, references, procedures.",
+            "does": "Supplies those instructions to the coding agent before it writes the requested code.",
+            "returns": "An agent that follows current WordPress practice.",
+            "lesson": "The guidance affects the agent’s work outside the site; it does not execute on a live WordPress installation."
+          }
+        },
+        "connectHeading": "How it connects",
+        "connectLayout": "chain",
+        "connect": [
+          {
+            "label": "Select guidance"
+          },
+          {
+            "label": "Attach to the agent",
+            "accent": true
+          },
+          {
+            "label": "Follow the procedure"
+          }
+        ],
+        "notes": [
+          {
+            "heading": "Under the hood",
+            "text": "Covers blocks, themes, plugins, REST, the Interactivity API, Abilities, performance, and security. Three of the skills are about Abilities alone: how to register one, how to audit an existing REST surface for candidates, and how to verify a registration against what it claims. Installable for several coding assistants, or committed alongside an individual project."
+          }
+        ],
+        "href": "https://github.com/WordPress/agent-skills",
+        "linkLabel": "github.com/WordPress/agent-skills",
+        "qr": "qr/skills.svg"
+      },
+      {
+        "id": "assistant",
+        "badge": "Not WordPress",
+        "title": "AI assistant",
+        "lede": "A program outside WordPress — a chat assistant, an editor, an agent — that speaks MCP. It holds no privileges of its own — it acts as a WordPress user it was given credentials for, and never gets more reach than that user has.",
+        "roles": {
+          "uses-wp": {
+            "receives": "A person’s instruction, outside WordPress.",
+            "does": "Decides a WordPress action is needed and issues an MCP tool call.",
+            "returns": "Whatever WordPress allows back — nothing more.",
+            "lesson": "The assistant is a client, not an authority. It asks; it does not decide."
+          }
+        }
+      },
+      {
+        "id": "agent",
+        "badge": "Not WordPress",
+        "title": "Coding agent",
+        "lede": "A coding assistant that writes plugin and theme code. It works outside the site — on a developer’s machine or in a hosted environment — and never runs against a live install.",
+        "roles": {
+          "learns": {
+            "receives": "The attached guidance, plus the task it was asked to do.",
+            "does": "Writes plugin or theme code, outside the site.",
+            "returns": "Code a person still has to review and install.",
+            "lesson": "Nothing here touches a running site. The agent produces text, not changes."
+          },
+          "tests": {
+            "receives": "One task and its requirements, as a single message.",
+            "does": "Writes PHP. It gets no conversation, no retry, and no sight of the assertions.",
+            "returns": "Whatever it wrote, parsed out of the reply and passed on unrepaired.",
+            "lesson": "Every model gets exactly the same task, so a difference in the result is a difference in the model."
+          }
+        }
+      },
+      {
+        "id": "provider",
+        "badge": "Not WordPress",
+        "title": "External AI service",
+        "lede": "The model provider a site owner configured: an API run by someone else, on someone else’s infrastructure. WordPress sends it a request and receives a result.",
+        "roles": {
+          "uses-ai": {
+            "receives": "The request, once it has crossed out of WordPress.",
+            "does": "Runs the model on infrastructure WordPress does not control.",
+            "returns": "A result the provider plugin hands back to the AI Client.",
+            "lesson": "The model and AI service remain outside WordPress; WordPress owns the integration and request path around them."
+          }
+        }
+      },
+      {
+        "id": "task",
+        "badge": "Not WordPress",
+        "title": "A WordPress task",
+        "lede": "The actual work someone wants done: a plugin, a theme, a fix. On this map it stands for the job itself, not for any code running on a site.",
+        "roles": {
+          "learns": {
+            "receives": "The agent’s attention, once the guidance is attached.",
+            "does": "Stands for the real work — a plugin, a theme, a fix.",
+            "returns": "Finished code, still outside WordPress.",
+            "lesson": "The site is not involved until a person installs what the agent wrote."
+          }
+        }
+      },
+      {
+        "id": "provider-plugin",
+        "badge": "WordPress plugin",
+        "title": "AI provider plugin",
+        "lede": "A provider-specific integration installed as a WordPress plugin. It speaks one external service’s protocol using the credentials Connectors resolved for it.",
+        "roles": {
+          "uses-ai": {
+            "receives": "The routed request from the AI Client.",
+            "does": "Speaks one external service’s protocol, using the credentials Connectors resolved.",
+            "returns": "That service’s reply, handed back to the AI Client.",
+            "lesson": "The provider-specific part is a plugin. Swapping providers does not change the feature that asked."
+          }
+        }
+      }
+    ],
+    "suggestions": [
+      {
+        "label": "Alt text",
+        "text": "Two people reviewing a site on a laptop"
+      },
+      {
+        "label": "Post title",
+        "text": "A quieter way to explain WordPress and AI"
+      },
+      {
+        "label": "Summary",
+        "text": "Three sentences, plain language, no jargon"
+      },
+      {
+        "label": "Editorial note",
+        "text": "Tighten the opening paragraph"
+      }
+    ]
+  },
+  "layouts": {
+    "uses-ai": {
+      "members": {
+        "plugin": 1,
+        "client": 2,
+        "provider": 0
+      },
+      "sidecars": [
+        "connectors"
+      ],
+      "providerPlugin": {
+        "step": 3,
+        "position": [
+          824,
+          214
+        ],
+        "restPosition": [
+          824,
+          332
+        ]
+      },
+      "place": {
+        "plugin": [
+          268,
+          192
+        ],
+        "client": [
+          556,
+          192
+        ],
+        "connectors": [
+          836,
+          360
+        ],
+        "provider": [
+          1180,
+          206
+        ]
+      },
+      "park": [
+        "mcp",
+        "abilities",
+        "bench"
+      ],
+      "shelfY": 512,
+      "shelfStart": 3,
+      "edges": [
+        "M504 266 L556 266",
+        "M792 266 L824 266",
+        "M1024 266 L1180 266"
+      ],
+      "rest": [
+        "M504 234 L556 234",
+        "M792 234 C810 234 806 384 824 384",
+        "M1024 384 C1080 384 1094 390 1150 390"
+      ],
+      "sidecarEdges": [
+        "M924 360 L924 318"
+      ],
+      "sidecarRest": [
+        "M924 332 C954 318 1012 320 1030 308"
+      ],
+      "dur": [
+        "1.5s",
+        "1.9s",
+        "1.7s"
+      ],
+      "crosses": [
+        "right"
+      ]
+    },
+    "uses-wp": {
+      "members": {
+        "assistant": 1,
+        "mcp": 2,
+        "abilities": 3
+      },
+      "place": {
+        "assistant": [
+          24,
+          156
+        ],
+        "mcp": [
+          122,
+          318
+        ],
+        "abilities": [
+          556,
+          318
+        ],
+        "skills": [
+          1150,
+          112
+        ],
+        "agent": [
+          1150,
+          462
+        ],
+        "provider": [
+          1150,
+          330
+        ],
+        "task": [
+          1150,
+          594
+        ]
+      },
+      "park": [
+        "plugin",
+        "client",
+        "connectors",
+        "bench"
+      ],
+      "shelfY": 512,
+      "strips": {
+        "mcp": [
+          0,
+          -57
+        ],
+        "abilities": [
+          0,
+          -82
+        ]
+      },
+      "edges": [
+        "M114 262 L114 392 L118 392",
+        "M358 392 L556 392"
+      ],
+      "rest": [
+        "M114 276 C114 342 162 372 230 395",
+        "M358 474 L556 474"
+      ],
+      "dur": [
+        "2.1s",
+        "1.9s"
+      ],
+      "crosses": [
+        "left"
+      ],
+      "tokens": true
+    },
+    "learns": {
+      "members": {
+        "skills": 1,
+        "agent": 2,
+        "task": 3
+      },
+      "place": {
+        "skills": [
+          24,
+          150
+        ],
+        "agent": [
+          24,
+          320
+        ],
+        "task": [
+          24,
+          490
+        ],
+        "assistant": [
+          1150,
+          112
+        ],
+        "provider": [
+          1150,
+          330
+        ]
+      },
+      "park": [
+        "plugin",
+        "client",
+        "connectors",
+        "mcp",
+        "abilities",
+        "bench"
+      ],
+      "shelfY": 512,
+      "edges": [
+        "M114 276 L114 314",
+        "M114 446 L114 484"
+      ],
+      "rest": [
+        "M114 278 L114 312",
+        "M114 448 L114 482"
+      ],
+      "dur": [
+        "1.4s",
+        "1.4s"
+      ],
+      "crosses": [],
+      "zone": "outside"
+    },
+    "tests": {
+      "members": {
+        "agent": 1,
+        "bench": 2
+      },
+      "place": {
+        "agent": [
+          24,
+          318
+        ],
+        "bench": [
+          556,
+          678
+        ],
+        "assistant": [
+          1150,
+          252
+        ],
+        "skills": [
+          1150,
+          384
+        ],
+        "provider": [
+          1150,
+          516
+        ],
+        "task": [
+          1150,
+          648
+        ]
+      },
+      "park": [
+        "plugin",
+        "client",
+        "connectors",
+        "mcp",
+        "abilities"
+      ],
+      "noStrip": [
+        "bench"
+      ],
+      "shelfY": 140,
+      "edges": [
+        "M114 422 L114 450 Q114 470 134 470 L440 470 Q460 470 460 490 L460 732 Q460 752 480 752 L546 752"
+      ],
+      "rest": [
+        "M114 402 C114 630 176 748 336 748 L546 748"
+      ],
+      "dur": [
+        "2.8s"
+      ],
+      "crosses": [
+        "left",
+        "bottom"
+      ]
+    }
+  },
+  "previews": [
+    {
+      "storyId": "uses-ai",
+      "scale": 0.8,
+      "ids": [
+        "plugin",
+        "client",
+        "provider"
+      ],
+      "steps": {
+        "plugin": 1,
+        "client": 2,
+        "provider": 0
+      },
+      "sidecars": [
+        "connectors"
+      ],
+      "providerPlugin": {
+        "step": 3,
+        "position": [
+          716,
+          200
+        ],
+        "scale": 0.8
+      },
+      "at": {
+        "plugin": [
+          260,
+          200
+        ],
+        "client": [
+          488,
+          200
+        ],
+        "connectors": [
+          728,
+          340
+        ],
+        "provider": [
+          1060,
+          211
+        ]
+      },
+      "paths": [
+        "M449 259 L488 259",
+        "M677 259 L716 259",
+        "M876 259 L1060 259"
+      ],
+      "sidecarPaths": [
+        "M798 340 L798 284"
+      ]
+    },
+    {
+      "storyId": "uses-wp",
+      "scale": 0.8,
+      "ids": [
+        "assistant",
+        "mcp",
+        "abilities"
+      ],
+      "at": {
+        "assistant": [
+          30,
+          214
+        ],
+        "mcp": [
+          222,
+          200
+        ],
+        "abilities": [
+          520,
+          200
+        ]
+      },
+      "paths": [
+        "M180 257 L216 257",
+        "M369 259 L514 259"
+      ]
+    },
+    {
+      "storyId": "learns",
+      "scale": 0.72,
+      "ids": [
+        "skills",
+        "agent",
+        "task"
+      ],
+      "at": {
+        "skills": [
+          36,
+          150
+        ],
+        "agent": [
+          36,
+          272
+        ],
+        "task": [
+          36,
+          394
+        ]
+      },
+      "paths": [
+        "M108 242 L108 266",
+        "M108 364 L108 388"
+      ]
+    },
+    {
+      "storyId": "tests",
+      "scale": 0.8,
+      "ids": [
+        "agent",
+        "bench"
+      ],
+      "at": {
+        "agent": [
+          36,
+          196
+        ],
+        "bench": [
+          430,
+          320
+        ]
+      },
+      "paths": [
+        "M186 240 C280 244 300 320 424 372"
+      ]
+    }
+  ],
+  "neutral": {
+    "plugin": [
+      268,
+      160
+    ],
+    "client": [
+      556,
+      160
+    ],
+    "connectors": [
+      912,
+      160
+    ],
+    "mcp": [
+      268,
+      400
+    ],
+    "abilities": [
+      556,
+      400
+    ],
+    "bench": [
+      556,
+      672
+    ],
+    "assistant": [
+      24,
+      112
+    ],
+    "skills": [
+      24,
+      244
+    ],
+    "agent": [
+      24,
+      376
+    ],
+    "provider": [
+      1150,
+      330
+    ],
+    "task": [
+      24,
+      508
+    ],
+    "provider-plugin": [
+      912,
+      400
+    ]
+  },
+  "loose": {
+    "plugin": [
+      -38,
+      26,
+      -1.4
+    ],
+    "client": [
+      20,
+      -18,
+      1.1
+    ],
+    "connectors": [
+      28,
+      34,
+      -0.9
+    ],
+    "mcp": [
+      120,
+      -36,
+      1.6
+    ],
+    "abilities": [
+      -26,
+      28,
+      -1.2
+    ],
+    "bench": [
+      32,
+      -44,
+      0.9
+    ],
+    "assistant": [
+      -6,
+      -30,
+      -1.3
+    ],
+    "skills": [
+      12,
+      96,
+      1.4
+    ],
+    "agent": [
+      16,
+      92,
+      -1
+    ],
+    "provider": [
+      -18,
+      90,
+      1.2
+    ],
+    "task": [
+      6,
+      54,
+      -1.1
+    ]
+  },
+  "shelfX": [
+    250,
+    436,
+    622,
+    808,
+    994,
+    1170
+  ],
+  "about": {
+    "badge": "Transparency",
+    "title": "About this exhibit",
+    "backLabel": "Back to the exhibit",
+    "disclosures": [
+      {
+        "term": "AI assistance:",
+        "description": "Yes"
+      },
+      {
+        "term": "Tool:",
+        "description": "OpenAI Codex"
+      },
+      {
+        "term": "Used for:",
+        "description": "implementation, tests, and deployment preparation."
+      }
+    ],
+    "responsibility": "Final work was human-reviewed and tested; the human contributor remains responsible for it."
+  },
+  "bench": {
+    "titles": {
+      "task": "One task, one message",
+      "model": "Whatever the model wrote",
+      "sandbox": "A real WordPress, thrown away after",
+      "checks": "WordPress is the grader",
+      "evidence": "Pass or fail. Never a percentage"
+    },
+    "paths": [
+      "M204 200 C420 132 940 128 1148 194",
+      "M1240 286 C1240 348 1088 322 986 300",
+      "M654 266 L626 266",
+      "M330 358 C296 418 254 438 208 462"
+    ],
+    "stages": {
+      "task": {
+        "number": "01",
+        "badge": "The harness",
+        "label": "The task",
+        "summary": "One prompt, one set of requirements",
+        "kicker": "Stage 01 · outside the site",
+        "title": "One task, one message",
+        "body": "A prompt and its requirements, handed to the model as a single message. Every model gets exactly the same text, so a difference in the result is a difference in the model.",
+        "rows": [
+          [
+            "prompt",
+            "Write the code that does this. One task, one message."
+          ],
+          [
+            "requirements",
+            "Named functions and hooks, and the shape of what they return."
+          ],
+          [
+            "never sent",
+            "No conversation, no follow-up, no hint about the assertions."
+          ]
+        ]
+      },
+      "model": {
+        "number": "02",
+        "badge": "Not WordPress",
+        "label": "The model answers",
+        "summary": "PHP, parsed out of the reply",
+        "kicker": "Stage 02 · outside the site",
+        "title": "Whatever the model wrote",
+        "body": "The harness takes the reply and parses the PHP out of it. If the answer does not parse, that is the answer — nothing is repaired on the way in.",
+        "rows": [
+          [
+            "reply",
+            "Whatever the model wrote, in full."
+          ],
+          [
+            "parsed out",
+            "The PHP the harness could find in it."
+          ],
+          [
+            "not repaired",
+            "Nothing is patched and nothing is retried before it runs."
+          ]
+        ]
+      },
+      "sandbox": {
+        "number": "03",
+        "badge": "Inside WordPress",
+        "label": "WordPress runs it",
+        "summary": "A real 7.0, thrown away after",
+        "flow": [
+          {
+            "label": "setup"
+          },
+          {
+            "label": "the model’s code",
+            "accent": true
+          },
+          {
+            "label": "assertions"
+          },
+          {
+            "label": "teardown"
+          }
+        ],
+        "kicker": "Stage 03 · inside WordPress",
+        "title": "A real WordPress, thrown away after",
+        "body": "The code runs inside a WordPress that exists only for this one test. That makes the result a fact about WordPress rather than a fact about a fixture.",
+        "rows": [
+          [
+            "the install",
+            "A real WordPress 7.0, created for this one test."
+          ],
+          [
+            "the run",
+            "Setup, then the model’s code, then the assertions, then teardown."
+          ],
+          [
+            "afterwards",
+            "The install is thrown away. No live site is ever involved."
+          ]
+        ]
+      },
+      "checks": {
+        "number": "04",
+        "badge": "Inside WordPress",
+        "label": "WordPress checks it",
+        "summary": "WordPress code inspects WordPress state",
+        "flow": [
+          {
+            "label": "every assertion",
+            "accent": true
+          },
+          {
+            "label": "pass"
+          }
+        ],
+        "kicker": "Stage 04 · inside WordPress",
+        "title": "WordPress is the grader",
+        "body": "The assertions are WordPress code inspecting WordPress state — not a model judging another model’s answer. Passing is all or nothing.",
+        "note": "Two of three assertions is a fail. A number between 0 and 1 is a bug in the harness, not partial credit.",
+        "rows": [
+          [
+            "3 of 3",
+            "Pass."
+          ],
+          [
+            "2 of 3",
+            "Fail. There is no partial credit."
+          ],
+          [
+            "static analysis",
+            "A diagnostic only — unless the code trips a forbidden pattern, which fails the test outright."
+          ]
+        ]
+      },
+      "evidence": {
+        "number": "05",
+        "badge": "Back to the harness",
+        "label": "The verdict",
+        "summary": "Pass or fail. Never a percentage",
+        "kicker": "Stage 05 · back in the harness",
+        "title": "Pass or fail. Never a percentage",
+        "body": "Three inputs go through the same verifier, and each one proves a different thing. Run them in this order.",
+        "note": "A broken grader still reports a number. If the sandbox never started, every test scores zero and the run still exits clean — which looks exactly like a model that failed everything.",
+        "rows": [
+          [
+            "--check-reference-solution",
+            "Proves the grader works. The canonical solution goes in, no model is called. Run it first: if this fails, no other number means anything."
+          ],
+          [
+            "a normal run",
+            "Proves the model works. What the model actually wrote goes in — the only number worth reporting, and only once the other two hold."
+          ],
+          [
+            "--check-exploits",
+            "Proves the test is specified. An empty function goes in, then a bare return. Every one must fail — a test a stub can pass was checking a fixture, not WordPress."
+          ]
+        ]
+      }
+    }
+  },
+  "renderedHtml": "\n<section class=\"core-ai-map is-attract\" aria-label=\"WordPress Core AI Living Block Map\" data-wp-interactive=\"core-ai/map\" data-wp-run=\"callbacks.useKiosk\" data-wp-class--is-attract=\"state.isAttract\" data-wp-class--is-map=\"state.isMap\" data-wp-class--is-inspect=\"state.isInspect\" data-wp-class--is-bench=\"state.isBench\" data-wp-class--is-about=\"state.isAbout\" data-wp-class--has-story=\"state.hasStory\" data-screen-label=\"Core AI Living Block Map\" data-inactivity-timeout=\"60000\" data-offline-enabled=\"false\" data-cache-page=\"false\" data-cache-page-url=\"\" data-kiosk-key=\"\" data-service-worker-url=\"https://example.test/\" data-service-worker-scope=\"/living-block-map/\" data-asset-urls=\"[&quot;https:\\/\\/example.test\\/plugin\\/build\\/core-ai-map\\/view.js&quot;,&quot;https:\\/\\/example.test\\/plugin\\/build\\/core-ai-map\\/style-index.css&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/icon.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/icon-192.png&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/icon-512.png&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/abilities.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/client.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/connectors.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/plugin.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/mcp.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/bench.svg&quot;,&quot;https:\\/\\/example.test\\/plugin\\/assets\\/qr\\/skills.svg&quot;]\" data-test-context=\"{&quot;screen&quot;:&quot;attract&quot;,&quot;story&quot;:&quot;&quot;,&quot;openingStory&quot;:&quot;uses-ai&quot;,&quot;storyTitles&quot;:{&quot;uses-ai&quot;:&quot;WordPress uses AI&quot;,&quot;uses-wp&quot;:&quot;AI uses WordPress&quot;,&quot;learns&quot;:&quot;An agent learns WordPress&quot;,&quot;tests&quot;:&quot;WordPress tests the result&quot;},&quot;storyTakeaways&quot;:{&quot;uses-ai&quot;:&quot;A WordPress feature uses a common AI interface instead of integrating directly with every provider. Provider configuration supports the request, while the AI service remains outside WordPress.&quot;,&quot;uses-wp&quot;:&quot;The assistant does not bypass WordPress. The MCP Adapter translates the request, and the selected ability still applies WordPress permissions.&quot;,&quot;learns&quot;:&quot;Agent Skills changes the information available to the coding agent. Nothing runs on the WordPress site during this flow.&quot;,&quot;tests&quot;:&quot;The generated code runs in a disposable WordPress environment and is judged by WordPress tests, not by another model&#039;s opinion.&quot;},&quot;storySituations&quot;:{&quot;uses-ai&quot;:&quot;A feature inside WordPress needs an AI-generated result.&quot;,&quot;uses-wp&quot;:&quot;An outside assistant asks WordPress to perform an allowed action.&quot;,&quot;learns&quot;:&quot;A coding agent receives WordPress-specific guidance before writing code.&quot;,&quot;tests&quot;:&quot;Code written by an agent needs to be tested against real WordPress behavior.&quot;},&quot;storyOutcomes&quot;:{&quot;uses-ai&quot;:&quot;WordPress requests an AI result&quot;,&quot;uses-wp&quot;:&quot;An assistant requests a WordPress action&quot;,&quot;learns&quot;:&quot;A coding agent receives WordPress guidance&quot;,&quot;tests&quot;:&quot;WordPress evaluates generated code&quot;},&quot;storySteps&quot;:{&quot;uses-ai&quot;:&quot;1 \\u2192 2 \\u2192 3&quot;,&quot;uses-wp&quot;:&quot;1 \\u2192 2 \\u2192 3&quot;,&quot;learns&quot;:&quot;1 \\u2192 2 \\u2192 3&quot;,&quot;tests&quot;:&quot;1 \\u2192 2&quot;},&quot;participants&quot;:{&quot;uses-ai&quot;:[&quot;plugin&quot;,&quot;client&quot;,&quot;provider&quot;,&quot;connectors&quot;,&quot;provider-plugin&quot;],&quot;uses-wp&quot;:[&quot;assistant&quot;,&quot;mcp&quot;,&quot;abilities&quot;],&quot;learns&quot;:[&quot;skills&quot;,&quot;agent&quot;,&quot;task&quot;],&quot;tests&quot;:[&quot;agent&quot;,&quot;bench&quot;]},&quot;cardTitles&quot;:{&quot;plugin&quot;:&quot;AI Plugin&quot;,&quot;client&quot;:&quot;AI Client&quot;,&quot;connectors&quot;:&quot;Connectors&quot;,&quot;mcp&quot;:&quot;MCP Adapter&quot;,&quot;abilities&quot;:&quot;Abilities API&quot;,&quot;bench&quot;:&quot;WP-Bench&quot;,&quot;assistant&quot;:&quot;AI assistant&quot;,&quot;skills&quot;:&quot;Agent Skills&quot;,&quot;agent&quot;:&quot;Coding agent&quot;,&quot;task&quot;:&quot;A WordPress task&quot;,&quot;provider&quot;:&quot;External AI service&quot;,&quot;provider-plugin&quot;:&quot;AI provider plugin&quot;},&quot;guidance&quot;:{&quot;attract&quot;:&quot;Choose a flow to begin.&quot;,&quot;flow&quot;:&quot;Follow %1$s. Highlighted components take part in this flow. Tap one to learn what it contributes.&quot;,&quot;inspect&quot;:&quot;You are viewing this component\\u2019s role in \\u201c%1$s.\\u201d&quot;,&quot;browse&quot;:&quot;Tap any component to learn what it is and where it belongs.&quot;,&quot;cardAction&quot;:&quot;%1$s \\u2014 view its role in \\u201c%2$s.\\u201d&quot;,&quot;cardActionStep&quot;:&quot;Step %1$s: %2$s \\u2014 view its role in \\u201c%3$s.\\u201d&quot;,&quot;cardInactive&quot;:&quot;%1$s \\u2014 not part of this flow.&quot;,&quot;cardActionBrowse&quot;:&quot;%1$s \\u2014 open its details.&quot;},&quot;announcements&quot;:{&quot;flowSelected&quot;:&quot;%1$s.&quot;,&quot;flowReplayed&quot;:&quot;%1$s replayed.&quot;,&quot;takeaway&quot;:&quot;%1$s: %2$s&quot;,&quot;browse&quot;:&quot;Every component is on the canvas with no flow selected. Tap any component to learn what it is and where it belongs.&quot;,&quot;nextSuggestion&quot;:&quot;The AI Plugin shows the next suggestion.&quot;,&quot;detailsInFlow&quot;:&quot;%1$s details open in %2$s.&quot;,&quot;detailsBrowse&quot;:&quot;%1$s details open.&quot;},&quot;labels&quot;:{&quot;railEmptyLabel&quot;:&quot;Choose a flow&quot;,&quot;railActiveLabel&quot;:&quot;Choose another flow&quot;,&quot;browseLabel&quot;:&quot;Browse all components&quot;,&quot;browseDescription&quot;:&quot;Every component on one canvas, with no flow selected.&quot;,&quot;takeawayHeading&quot;:&quot;What this flow shows&quot;,&quot;roleHeading&quot;:&quot;Its role in this flow&quot;,&quot;lessonHeading&quot;:&quot;Why that matters&quot;,&quot;definitionHeading&quot;:&quot;What it is&quot;,&quot;technicalHeading&quot;:&quot;Under the hood&quot;,&quot;exploreHeading&quot;:&quot;Keep exploring&quot;,&quot;tapCue&quot;:&quot;Tap for its role&quot;,&quot;receivesLabel&quot;:&quot;Receives&quot;,&quot;doesLabel&quot;:&quot;Does&quot;,&quot;returnsLabel&quot;:&quot;Passes on&quot;},&quot;inspect&quot;:&quot;&quot;,&quot;previewIndex&quot;:0,&quot;previewPhase&quot;:&quot;assembling&quot;,&quot;attractPhase&quot;:&quot;assembling&quot;,&quot;flowPhase&quot;:&quot;settled&quot;,&quot;storyMotionPhase&quot;:&quot;settled&quot;,&quot;pendingTakeawayStory&quot;:&quot;&quot;,&quot;abilitiesTab&quot;:&quot;overview&quot;,&quot;benchStage&quot;:&quot;sandbox&quot;,&quot;benchPathsLive&quot;:false,&quot;aboutReturnScreen&quot;:&quot;&quot;,&quot;applied&quot;:false,&quot;idleStoryIndex&quot;:0,&quot;isOffline&quot;:false,&quot;suggestion&quot;:0,&quot;announcement&quot;:&quot;Core AI Living Block Map ready. Choose a flow to begin, or open the first flow.&quot;,&quot;suggestions&quot;:[{&quot;label&quot;:&quot;Alt text&quot;,&quot;text&quot;:&quot;Two people reviewing a site on a laptop&quot;},{&quot;label&quot;:&quot;Post title&quot;,&quot;text&quot;:&quot;A quieter way to explain WordPress and AI&quot;},{&quot;label&quot;:&quot;Summary&quot;,&quot;text&quot;:&quot;Three sentences, plain language, no jargon&quot;},{&quot;label&quot;:&quot;Editorial note&quot;,&quot;text&quot;:&quot;Tighten the opening paragraph&quot;}],&quot;phases&quot;:[&quot;Needs review&quot;,&quot;Applied&quot;],&quot;storyCopy&quot;:{&quot;uses-ai&quot;:&quot;A plugin asks the AI Client for a capability. The Client routes through a configured provider plugin to an external AI service; Connectors supplies discovery, configuration, and credentials beside the request path.&quot;,&quot;uses-wp&quot;:&quot;An authorized assistant calls in through the MCP Adapter, which translates the call into a WordPress ability. Permission still belongs to WordPress.&quot;,&quot;learns&quot;:&quot;Agent Skills attaches current WordPress guidance to a coding agent, which then starts the task. All of this happens outside the site \\u2014 nothing inside WordPress runs.&quot;,&quot;tests&quot;:&quot;WP-Bench runs what the agent produced inside a sandboxed WordPress, and WordPress itself decides whether it passed. Evidence, not vibes.&quot;},&quot;benchTitles&quot;:{&quot;task&quot;:&quot;One task, one message&quot;,&quot;model&quot;:&quot;Whatever the model wrote&quot;,&quot;sandbox&quot;:&quot;A real WordPress, thrown away after&quot;,&quot;checks&quot;:&quot;WordPress is the grader&quot;,&quot;evidence&quot;:&quot;Pass or fail. Never a percentage&quot;},&quot;recompose&quot;:true,&quot;shapes&quot;:true,&quot;storyIds&quot;:[&quot;uses-ai&quot;,&quot;uses-wp&quot;,&quot;learns&quot;,&quot;tests&quot;],&quot;previews&quot;:[{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;scale&quot;:0.8,&quot;ids&quot;:[&quot;plugin&quot;,&quot;client&quot;,&quot;provider&quot;],&quot;steps&quot;:{&quot;plugin&quot;:1,&quot;client&quot;:2,&quot;provider&quot;:0},&quot;sidecars&quot;:[&quot;connectors&quot;],&quot;providerPlugin&quot;:{&quot;step&quot;:3,&quot;position&quot;:[716,200],&quot;scale&quot;:0.8},&quot;at&quot;:{&quot;plugin&quot;:[260,200],&quot;client&quot;:[488,200],&quot;connectors&quot;:[728,340],&quot;provider&quot;:[1060,211]},&quot;paths&quot;:[&quot;M449 259 L488 259&quot;,&quot;M677 259 L716 259&quot;,&quot;M876 259 L1060 259&quot;],&quot;sidecarPaths&quot;:[&quot;M798 340 L798 284&quot;]},{&quot;storyId&quot;:&quot;uses-wp&quot;,&quot;scale&quot;:0.8,&quot;ids&quot;:[&quot;assistant&quot;,&quot;mcp&quot;,&quot;abilities&quot;],&quot;at&quot;:{&quot;assistant&quot;:[30,214],&quot;mcp&quot;:[222,200],&quot;abilities&quot;:[520,200]},&quot;paths&quot;:[&quot;M180 257 L216 257&quot;,&quot;M369 259 L514 259&quot;]},{&quot;storyId&quot;:&quot;learns&quot;,&quot;scale&quot;:0.72,&quot;ids&quot;:[&quot;skills&quot;,&quot;agent&quot;,&quot;task&quot;],&quot;at&quot;:{&quot;skills&quot;:[36,150],&quot;agent&quot;:[36,272],&quot;task&quot;:[36,394]},&quot;paths&quot;:[&quot;M108 242 L108 266&quot;,&quot;M108 364 L108 388&quot;]},{&quot;storyId&quot;:&quot;tests&quot;,&quot;scale&quot;:0.8,&quot;ids&quot;:[&quot;agent&quot;,&quot;bench&quot;],&quot;at&quot;:{&quot;agent&quot;:[36,196],&quot;bench&quot;:[430,320]},&quot;paths&quot;:[&quot;M186 240 C280 244 300 320 424 372&quot;]}],&quot;neutral&quot;:{&quot;plugin&quot;:[268,160],&quot;client&quot;:[556,160],&quot;connectors&quot;:[912,160],&quot;mcp&quot;:[268,400],&quot;abilities&quot;:[556,400],&quot;bench&quot;:[556,672],&quot;assistant&quot;:[24,112],&quot;skills&quot;:[24,244],&quot;agent&quot;:[24,376],&quot;provider&quot;:[1150,330],&quot;task&quot;:[24,508],&quot;provider-plugin&quot;:[912,400]},&quot;loose&quot;:{&quot;plugin&quot;:[-38,26,-1.4],&quot;client&quot;:[20,-18,1.1],&quot;connectors&quot;:[28,34,-0.9],&quot;mcp&quot;:[120,-36,1.6],&quot;abilities&quot;:[-26,28,-1.2],&quot;bench&quot;:[32,-44,0.9],&quot;assistant&quot;:[-6,-30,-1.3],&quot;skills&quot;:[12,96,1.4],&quot;agent&quot;:[16,92,-1],&quot;provider&quot;:[-18,90,1.2],&quot;task&quot;:[6,54,-1.1]},&quot;shelfX&quot;:[250,436,622,808,994,1170],&quot;layout&quot;:{&quot;uses-ai&quot;:{&quot;members&quot;:{&quot;plugin&quot;:1,&quot;client&quot;:2,&quot;provider&quot;:0},&quot;sidecars&quot;:[&quot;connectors&quot;],&quot;providerPlugin&quot;:{&quot;step&quot;:3,&quot;position&quot;:[824,214],&quot;restPosition&quot;:[824,332]},&quot;place&quot;:{&quot;plugin&quot;:[268,192],&quot;client&quot;:[556,192],&quot;connectors&quot;:[836,360],&quot;provider&quot;:[1180,206]},&quot;park&quot;:[&quot;mcp&quot;,&quot;abilities&quot;,&quot;bench&quot;],&quot;shelfY&quot;:512,&quot;shelfStart&quot;:3,&quot;edges&quot;:[&quot;M504 266 L556 266&quot;,&quot;M792 266 L824 266&quot;,&quot;M1024 266 L1180 266&quot;],&quot;rest&quot;:[&quot;M504 234 L556 234&quot;,&quot;M792 234 C810 234 806 384 824 384&quot;,&quot;M1024 384 C1080 384 1094 390 1150 390&quot;],&quot;sidecarEdges&quot;:[&quot;M924 360 L924 318&quot;],&quot;sidecarRest&quot;:[&quot;M924 332 C954 318 1012 320 1030 308&quot;],&quot;dur&quot;:[&quot;1.5s&quot;,&quot;1.9s&quot;,&quot;1.7s&quot;],&quot;crosses&quot;:[&quot;right&quot;]},&quot;uses-wp&quot;:{&quot;members&quot;:{&quot;assistant&quot;:1,&quot;mcp&quot;:2,&quot;abilities&quot;:3},&quot;place&quot;:{&quot;assistant&quot;:[24,156],&quot;mcp&quot;:[122,318],&quot;abilities&quot;:[556,318],&quot;skills&quot;:[1150,112],&quot;agent&quot;:[1150,462],&quot;provider&quot;:[1150,330],&quot;task&quot;:[1150,594]},&quot;park&quot;:[&quot;plugin&quot;,&quot;client&quot;,&quot;connectors&quot;,&quot;bench&quot;],&quot;shelfY&quot;:512,&quot;strips&quot;:{&quot;mcp&quot;:[0,-57],&quot;abilities&quot;:[0,-82]},&quot;edges&quot;:[&quot;M114 262 L114 392 L118 392&quot;,&quot;M358 392 L556 392&quot;],&quot;rest&quot;:[&quot;M114 276 C114 342 162 372 230 395&quot;,&quot;M358 474 L556 474&quot;],&quot;dur&quot;:[&quot;2.1s&quot;,&quot;1.9s&quot;],&quot;crosses&quot;:[&quot;left&quot;],&quot;tokens&quot;:true},&quot;learns&quot;:{&quot;members&quot;:{&quot;skills&quot;:1,&quot;agent&quot;:2,&quot;task&quot;:3},&quot;place&quot;:{&quot;skills&quot;:[24,150],&quot;agent&quot;:[24,320],&quot;task&quot;:[24,490],&quot;assistant&quot;:[1150,112],&quot;provider&quot;:[1150,330]},&quot;park&quot;:[&quot;plugin&quot;,&quot;client&quot;,&quot;connectors&quot;,&quot;mcp&quot;,&quot;abilities&quot;,&quot;bench&quot;],&quot;shelfY&quot;:512,&quot;edges&quot;:[&quot;M114 276 L114 314&quot;,&quot;M114 446 L114 484&quot;],&quot;rest&quot;:[&quot;M114 278 L114 312&quot;,&quot;M114 448 L114 482&quot;],&quot;dur&quot;:[&quot;1.4s&quot;,&quot;1.4s&quot;],&quot;crosses&quot;:[],&quot;zone&quot;:&quot;outside&quot;},&quot;tests&quot;:{&quot;members&quot;:{&quot;agent&quot;:1,&quot;bench&quot;:2},&quot;place&quot;:{&quot;agent&quot;:[24,318],&quot;bench&quot;:[556,678],&quot;assistant&quot;:[1150,252],&quot;skills&quot;:[1150,384],&quot;provider&quot;:[1150,516],&quot;task&quot;:[1150,648]},&quot;park&quot;:[&quot;plugin&quot;,&quot;client&quot;,&quot;connectors&quot;,&quot;mcp&quot;,&quot;abilities&quot;],&quot;noStrip&quot;:[&quot;bench&quot;],&quot;shelfY&quot;:140,&quot;edges&quot;:[&quot;M114 422 L114 450 Q114 470 134 470 L440 470 Q460 470 460 490 L460 732 Q460 752 480 752 L546 752&quot;],&quot;rest&quot;:[&quot;M114 402 C114 630 176 748 336 748 L546 748&quot;],&quot;dur&quot;:[&quot;2.8s&quot;],&quot;crosses&quot;:[&quot;left&quot;,&quot;bottom&quot;]}},&quot;benchPaths&quot;:[&quot;M204 200 C420 132 940 128 1148 194&quot;,&quot;M1240 286 C1240 348 1088 322 986 300&quot;,&quot;M654 266 L626 266&quot;,&quot;M330 358 C296 418 254 438 208 462&quot;]}\">\n\t\t<h1\n\t\tclass=\"core-ai-map__sr-only\"\n\t\tdata-wp-bind--hidden=\"!state.isNotAttract\"\n\t\thidden\n\t>What is WordPress Core AI?</h1>\n\n\t<div class=\"core-ai-map__stage\">\n\t\t<div class=\"core-ai-map__grid\" aria-hidden=\"true\"></div>\n\n\t\t<header class=\"core-ai-map__topbar\">\n\t\t\t<div class=\"core-ai-map__brand\">\n\t\t\t\t<img\n\t\t\t\t\tclass=\"core-ai-map__mark\"\n\t\t\t\t\tsrc=\"https://example.test/plugin/assets/icon.svg\"\n\t\t\t\t\talt=\"\"\n\t\t\t\t\twidth=\"30\"\n\t\t\t\t\theight=\"30\"\n\t\t\t\t>\n\t\t\t\t<span>WordPress Core AI</span>\n\t\t\t\t<span class=\"core-ai-map__brand-separator\" aria-hidden=\"true\"></span>\n\t\t\t\t<strong>Living Block Map</strong>\n\t\t\t</div>\n\n\t\t\t\t\t\t<p\n\t\t\t\tclass=\"core-ai-map__guidance\"\n\t\t\t\tdata-wp-text=\"state.guidance\"\n\t\t\t\tdata-wp-bind--hidden=\"state.isGuidanceHidden\"\n\t\t\t\thidden\n\t\t\t>Choose a flow to begin.</p>\n\n\t\t\t<div class=\"core-ai-map__topbar-actions\">\n\t\t\t\t<p class=\"core-ai-map__offline\" data-wp-bind--hidden=\"state.isOnline\" hidden>\n\t\t\t\t\t<span aria-hidden=\"true\"></span>Offline mode\t\t\t\t</p>\n\t\t\t\t<button class=\"core-ai-map__browse\" type=\"button\" data-wp-bind--hidden=\"state.isBrowseControlHidden\" data-wp-on--click=\"actions.browseAll\" hidden>\n\t\t\t\t\tBrowse all components\t\t\t\t</button>\n\t\t\t\t<button class=\"core-ai-map__reset\" type=\"button\" data-wp-bind--hidden=\"state.isResetHidden\" data-wp-on--click=\"actions.reset\" hidden>\n\t\t\t\t\tStart over\t\t\t\t</button>\n\t\t\t</div>\n\t\t</header>\n\n\t\t<div\n\t\t\tclass=\"core-ai-map__canvas\"\n\t\t\tdata-core-ai-surface=\"canvas\"\n\t\t\tdata-screen-label=\"Living Block Map canvas\"\n\t\t\taria-hidden=\"true\"\n\t\t\tinert\n\t\t\tdata-wp-bind--aria-hidden=\"state.isCanvasHidden\"\n\t\t\tdata-wp-bind--inert=\"state.isCanvasInert\"\n\t\t>\n\t\t\t<div class=\"core-ai-map__plate\" aria-hidden=\"true\"></div>\n\n\t\t\t<p class=\"core-ai-map__zone core-ai-map__zone--outside\" data-wp-class--is-lit=\"state.isOutsideZoneLit\">\n\t\t\t\tOutside · assistants\t\t\t</p>\n\t\t\t<p class=\"core-ai-map__zone core-ai-map__zone--inside\">Inside WordPress</p>\n\t\t\t<p class=\"core-ai-map__zone core-ai-map__zone--providers\">Outside · AI providers</p>\n\t\t\t\t<div class=\"core-ai-map__legend core-ai-map__legend--map\" aria-label=\"How to read the map\">\n\t\t<ul role=\"list\">\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--solid\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Solid arrow:</strong> active request or work</span>\n\t\t\t</li>\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--dashed\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Dashed line:</strong> configuration or supporting information</span>\n\t\t\t</li>\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--dimmed\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Dimmed component:</strong> not part of this flow</span>\n\t\t\t</li>\n\t\t</ul>\n\t</div>\n\t\t\t\t<p class=\"core-ai-map__zone core-ai-map__zone--runtime\">Below the runtime · evaluation</p>\n\n\t\t\t<p\n\t\t\t\tclass=\"core-ai-map__shelf-label\"\n\t\t\t\tdata-wp-bind--hidden=\"state.isShelfHidden\"\n\t\t\t\tdata-wp-style--left=\"state.shelfLeft\"\n\t\t\t\tdata-wp-style--top=\"state.shelfTop\"\n\t\t\t>\n\t\t\t\tAlso part of the ecosystem\t\t\t</p>\n\n\t\t\t<svg class=\"core-ai-map__wires\" viewBox=\"0 0 1366 1024\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t<defs>\n\t\t\t\t\t<marker id=\"core-ai-map-fixture-tip\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerWidth=\"4.6\" markerHeight=\"4.6\" orient=\"auto-start-reverse\">\n\t\t\t\t\t\t<path d=\"M0 0 L10 5 L0 10 z\"></path>\n\t\t\t\t\t</marker>\n\t\t\t\t</defs>\n\n\t\t\t\t<g class=\"core-ai-map__rules\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\tclass=\"core-ai-map__rule core-ai-map__rule--left\"\n\t\t\t\t\t\t\td=\"M240 112 L240 600\"\n\t\t\t\t\t\t\tdata-core-ai-rule=\"left\"\n\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\tclass=\"core-ai-map__rule core-ai-map__rule--right\"\n\t\t\t\t\t\t\td=\"M1030 112 L1030 600\"\n\t\t\t\t\t\t\tdata-core-ai-rule=\"right\"\n\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\tclass=\"core-ai-map__rule core-ai-map__rule--bottom\"\n\t\t\t\t\t\t\td=\"M240 628 L1030 628\"\n\t\t\t\t\t\t\tdata-core-ai-rule=\"bottom\"\n\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t</g>\n\n\t\t\t\t<g class=\"core-ai-map__hairlines is-hidden\">\n\t\t\t\t\t<path d=\"M504 234 L556 234\"></path>\n\t\t\t\t\t<path d=\"M792 234 L912 234\"></path>\n\t\t\t\t\t<path d=\"M674 308 L674 400\"></path>\n\t\t\t\t\t<path d=\"M358 474 L556 474\"></path>\n\t\t\t\t</g>\n\n\t\t\t\t<!-- Attract previews keep literal paths so hydration never writes SVG d. -->\n\t\t\t\t<g\n\t\t\t\t\tclass=\"core-ai-map__preview-flow\"\n\t\t\t\t\tdata-core-ai-preview=\"0\"\n\t\t\t\t>\n\t\t\t\t\t<path d=\"M449 259 L488 259\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<path d=\"M677 259 L716 259\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<path d=\"M876 259 L1060 259\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<path class=\"core-ai-map__config-path core-ai-map__preview-config\" d=\"M798 340 L798 284\"></path>\n\t\t\t\t\t<circle class=\"core-ai-map__preview-signal\" r=\"5.5\" cx=\"0\" cy=\"0\"></circle>\n\t\t\t\t</g>\n\t\t\t\t<g\n\t\t\t\t\tclass=\"core-ai-map__preview-flow\"\n\t\t\t\t\tdata-core-ai-preview=\"1\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<path d=\"M180 257 L216 257\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<path d=\"M369 259 L514 259\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<circle class=\"core-ai-map__preview-signal\" r=\"5.5\" cx=\"0\" cy=\"0\"></circle>\n\t\t\t\t</g>\n\t\t\t\t<g\n\t\t\t\t\tclass=\"core-ai-map__preview-flow\"\n\t\t\t\t\tdata-core-ai-preview=\"2\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<path d=\"M108 242 L108 266\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<path d=\"M108 364 L108 388\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<circle class=\"core-ai-map__preview-signal\" r=\"5.5\" cx=\"0\" cy=\"0\"></circle>\n\t\t\t\t</g>\n\t\t\t\t<g\n\t\t\t\t\tclass=\"core-ai-map__preview-flow\"\n\t\t\t\t\tdata-core-ai-preview=\"3\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<path d=\"M186 240 C280 244 300 320 424 372\" marker-end=\"url(#core-ai-map-fixture-tip)\"></path>\n\t\t\t\t\t<circle class=\"core-ai-map__preview-signal\" r=\"5.5\" cx=\"0\" cy=\"0\"></circle>\n\t\t\t\t</g>\n\n\t\t\t\t\t\t\t\t<g class=\"core-ai-map__flow\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M504 266 L556 266\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M792 266 L824 266\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M1024 266 L1180 266\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M504 234 L556 234\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M792 234 C810 234 806 384 824 384\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M1024 384 C1080 384 1094 390 1150 390\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 262 L114 392 L118 392\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-wp\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M358 392 L556 392\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-wp\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 276 C114 342 162 372 230 395\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-wp\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M358 474 L556 474\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-wp\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 276 L114 314\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"learns\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 446 L114 484\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"learns\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 278 L114 312\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"learns\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 448 L114 482\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"learns\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 422 L114 450 Q114 470 134 470 L440 470 Q460 470 460 490 L460 732 Q460 752 480 752 L546 752\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"tests\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\t\td=\"M114 402 C114 630 176 748 336 748 L546 748\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-story=\"tests\"\n\t\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\t\tmarker-end=\"url(#core-ai-map-fixture-tip)\"\n\t\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</g>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__config-path\"\n\t\t\t\t\t\t\t\td=\"M924 360 L924 318\"\n\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\tdata-core-ai-variant=\"edges\"\n\t\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<path\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__config-path\"\n\t\t\t\t\t\t\t\td=\"M924 332 C954 318 1012 320 1030 308\"\n\t\t\t\t\t\t\t\tdata-core-ai-story=\"uses-ai\"\n\t\t\t\t\t\t\t\tdata-core-ai-variant=\"rest\"\n\t\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t\t></path>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</svg>\n\n\t\t\t<div class=\"core-ai-map__sparks\" aria-hidden=\"true\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M504 266 L556 266');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.5s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M792 266 L824 266');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.9s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M1024 266 L1180 266');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.7s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 1s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M504 234 L556 234');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.5s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M792 234 C810 234 806 384 824 384');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.9s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M1024 384 C1080 384 1094 390 1150 390');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.7s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 1s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 262 L114 392 L118 392');\n\t\t\t\t\t\t\t\t\tanimation-duration: 2.1s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M358 392 L556 392');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.9s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 276 C114 342 162 372 230 395');\n\t\t\t\t\t\t\t\t\tanimation-duration: 2.1s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M358 474 L556 474');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.9s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 276 L114 314');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.4s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 446 L114 484');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.4s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 278 L114 312');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.4s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 448 L114 482');\n\t\t\t\t\t\t\t\t\tanimation-duration: 1.4s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0.55s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 422 L114 450 Q114 470 134 470 L440 470 Q460 470 460 490 L460 732 Q460 752 480 752 L546 752');\n\t\t\t\t\t\t\t\t\tanimation-duration: 2.8s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;,&quot;variant&quot;:&quot;edges&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__spark\"\n\t\t\t\t\t\t\t\tstyle=\"\n\t\t\t\t\t\t\t\t\toffset-path: path('M114 402 C114 630 176 748 336 748 L546 748');\n\t\t\t\t\t\t\t\t\tanimation-duration: 2.8s;\n\t\t\t\t\t\t\t\t\tanimation-delay: 0s;\n\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;,&quot;variant&quot;:&quot;rest&quot;}\"\t\t\t\t\t\t\t\tdata-wp-class--is-live=\"state.isSparkLive\"\n\t\t\t\t\t\t\t></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\n\t\t\t<div class=\"core-ai-map__tokens\" aria-hidden=\"true\" data-wp-class--is-live=\"state.areTokensLive\" data-wp-class--is-visible=\"state.areTokensVisible\">\n\t\t\t\t<span class=\"core-ai-map__token core-ai-map__token--call\">tools/call</span>\n\t\t\t\t<span class=\"core-ai-map__token core-ai-map__token--ability\">ability</span>\n\t\t\t</div>\n\n\t\t\t<div\n\t\t\t\tclass=\"core-ai-map__learns-explanation\"\n\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\thidden\n\t\t\t>\n\t\t\t\t<span class=\"core-ai-map__learns-label core-ai-map__learns-label--skills\">attaches guidance</span>\n\t\t\t\t<span class=\"core-ai-map__learns-label core-ai-map__learns-label--task\">starts the work</span>\n\t\t\t\t<div class=\"core-ai-map__learns-site\">\n\t\t\t\t\t<small>Inside WordPress</small>\n\t\t\t\t\t<strong>Nothing here runs</strong>\n\t\t\t\t\t<p>The guidance travels with the agent. The site is not involved until a person installs what the agent wrote.</p>\n\t\t\t\t</div>\n\t\t\t</div>\n\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__actor core-ai-map__actor--assistant\"\n\t\t\t\t\t\tstyle=\"--cai-x: 24px; --cai-y: 112px; transform: translate(-6px, -30px) rotate(-1.3deg); opacity: 0.2;\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;assistant&quot;}\"\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__actor-float\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__actor-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-assistant\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-badge\">Not WordPress</span>\n\t\t\t\t\t\t\t\t<strong>AI assistant</strong>\n\t\t\t\t\t\t\t\t<small>Speaks MCP</small>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__actor core-ai-map__actor--skills\"\n\t\t\t\t\t\tstyle=\"--cai-x: 24px; --cai-y: 244px; transform: translate(12px, 96px) rotate(1.4deg); opacity: 0.2;\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;skills&quot;}\"\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__actor-float\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-ghost core-ai-map__actor-ghost--far\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-ghost core-ai-map__actor-ghost--near\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__actor-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-skills\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-badge\">Guidance</span>\n\t\t\t\t\t\t\t\t<strong>Agent Skills</strong>\n\t\t\t\t\t\t\t\t<small>Instruction bundles</small>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__actor core-ai-map__actor--agent\"\n\t\t\t\t\t\tstyle=\"--cai-x: 24px; --cai-y: 376px; transform: translate(16px, 92px) rotate(-1deg); opacity: 0.2;\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;agent&quot;}\"\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__actor-float\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__actor-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-agent\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-badge\">Not WordPress</span>\n\t\t\t\t\t\t\t\t<strong>Coding agent</strong>\n\t\t\t\t\t\t\t\t<small>Writes the code</small>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__actor core-ai-map__actor--task\"\n\t\t\t\t\t\tstyle=\"--cai-x: 24px; --cai-y: 508px; transform: translate(6px, 54px) rotate(-1.1deg); opacity: 0.2;\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;task&quot;}\"\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__actor-float\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__actor-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-task\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-badge\">Not WordPress</span>\n\t\t\t\t\t\t\t\t<strong>A WordPress task</strong>\n\t\t\t\t\t\t\t\t<small>Plugin or theme work</small>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--plugin is-preview-member\"\n\t\t\t\t\t\tstyle=\"--cai-x: 268px; --cai-y: 160px; transform: translate(-8px, 40px) scale(0.8);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;plugin&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 1;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-plugin\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\">1</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<rect x=\"4\" y=\"6\" width=\"24\" height=\"20\" rx=\"2\"></rect>\n\t\t\t<path d=\"M9 13h9m-9 5h14\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">Experimental reference plugin</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>AI Plugin</strong>\n\t\t\t\t\t\t\t\t\t<small>Turn the foundations into useful features</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--client is-preview-member\"\n\t\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 160px; transform: translate(-68px, 40px) scale(0.8);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;client&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 1;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-client\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\">2</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<path d=\"M5 6h22v15H15l-6 5v-5H5V6Z\"></path>\n\t\t\t<path d=\"M10 12h12m-12 4h8\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">Core API · 7.0</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>AI Client</strong>\n\t\t\t\t\t\t\t\t\t<small>Request AI through one common interface</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__provider-plugin is-active\"\n\t\t\t\t\t\tstyle=\"--cai-x: 912px; --cai-y: 400px; transform: translate(-196px, -200px) scale(0.8);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;provider-plugin&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isProviderPluginHidden\"\n\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.providerPluginTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<button\n\t\t\t\t\t\t\tclass=\"core-ai-map__provider-plugin-body\"\n\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-provider-plugin\"\n\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\">3</span>\n\t\t\t\t\t\t\t<span class=\"core-ai-map__provider-plugin-badge\">WordPress plugin</span>\n\t\t\t\t\t\t\t<strong>AI provider plugin</strong>\n\t\t\t\t\t\t\t<small>Provider-specific integration</small>\n\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__actor core-ai-map__actor--provider is-preview-member\"\n\t\t\t\t\t\tstyle=\"--cai-x: 1150px; --cai-y: 330px; transform: translate(-90px, -119px) scale(0.8);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;provider&quot;}\"\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__actor-float\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__actor-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-provider\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__actor-badge\">Not WordPress</span>\n\t\t\t\t\t\t\t\t<strong>External AI service</strong>\n\t\t\t\t\t\t\t\t<small>Selected from site configuration</small>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--connectors is-sidecar is-preview-sidecar\"\n\t\t\t\t\t\tstyle=\"--cai-x: 912px; --cai-y: 160px; transform: translate(-184px, 180px) scale(0.8);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;connectors&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 0.86;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-connectors\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<path d=\"M13 4h6v7h5v6h-5v4a7 7 0 0 1-14 0v-4h8V4Z\"></path>\n\t\t\t<path d=\"M8 17v-5m10-1V6\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">Core API · 7.0</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>Connectors</strong>\n\t\t\t\t\t\t\t\t\t<small>Configure provider plugins and credentials</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__sidecar-label\">Setup · discovery · credentials</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--mcp\"\n\t\t\t\t\t\tstyle=\"--cai-x: 268px; --cai-y: 400px; transform: translate(120px, -36px) rotate(1.6deg);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;mcp&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 0.2;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-mcp\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<path d=\"M11 5v7m10-7v7M8 12h16v3a8 8 0 0 1-8 8v4\"></path>\n\t\t\t<path d=\"M12 17h8\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">WordPress plugin · not in Core</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>MCP Adapter</strong>\n\t\t\t\t\t\t\t\t\t<small>Let authorized assistants work with WordPress</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--abilities\"\n\t\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 400px; transform: translate(-26px, 28px) rotate(-1.2deg);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;abilities&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 0.2;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-abilities\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<rect x=\"4\" y=\"5\" width=\"10\" height=\"9\" rx=\"1.5\"></rect>\n\t\t\t<rect x=\"18\" y=\"18\" width=\"10\" height=\"9\" rx=\"1.5\"></rect>\n\t\t\t<path d=\"M14 9.5h5a4 4 0 0 1 4 4V18M18 22.5h-5a4 4 0 0 1-4-4V14\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">Core API · 6.9</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>Abilities API</strong>\n\t\t\t\t\t\t\t\t\t<small>Describe what WordPress can do</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__block core-ai-map__block--bench\"\n\t\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 672px; transform: translate(32px, -44px) rotate(0.9deg);\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;bench&quot;}\"\t\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isCardActive\"\n\t\t\t\t\t\tdata-wp-class--is-parked=\"state.isCardParked\"\n\t\t\t\t\t\tdata-wp-class--is-sidecar=\"state.isCardSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-preview-member=\"state.isPreviewMember\"\n\t\t\t\t\t\tdata-wp-class--is-preview-sidecar=\"state.isPreviewSidecar\"\n\t\t\t\t\t\tdata-wp-class--is-dimmed=\"state.isCardDimmed\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__block-float\">\n\t\t\t\t\t\t\t<button\n\t\t\t\t\t\t\t\tclass=\"core-ai-map__block-body\"\n\t\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\t\tstyle=\"opacity: 0.2;\"\n\t\t\t\t\t\t\t\tdata-wp-style--opacity=\"state.cardOpacity\"\n\t\t\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-panel-bench\"\n\t\t\t\t\t\t\t\taria-expanded=\"false\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-expanded=\"state.isCardInspected\"\n\t\t\t\t\t\t\t\tdata-wp-bind--aria-label=\"state.cardActionLabel\"\n\t\t\t\t\t\t\t\tdata-wp-bind--disabled=\"state.isCardNotTappable\"\n\t\t\t\t\t\t\t\tdata-wp-on--click=\"actions.inspectCard\"\n\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__step\" data-wp-text=\"state.cardStep\" aria-hidden=\"true\"></span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-head\">\n\t\t\t\t\t\t\t\t\t\t<svg class=\"core-ai-map__icon\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t<path d=\"M5 27V14m7 13V8m7 19V17m7 10V4\"></path>\n\t\t\t<path d=\"M3 27h26\"></path>\n\t\t\t</svg>\n\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-badge\">Early benchmark</span>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__block-name\">\n\t\t\t\t\t\t\t\t\t<strong>WP-Bench</strong>\n\t\t\t\t\t\t\t\t\t<small>See whether the code an agent writes actually runs</small>\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__tap-cue\" data-wp-bind--hidden=\"state.isTapCueHidden\" aria-hidden=\"true\" hidden>Tap for its role</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--plugin\"\n\t\t\t\t\tstyle=\"--cai-x: 268px; --cai-y: 160px; transform: translate(-8px, 40px) scale(0.8);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;plugin&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--plugin\"\n\t\t\t\t\t\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div\n\t\t\t\tclass=\"core-ai-map__workbench\"\n\t\t\t\tdata-wp-class--is-applied=\"state.isSuggestionApplied\"\n\t\t\t>\n\t\t\t\t<div class=\"core-ai-map__workbench-head\">\n\t\t\t\t\t<span data-wp-text=\"state.suggestionLabel\">Alt text</span>\n\t\t\t\t\t<em class=\"core-ai-map__workbench-phase\" data-wp-text=\"state.suggestionPhase\">Needs review</em>\n\t\t\t\t</div>\n\t\t\t\t<p class=\"core-ai-map__workbench-text\" data-wp-text=\"state.suggestionText\">Two people reviewing a site on a laptop</p>\n\t\t\t\t<div class=\"core-ai-map__workbench-actions\">\n\t\t\t\t\t<span class=\"core-ai-map__workbench-review\">A person reviews</span>\n\t\t\t\t\t<button class=\"core-ai-map__workbench-apply\" type=\"button\" data-wp-on--click=\"actions.applySuggestion\">Apply</button>\n\t\t\t\t</div>\n\t\t\t\t<p class=\"core-ai-map__workbench-note\" data-wp-bind--hidden=\"state.isSuggestionNotApplied\" hidden>A person chose Apply. Nothing is applied without that tap.</p>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--client\"\n\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 160px; transform: translate(-68px, 40px) scale(0.8);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;client&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--client\"\n\t\t\t\t\t\taria-hidden=\"true\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__router\">\n\t\t\t\t<div class=\"core-ai-map__router-row\">\n\t\t\t\t\t<span>text</span><span>image</span><span>json</span>\n\t\t\t\t\t<span class=\"core-ai-map__router-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t<span class=\"core-ai-map__router-result\">result</span>\n\t\t\t\t</div>\n\t\t\t\t<p>route &middot; select &middot; normalize</p>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--connectors\"\n\t\t\t\t\tstyle=\"--cai-x: 912px; --cai-y: 160px; transform: translate(-184px, 180px) scale(0.8);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;connectors&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--connectors\"\n\t\t\t\t\t\taria-hidden=\"true\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__sockets\">\n\t\t\t\t<div class=\"core-ai-map__sockets-row\">\n\t\t\t\t\t<span class=\"core-ai-map__socket core-ai-map__socket--connected\">Connected</span>\n\t\t\t\t\t<span class=\"core-ai-map__socket core-ai-map__socket--available\">Available</span>\n\t\t\t\t</div>\n\t\t\t\t<span class=\"core-ai-map__socket core-ai-map__socket--credentials\">Needs credentials</span>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--mcp\"\n\t\t\t\t\tstyle=\"--cai-x: 268px; --cai-y: 400px; transform: translate(120px, -36px) rotate(1.6deg);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;mcp&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--mcp\"\n\t\t\t\t\t\taria-hidden=\"true\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__bridge\">\n\t\t\t\t<span class=\"core-ai-map__bridge-outside\">tools &middot; resources</span>\n\t\t\t\t<span class=\"core-ai-map__bridge-inside\">abilities</span>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--abilities\"\n\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 400px; transform: translate(-26px, 28px) rotate(-1.2deg);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;abilities&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--abilities\"\n\t\t\t\t\t\taria-hidden=\"true\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__ports\">\n\t\t\t\t<span>Input</span>\n\t\t\t\t<span class=\"is-accent\">Permission &#10003;</span>\n\t\t\t\t<span>Run</span>\n\t\t\t\t<span>Output</span>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__strip-anchor core-ai-map__strip-anchor--bench\"\n\t\t\t\t\tstyle=\"--cai-x: 556px; --cai-y: 672px; transform: translate(32px, -44px) rotate(0.9deg);\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;bench&quot;}\"\t\t\t\t\tdata-wp-style--transform=\"state.cardTransform\"\n\t\t\t\t>\n\t\t\t\t\t<div\n\t\t\t\t\t\tclass=\"core-ai-map__strip core-ai-map__strip--bench\"\n\t\t\t\t\t\taria-hidden=\"true\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStripHidden\"\n\t\t\t\t\t\tdata-wp-class--is-live=\"state.isStripLive\"\n\t\t\t\t\t\tdata-wp-style--top=\"state.stripTop\"\n\t\t\t\t\t\thidden\n\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__meters\">\n\t\t\t\t<div class=\"core-ai-map__meter\">\n\t\t\t\t\t<span class=\"core-ai-map__meter-label\">suite</span>\n\t\t\t\t\t<span class=\"core-ai-map__meter-value\">wp-core-v1</span>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"core-ai-map__meter\">\n\t\t\t\t\t<span class=\"core-ai-map__meter-label\">tests</span>\n\t\t\t\t\t<span class=\"core-ai-map__meter-value\">185</span>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"core-ai-map__meter\">\n\t\t\t\t\t<span class=\"core-ai-map__meter-label\">pass</span>\n\t\t\t\t\t<span class=\"core-ai-map__meter-value\">boolean</span>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"core-ai-map__meter\">\n\t\t\t\t\t<span class=\"core-ai-map__meter-label\">grader</span>\n\t\t\t\t\t<span class=\"core-ai-map__meter-value\">WordPress</span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t<div class=\"core-ai-map__story-copy\" data-wp-bind--hidden=\"state.isStoryBandHidden\" hidden>\n\t\t\t<div class=\"core-ai-map__browse-note\" data-wp-bind--hidden=\"state.isBrowseNoteHidden\" hidden>\n\t\t\t\t<p>\n\t\t\t\t\t<strong>Browse all components</strong>\n\t\t\t\t\t<span>Every component on one canvas, with no flow selected.</span>\n\t\t\t\t</p>\n\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__story-flow\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<div class=\"core-ai-map__story-lessons\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__situation\">\n\t\t\t\t\t\t\t\t<strong>Situation</strong>\n\t\t\t\t\t\t\t\t<span>A feature inside WordPress needs an AI-generated result.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__takeaway\" data-wp-bind--hidden=\"state.isTakeawayHidden\" hidden>\n\t\t\t\t\t\t\t\t<strong>What this flow shows</strong>\n\t\t\t\t\t\t\t\t<span>A WordPress feature uses a common AI interface instead of integrating directly with every provider. Provider configuration supports the request, while the AI service remains outside WordPress.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"core-ai-map__story-actions\">\n\t\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__replay\" type=\"button\" data-wp-on--click=\"actions.replayStory\">\n\t\t\t\t\t\t\t<span aria-hidden=\"true\">&#8635;</span>Replay\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__story-flow\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<div class=\"core-ai-map__story-lessons\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__situation\">\n\t\t\t\t\t\t\t\t<strong>Situation</strong>\n\t\t\t\t\t\t\t\t<span>An outside assistant asks WordPress to perform an allowed action.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__takeaway\" data-wp-bind--hidden=\"state.isTakeawayHidden\" hidden>\n\t\t\t\t\t\t\t\t<strong>What this flow shows</strong>\n\t\t\t\t\t\t\t\t<span>The assistant does not bypass WordPress. The MCP Adapter translates the request, and the selected ability still applies WordPress permissions.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"core-ai-map__story-actions\">\n\t\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__replay\" type=\"button\" data-wp-on--click=\"actions.replayStory\">\n\t\t\t\t\t\t\t<span aria-hidden=\"true\">&#8635;</span>Replay\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__story-flow\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<div class=\"core-ai-map__story-lessons\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__situation\">\n\t\t\t\t\t\t\t\t<strong>Situation</strong>\n\t\t\t\t\t\t\t\t<span>A coding agent receives WordPress-specific guidance before writing code.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__takeaway\" data-wp-bind--hidden=\"state.isTakeawayHidden\" hidden>\n\t\t\t\t\t\t\t\t<strong>What this flow shows</strong>\n\t\t\t\t\t\t\t\t<span>Agent Skills changes the information available to the coding agent. Nothing runs on the WordPress site during this flow.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"core-ai-map__story-actions\">\n\t\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__replay\" type=\"button\" data-wp-on--click=\"actions.replayStory\">\n\t\t\t\t\t\t\t<span aria-hidden=\"true\">&#8635;</span>Replay\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t\t\t<div\n\t\t\t\t\tclass=\"core-ai-map__story-flow\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<div class=\"core-ai-map__story-lessons\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__situation\">\n\t\t\t\t\t\t\t\t<strong>Situation</strong>\n\t\t\t\t\t\t\t\t<span>Code written by an agent needs to be tested against real WordPress behavior.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__takeaway\" data-wp-bind--hidden=\"state.isTakeawayHidden\" hidden>\n\t\t\t\t\t\t\t\t<strong>What this flow shows</strong>\n\t\t\t\t\t\t\t\t<span>The generated code runs in a disposable WordPress environment and is judged by WordPress tests, not by another model&#039;s opinion.</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"core-ai-map__story-actions\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__run-loop-link\" type=\"button\" data-wp-on--click=\"actions.openBench\">\n\t\t\t\t\t\t\t\tSee the run loop<span aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__replay\" type=\"button\" data-wp-on--click=\"actions.replayStory\">\n\t\t\t\t\t\t\t<span aria-hidden=\"true\">&#8635;</span>Replay\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t\t</div>\n\n\t\t\t\t<nav class=\"core-ai-map__rail\" aria-labelledby=\"core-ai-map-fixture-rail-label\" data-wp-bind--hidden=\"state.isRailHidden\" hidden>\n\t\t\t<p class=\"core-ai-map__rail-label\" id=\"core-ai-map-fixture-rail-label\" data-wp-text=\"state.railLabel\">Choose a flow</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\ttype=\"button\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-class--is-active=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-on--click=\"actions.selectStory\"\n\t\t\t\t>\n\t\t\t\t\t<span class=\"core-ai-map__rail-number\" aria-hidden=\"true\">01</span>\n\t\t\t\t\t<span class=\"core-ai-map__rail-copy\">\n\t\t\t\t\t\t<strong>WordPress uses AI</strong>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<small class=\"core-ai-map__rail-outcome\">WordPress requests an AI result</small>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\ttype=\"button\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;}\"\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-class--is-active=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-on--click=\"actions.selectStory\"\n\t\t\t\t>\n\t\t\t\t\t<span class=\"core-ai-map__rail-number\" aria-hidden=\"true\">02</span>\n\t\t\t\t\t<span class=\"core-ai-map__rail-copy\">\n\t\t\t\t\t\t<strong>AI uses WordPress</strong>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<small class=\"core-ai-map__rail-outcome\">An assistant requests a WordPress action</small>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\ttype=\"button\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-class--is-active=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-on--click=\"actions.selectStory\"\n\t\t\t\t>\n\t\t\t\t\t<span class=\"core-ai-map__rail-number\" aria-hidden=\"true\">03</span>\n\t\t\t\t\t<span class=\"core-ai-map__rail-copy\">\n\t\t\t\t\t\t<strong>An agent learns WordPress</strong>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<small class=\"core-ai-map__rail-outcome\">A coding agent receives WordPress guidance</small>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\ttype=\"button\"\n\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;}\"\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-class--is-active=\"state.isStorySelected\"\n\t\t\t\t\tdata-wp-on--click=\"actions.selectStory\"\n\t\t\t\t>\n\t\t\t\t\t<span class=\"core-ai-map__rail-number\" aria-hidden=\"true\">04</span>\n\t\t\t\t\t<span class=\"core-ai-map__rail-copy\">\n\t\t\t\t\t\t<strong>WordPress tests the result</strong>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<small class=\"core-ai-map__rail-outcome\">WordPress evaluates generated code</small>\n\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t</button>\n\t\t\t\t\t</nav>\n\n\t\t<footer class=\"core-ai-map__colophon\">\n\t\t\t<button\n\t\t\t\tclass=\"core-ai-map__about-trigger\"\n\t\t\t\ttype=\"button\"\n\t\t\t\taria-controls=\"core-ai-map-fixture-about\"\n\t\t\t\taria-expanded=\"false\"\n\t\t\t\tdata-wp-bind--hidden=\"state.isAboutControlHidden\"\n\t\t\t\tdata-wp-bind--aria-expanded=\"state.isAbout\"\n\t\t\t\tdata-wp-on--click=\"actions.openAbout\"\n\t\t\t>\n\t\t\t\tAbout this exhibit\t\t\t</button>\n\t\t</footer>\n\n\t\t<div class=\"core-ai-map__attract\" data-screen-label=\"Living Block Map welcome\" data-wp-bind--hidden=\"state.isNotAttract\">\n\t\t\t<p class=\"core-ai-map__eyebrow\">WordPress Core AI</p>\n\t\t\t<h1>What is WordPress Core AI?</h1>\n\t\t\t<div class=\"core-ai-map__orientation\">\n\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__intro\">WordPress Core AI is a set of open building blocks that let WordPress use AI services and work with outside assistants—without tying WordPress to one provider.</p>\n\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__intro\">Explore four flows to see what happens inside WordPress, what happens outside it, and how the projects connect.</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t<ol class=\"core-ai-map__welcome-steps\" role=\"list\">\n\t\t\t\t<li><span>1</span><strong>Choose a flow</strong></li>\n\t\t\t\t<li><span>2</span><strong>Follow the numbered path</strong></li>\n\t\t\t\t<li><span>3</span><strong>Tap a highlighted component to see its role</strong></li>\n\t\t\t</ol>\n\t\t\t\t<div class=\"core-ai-map__legend core-ai-map__legend--welcome\" aria-label=\"How to read the map\">\n\t\t<ul role=\"list\">\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--solid\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Solid arrow:</strong> active request or work</span>\n\t\t\t</li>\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--dashed\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Dashed line:</strong> configuration or supporting information</span>\n\t\t\t</li>\n\t\t\t<li class=\"core-ai-map__legend-item\">\n\t\t\t\t<span class=\"core-ai-map__legend-sample core-ai-map__legend-sample--dimmed\" aria-hidden=\"true\"></span>\n\t\t\t\t<span><strong>Dimmed component:</strong> not part of this flow</span>\n\t\t\t</li>\n\t\t</ul>\n\t</div>\n\t\t\t\t<div class=\"core-ai-map__attract-actions\">\n\t\t\t\t<button class=\"core-ai-map__prompt\" type=\"button\" data-wp-on--click=\"actions.start\">\n\t\t\t\t\t<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t\t\t<path d=\"M12 5v14M5 12h14\"></path>\n\t\t\t\t\t</svg>\n\t\t\t\t\tExplore the first flow\t\t\t\t</button>\n\t\t\t\t<button class=\"core-ai-map__attract-browse\" type=\"button\" data-wp-on--click=\"actions.browseAll\">\n\t\t\t\t\tBrowse all components\t\t\t\t</button>\n\t\t\t</div>\n\t\t\t<div class=\"core-ai-map__attract-story\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p\n\t\t\t\t\t\tdata-test-context=\"{&quot;previewId&quot;:0}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isPreviewHidden\"\n\t\t\t\t\t\tdata-wp-class--is-visible=\"state.isPreviewTextVisible\"\n\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t<em>A plugin asks the AI Client for a capability. The Client routes through a configured provider plugin to an external AI service; Connectors supplies discovery, configuration, and credentials beside the request path.</em>\n\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p\n\t\t\t\t\t\tdata-test-context=\"{&quot;previewId&quot;:1}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isPreviewHidden\"\n\t\t\t\t\t\tdata-wp-class--is-visible=\"state.isPreviewTextVisible\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<span>AI uses WordPress</span>\n\t\t\t\t\t\t<em>An authorized assistant calls in through the MCP Adapter, which translates the call into a WordPress ability. Permission still belongs to WordPress.</em>\n\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p\n\t\t\t\t\t\tdata-test-context=\"{&quot;previewId&quot;:2}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isPreviewHidden\"\n\t\t\t\t\t\tdata-wp-class--is-visible=\"state.isPreviewTextVisible\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<span>An agent learns WordPress</span>\n\t\t\t\t\t\t<em>Agent Skills attaches current WordPress guidance to a coding agent, which then starts the task. All of this happens outside the site — nothing inside WordPress runs.</em>\n\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p\n\t\t\t\t\t\tdata-test-context=\"{&quot;previewId&quot;:3}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isPreviewHidden\"\n\t\t\t\t\t\tdata-wp-class--is-visible=\"state.isPreviewTextVisible\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<span>WordPress tests the result</span>\n\t\t\t\t\t\t<em>WP-Bench runs what the agent produced inside a sandboxed WordPress, and WordPress itself decides whether it passed. Evidence, not vibes.</em>\n\t\t\t\t\t</p>\n\t\t\t\t\t\t\t</div>\n\t\t</div>\n\n\t\t<aside\n\t\t\tid=\"core-ai-map-fixture-about\"\n\t\t\tclass=\"core-ai-map__about\"\n\t\t\trole=\"dialog\"\n\t\t\taria-modal=\"true\"\n\t\t\taria-labelledby=\"core-ai-map-fixture-about-title\"\n\t\t\tdata-wp-bind--hidden=\"state.isNotAbout\"\n\t\t\thidden\n\t\t>\n\t\t\t<div class=\"core-ai-map__about-content\">\n\t\t\t\t<button class=\"core-ai-map__about-close\" type=\"button\" data-wp-on--click=\"actions.closeAbout\">\n\t\t\t\t\t<span aria-hidden=\"true\">&larr;</span>\n\t\t\t\t\tBack to the exhibit\t\t\t\t</button>\n\t\t\t\t<p class=\"core-ai-map__details-badge\">Transparency</p>\n\t\t\t\t<h2 id=\"core-ai-map-fixture-about-title\">About this exhibit</h2>\n\t\t\t\t<dl class=\"core-ai-map__about-disclosure\">\n\t\t\t\t\t<div><dt>AI assistance:</dt><dd>Yes</dd></div>\n\t\t\t\t\t<div><dt>Tool:</dt><dd>OpenAI Codex</dd></div>\n\t\t\t\t\t<div><dt>Used for:</dt><dd>implementation, tests, and deployment preparation.</dd></div>\n\t\t\t\t</dl>\n\t\t\t\t<p>Final work was human-reviewed and tested; the human contributor remains responsible for it.</p>\n\t\t\t\t<p class=\"core-ai-map__about-reviewed\">Reviewed 14 Aug 2026</p>\n\t\t\t</div>\n\t\t</aside>\n\n\t\t<aside\n\t\t\tclass=\"core-ai-map__details\"\n\t\t\trole=\"region\"\n\t\t\taria-label=\"Block details\"\n\t\t\tdata-screen-label=\"Block details\"\n\t\t\tdata-wp-bind--hidden=\"state.isNotInspect\"\n\t\t\thidden\n\t\t>\n\t\t\t<button class=\"core-ai-map__details-close\" type=\"button\" data-wp-on--click=\"actions.closeInspect\">\n\t\t\t\t<span aria-hidden=\"true\">&larr;</span>\n\t\t\t\t<span data-wp-text=\"state.detailsBackLabel\">Back to the map</span>\n\t\t\t</button>\n\n\t\t\t\t\t\t<p\n\t\t\t\tclass=\"core-ai-map__details-guidance\"\n\t\t\t\tdata-wp-text=\"state.inspectGuidance\"\n\t\t\t\tdata-wp-bind--hidden=\"state.isFlowContextHidden\"\n\t\t\t\thidden\n\t\t\t></p>\n\t\t\t<p class=\"core-ai-map__details-continuation\" aria-hidden=\"true\">\n\t\t\t\t<span>Scroll or swipe for Under the hood and Keep exploring</span>\n\t\t\t\t<span aria-hidden=\"true\">&darr;</span>\n\t\t\t</p>\n\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-abilities\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-abilities-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;abilities&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-abilities-title\" class=\"core-ai-map__sr-only\">Abilities API</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>AI uses WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>Abilities API</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The translated request, naming the WordPress action and supplying its inputs.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Validates the inputs, checks whether the current user is allowed to perform the action, then runs its registered callback.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>A typed result, or a refusal.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">Connecting an outside assistant does not give it unrestricted access. WordPress still controls execution.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Core API · 6.9</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">Abilities API</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">Abilities are the list of things this site can do. Each one declares its inputs, its outputs, who is allowed to run it, and what happens when it runs.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"core-ai-map__ability-tabs\" role=\"tablist\" aria-label=\"Abilities API detail\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<button type=\"button\" role=\"tab\" tabindex=\"0\" id=\"core-ai-map-fixture-abilities-tab-overview\" aria-controls=\"core-ai-map-fixture-abilities-panel-overview\" aria-selected=\"true\" data-core-ai-abilities-tab=\"overview\" data-test-context=\"{&quot;tabId&quot;:&quot;overview&quot;}\" data-wp-bind--aria-selected=\"state.isAbilityTabSelected\" data-wp-bind--tabindex=\"state.abilityTabIndex\" data-wp-class--is-active=\"state.isAbilityTabSelected\" data-wp-on--click=\"actions.selectAbilityTab\">Overview</button>\n\t\t\t\t\t\t\t<button type=\"button\" role=\"tab\" tabindex=\"-1\" id=\"core-ai-map-fixture-abilities-tab-anatomy\" aria-controls=\"core-ai-map-fixture-abilities-panel-anatomy\" aria-selected=\"false\" data-core-ai-abilities-tab=\"anatomy\" data-test-context=\"{&quot;tabId&quot;:&quot;anatomy&quot;}\" data-wp-bind--aria-selected=\"state.isAbilityTabSelected\" data-wp-bind--tabindex=\"state.abilityTabIndex\" data-wp-class--is-active=\"state.isAbilityTabSelected\" data-wp-on--click=\"actions.selectAbilityTab\">Anatomy</button>\n\t\t\t\t\t\t\t<button type=\"button\" role=\"tab\" tabindex=\"-1\" id=\"core-ai-map-fixture-abilities-tab-permissions\" aria-controls=\"core-ai-map-fixture-abilities-panel-permissions\" aria-selected=\"false\" data-core-ai-abilities-tab=\"permissions\" data-test-context=\"{&quot;tabId&quot;:&quot;permissions&quot;}\" data-wp-bind--aria-selected=\"state.isAbilityTabSelected\" data-wp-bind--tabindex=\"state.abilityTabIndex\" data-wp-class--is-active=\"state.isAbilityTabSelected\" data-wp-on--click=\"actions.selectAbilityTab\">Who is allowed</button>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tid=\"core-ai-map-fixture-abilities-panel-overview\"\n\t\t\t\t\t\t\trole=\"tabpanel\"\n\t\t\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-abilities-tab-overview\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;tabId&quot;:&quot;overview&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isAbilityTabNotSelected\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t\t<div class=\"core-ai-map__chain\">\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Input</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Permission</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Run</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step is-accent\">Typed output</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">The PHP API landed in WordPress 6.9. WordPress 7.0 added a client-side counterpart for editor actions such as navigation and block insertion. A public default for client exposure, filtering in wp_get_abilities(), and filters around execution arrive in WordPress 7.1 on August 19, 2026. This exhibit runs a 7.1 release candidate, so the Anatomy panel describes the version you are looking at.</p>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\"><strong>Reached from both directions.</strong> An outside assistant is not the only caller. A request made by the AI Client inside WordPress can name registered abilities a model is allowed to call, and every one of those calls still passes the same permission check.</p>\n\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"abilities\"\n\t\tdata-core-ai-qr-id=\"abilities\"\n\t\tdata-qr-url=\"https://developer.wordpress.org/apis/abilities-api/\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/abilities.svg\"\n\t\t\talt=\"QR code for Abilities API: https://developer.wordpress.org/apis/abilities-api/\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://developer.wordpress.org/apis/abilities-api/</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tid=\"core-ai-map-fixture-abilities-panel-anatomy\"\n\t\t\t\t\t\t\trole=\"tabpanel\"\n\t\t\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-abilities-tab-anatomy\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;tabId&quot;:&quot;anatomy&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isAbilityTabNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">One registration, annotated</h4>\n\t\t\t\t\t\t\t<div class=\"core-ai-map__ability-code\">\n\t\t\t\t\t\t\t\t<p><b>A</b><code>wp_register_ability( 'bookings/get-availability', [</code></p>\n\t\t\t\t\t\t\t\t<p><b>B</b><code>  'label'               =&gt; 'Get availability',</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  'description'         =&gt; 'Open slots in a range.',</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  'category'            =&gt; 'bookings',</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  'input_schema'        =&gt; $schema,</code></p>\n\t\t\t\t\t\t\t\t<p><b>C</b><code>  'permission_callback' =&gt; $can_book,</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  'execute_callback'    =&gt; $handler,</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  'meta'                =&gt; [</code></p>\n\t\t\t\t\t\t\t\t<p><b>D</b><code>    'public'      =&gt; true,</code></p>\n\t\t\t\t\t\t\t\t<p><b>E</b><code>    'annotations' =&gt; [ 'readonly' =&gt; true ],</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>  ],</code></p>\n\t\t\t\t\t\t\t\t<p><i aria-hidden=\"true\"></i><code>] );</code></p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<ul class=\"core-ai-map__ability-notes\">\n\t\t\t\t\t\t\t\t<li><b>A</b><span><strong>Two segments, lowercase.</strong> The name is public API. Renaming it later breaks every caller.</span></li>\n\t\t\t\t\t\t\t\t<li><b>B</b><span><strong>This is the part an agent reads.</strong> It picks the ability from these two lines alone. If the description needs an “and”, it is two abilities.</span></li>\n\t\t\t\t\t\t\t\t<li><b>C</b><span><strong>Checked on every call.</strong> An editor button, a REST client and an outside assistant all pass through the same gate.</span></li>\n\t\t\t\t\t\t\t\t<li><b>D</b><span><strong>One public default, per-channel control. New in 7.1.</strong> Public seeds outside channels such as REST, MCP adapters, and agents; each channel can still be turned off independently.</span></li>\n\t\t\t\t\t\t\t\t<li><b>E</b><span><strong>Hints to clients about behavior — and the verb core requires.</strong> Read-only tells a client this ability changes nothing; over REST it also makes GET the only way to call it. What it never does is decide who may call it.</span></li>\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-warning\"><strong>Validation is not sanitization.</strong> The schema checks types and required fields. It does not clean input, and it does not fill in the defaults you wrote. Whatever arrives is raw.</p>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tid=\"core-ai-map-fixture-abilities-panel-permissions\"\n\t\t\t\t\t\t\trole=\"tabpanel\"\n\t\t\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-abilities-tab-permissions\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;tabId&quot;:&quot;permissions&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isAbilityTabNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">Three gates, one call</h4>\n\t\t\t\t\t\t\t<div class=\"core-ai-map__chain\">\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Assistant</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Transport</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step\">Meta-tool</span><span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-step is-accent\">Your callback</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<ol class=\"core-ai-map__permission-gates\">\n\t\t\t\t\t\t\t\t<li><strong>The endpoint lets you in</strong><span>The adapter’s default transport check is only whether someone is logged in. On a stock install a subscriber clears this gate.</span></li>\n\t\t\t\t\t\t\t\t<li><strong>The tool lets you ask</strong><span>On the default server abilities are not listed one by one. Three adapter tools stand in front of them — discover, inspect, execute — and each carries its own capability.</span></li>\n\t\t\t\t\t\t\t\t<li><strong>The ability decides</strong><span>Only the last gate sees what is actually being asked — which booking, which date, on whose behalf. This is the one you write.</span></li>\n\t\t\t\t\t\t\t</ol>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-warning\"><strong>All three must pass.</strong> The first two default to little more than “someone is logged in”. A permission check only ever tried as an administrator has not been tested.</p>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">An assistant acts as a real logged-in user. An ability that is too generous hands an outside service that user’s reach. Exposure is not authorization: public decides what a client may see, never what it may run.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-client\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-client-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;client&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-client-title\" class=\"core-ai-map__sr-only\">AI Client</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>AI Client</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>A capability request from a WordPress feature.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Sends the request through a compatible configured provider plugin.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>The provider’s response in a consistent WordPress format.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">WordPress features can request AI capabilities without integrating every external provider separately.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Core API · 7.0</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">AI Client</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">A plugin asks for a capability and the kind of result it needs. The AI Client routes through an installed provider plugin to a compatible external service; Connectors supplies that plugin’s configuration and credentials.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain \">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Text, image, speech or video request</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>AI Client</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Normalized result</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">A WordPress wrapper around the provider-agnostic PHP AI Client, which handles provider communication, model selection, and normalized results. Consuming plugins never integrate a provider directly. There is a JavaScript prompt API too, but it is administrator-gated and can send any prompt to any configured provider — so for editor features, register a REST endpoint scoped to that one feature. Check support before showing any AI interface — the checks are free, and a 7.0 site may have no provider configured at all.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">Calling back into WordPress</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">A request can name registered abilities the model is allowed to call. When it calls one, WordPress runs that ability — permission check and all — and folds the result back into the same request. This is where the two halves of the map meet: WordPress asking AI for something can end with WordPress doing the work itself.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"client\"\n\t\tdata-core-ai-qr-id=\"client\"\n\t\tdata-qr-url=\"https://developer.wordpress.org/reference/functions/wp_ai_client_prompt/\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/client.svg\"\n\t\t\talt=\"QR code for AI Client: https://developer.wordpress.org/reference/functions/wp_ai_client_prompt/\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://developer.wordpress.org/reference/functions/wp_ai_client_prompt/</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-connectors\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-connectors-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;connectors&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-connectors-title\" class=\"core-ai-map__sr-only\">Connectors</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>Connectors</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>Nothing in the request path — it sits beside it.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Provides provider-plugin installation, credentials, configuration, and connection status beside the active request path.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>The provider configuration the AI Client uses when it chooses a route.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">Provider setup is centralized instead of being rebuilt inside every AI-powered feature. Connectors supports the path; it does not execute the request.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Core API · 7.0</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">Connectors</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">Where a site owner installs provider plugins, supplies credentials, and sees connection status — one setup shared by every plugin that needs it. It supports the request path; it is not the request executor.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">Connection states</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain core-ai-map__chain--grid\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Available</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Needs plugin</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-warning\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Needs credentials</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Connected</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">Providers</h4>\n\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">Provider plugins register with the AI Client. Connectors auto-discovers them, and one button installs and activates the plugin before asking for its key. Keys are read from an environment variable first, then a wp-config constant, then the database — where they sit unencrypted by default. The map stays vendor-neutral: no provider owns a position on the canvas.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">Introduced in WordPress 7.0 as a standardized framework for registering and managing connections to external services. AI providers are the first users of it, not the only intended ones — the framework is built for outside connections generally.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"connectors\"\n\t\tdata-core-ai-qr-id=\"connectors\"\n\t\tdata-qr-url=\"https://make.wordpress.org/core/2026/03/18/introducing-the-connectors-api-in-wordpress-7-0/\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/connectors.svg\"\n\t\t\talt=\"QR code for Connectors: https://make.wordpress.org/core/2026/03/18/introducing-the-connectors-api-in-wordpress-7-0/\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://make.wordpress.org/core/2026/03/18/introducing-the-connectors-api-in-wordpress-7-0/</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-plugin\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-plugin-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;plugin&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-plugin-title\" class=\"core-ai-map__sr-only\">AI Plugin</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>AI Plugin</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>A person’s request in the editor — alt text, a summary, a title.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Turns it into a capability request and hands that to the AI Client.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>A suggestion the person reviews before anything is applied.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The feature decides what to ask for. A person still decides what to keep.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Experimental reference plugin</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">AI Plugin</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">Where the foundations become things people can use: alt text, summaries, titles, editorial notes, image generation. Nothing is on by default: you enable one experiment at a time.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain \">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Request</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Preview</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>A person reviews</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Apply</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">Also a reference implementation: it shows plugin authors how Abilities, the AI Client, and Connectors fit together. Requires WordPress 7.0. Connector approvals, request logging, and encrypting provider keys at rest are experimental governance features of this plugin, not of Connectors itself.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"plugin\"\n\t\tdata-core-ai-qr-id=\"plugin\"\n\t\tdata-qr-url=\"https://wordpress.org/plugins/ai/\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/plugin.svg\"\n\t\t\talt=\"QR code for AI Plugin: https://wordpress.org/plugins/ai/\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://wordpress.org/plugins/ai/</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-mcp\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-mcp-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;mcp&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-mcp-title\" class=\"core-ai-map__sr-only\">MCP Adapter</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>AI uses WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>MCP Adapter</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>An MCP tool call from an authorized outside assistant.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Translates the call into a WordPress ability and hands it to WordPress to run.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>The ability’s typed result, translated back into MCP.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The adapter is a translator at the edge of the site. It does not create the action, and it does not grant the permission.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">WordPress plugin · not in Core</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">MCP Adapter</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">Translation at the edge of the site. It exposes the abilities their authors marked public to authorized outside assistants — as MCP resources and prompts automatically, and as individual tools on a custom server — and translates their calls back into WordPress work.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain \">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>MCP tool call</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Transport check</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Meta-tool</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Permission</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Run</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">An official WordPress package installed as a plugin, not part of Core: HTTP and STDIO transports, configurable servers, validation, permission checks, error handling, and observability. The default server supports multiple MCP protocol versions; its HTTP transport implements MCP 2025-11-25. Today it answers calls; it does not make them. It does not create the underlying action, and it is not the model — WordPress still owns execution.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"mcp\"\n\t\tdata-core-ai-qr-id=\"mcp\"\n\t\tdata-qr-url=\"https://github.com/WordPress/mcp-adapter\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/mcp.svg\"\n\t\t\talt=\"QR code for MCP Adapter: https://github.com/WordPress/mcp-adapter\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://github.com/WordPress/mcp-adapter</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-bench\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-bench-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;bench&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-bench-title\" class=\"core-ai-map__sr-only\">WP-Bench</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress tests the result</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>WP-Bench</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The code the agent produced.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Runs it inside a real WordPress created for this one test, then throws that install away.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>Pass or fail, decided by WordPress assertions rather than by another model.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">Generated code is judged by WordPress tests, not by another AI model.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Early benchmark</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">WP-Bench</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">A test bench, not part of any live request. It measures whether the code an agent writes for WordPress actually runs.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t<button class=\"core-ai-map__run-loop-link\" type=\"button\" data-wp-on--click=\"actions.openBench\">\n\t\t\t\t\t\t\tOpen the run loop<span aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain \">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Task</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Sandbox</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Lint and runtime checks</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Evidence</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">One suite, one dimension: code generation tasks graded by static checks and runtime assertions in a real WordPress environment. WordPress itself runs the assertions. Passing is all-or-nothing: a partially correct result still fails. Run --check-reference-solution first to prove the grader accepts the canonical solution, then --check-exploits to prove trivial stubs fail.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"bench\"\n\t\tdata-core-ai-qr-id=\"bench\"\n\t\tdata-qr-url=\"https://github.com/WordPress/wp-bench\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/bench.svg\"\n\t\t\talt=\"QR code for WP-Bench: https://github.com/WordPress/wp-bench\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://github.com/WordPress/wp-bench</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-skills\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-skills-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;skills&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-skills-title\" class=\"core-ai-map__sr-only\">Agent Skills</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>An agent learns WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>Agent Skills</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>A selection of WordPress guidance — checklists, references, procedures.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Supplies those instructions to the coding agent before it writes the requested code.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>An agent that follows current WordPress practice.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The guidance affects the agent’s work outside the site; it does not execute on a live WordPress installation.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Contributor guidance</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">Agent Skills</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">Portable instruction bundles — guidance, checklists, references — that help a coding assistant follow current WordPress practice. Nothing here runs on a live site.</p>\n\t\t\t\t\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading core-ai-map__details-section\">Under the hood</h3>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<h4 class=\"core-ai-map__details-heading\">How it connects</h4>\n\t\t\t\t\t\t<div class=\"core-ai-map__chain \">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Select guidance</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t is-accent\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Attach to the agent</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__chain-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span\n\t\t\t\t\t\t\t\t\tclass=\"core-ai-map__chain-step\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\"\n\t\t\t\t\t\t\t\t>Follow the procedure</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p class=\"core-ai-map__details-note\">Covers blocks, themes, plugins, REST, the Interactivity API, Abilities, performance, and security. Three of the skills are about Abilities alone: how to register one, how to audit an existing REST surface for candidates, and how to verify a registration against what it claims. Installable for several coding assistants, or committed alongside an individual project.</p>\n\t\t\t\t\t\n\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Keep exploring</h3>\n\t<div\n\t\tclass=\"core-ai-map__qr\"\n\t\tdata-core-ai-qr=\"skills\"\n\t\tdata-core-ai-qr-id=\"skills\"\n\t\tdata-qr-url=\"https://github.com/WordPress/agent-skills\"\n\t>\n\t\t<img\n\t\t\tclass=\"core-ai-map__qr-image\"\n\t\t\tsrc=\"https://example.test/plugin/assets/qr/skills.svg\"\n\t\t\talt=\"QR code for Agent Skills: https://github.com/WordPress/agent-skills\"\n\t\t\twidth=\"112\"\n\t\t\theight=\"112\"\n\t\t>\n\t\t<span>\n\t\t\t<small>Open the canonical project page</small>\n\t\t\t<strong class=\"core-ai-map__qr-url\">https://github.com/WordPress/agent-skills</strong>\n\t\t\t<em>Keep exploring on your own device.</em>\n\t\t</span>\n\t</div>\n\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-assistant\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-assistant-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;assistant&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-assistant-title\" class=\"core-ai-map__sr-only\">AI assistant</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-wp&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>AI uses WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>AI assistant</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>A person’s instruction, outside WordPress.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Decides a WordPress action is needed and issues an MCP tool call.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>Whatever WordPress allows back — nothing more.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The assistant is a client, not an authority. It asks; it does not decide.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Not WordPress</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">AI assistant</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">A program outside WordPress — a chat assistant, an editor, an agent — that speaks MCP. It holds no privileges of its own — it acts as a WordPress user it was given credentials for, and never gets more reach than that user has.</p>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-agent\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-agent-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;agent&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-agent-title\" class=\"core-ai-map__sr-only\">Coding agent</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>An agent learns WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>Coding agent</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The attached guidance, plus the task it was asked to do.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Writes plugin or theme code, outside the site.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>Code a person still has to review and install.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">Nothing here touches a running site. The agent produces text, not changes.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;tests&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress tests the result</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>Coding agent</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>One task and its requirements, as a single message.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Writes PHP. It gets no conversation, no retry, and no sight of the assertions.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>Whatever it wrote, parsed out of the reply and passed on unrepaired.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">Every model gets exactly the same task, so a difference in the result is a difference in the model.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Not WordPress</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">Coding agent</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">A coding assistant that writes plugin and theme code. It works outside the site — on a developer’s machine or in a hosted environment — and never runs against a live install.</p>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-provider\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-provider-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;provider&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-provider-title\" class=\"core-ai-map__sr-only\">External AI service</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>External AI service</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The request, once it has crossed out of WordPress.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Runs the model on infrastructure WordPress does not control.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>A result the provider plugin hands back to the AI Client.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The model and AI service remain outside WordPress; WordPress owns the integration and request path around them.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Not WordPress</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">External AI service</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">The model provider a site owner configured: an API run by someone else, on someone else’s infrastructure. WordPress sends it a request and receives a result.</p>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-task\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-task-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;task&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-task-title\" class=\"core-ai-map__sr-only\">A WordPress task</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;learns&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>An agent learns WordPress</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>A WordPress task</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The agent’s attention, once the guidance is attached.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Stands for the real work — a plugin, a theme, a fix.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>Finished code, still outside WordPress.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The site is not involved until a person installs what the agent wrote.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">Not WordPress</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">A WordPress task</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">The actual work someone wants done: a plugin, a theme, a fix. On this map it stands for the job itself, not for any code running on a site.</p>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\tid=\"core-ai-map-fixture-panel-provider-plugin\"\n\t\t\t\t\taria-labelledby=\"core-ai-map-fixture-panel-provider-plugin-title\"\n\t\t\t\t\tdata-test-context=\"{&quot;cardId&quot;:&quot;provider-plugin&quot;}\"\t\t\t\t\tdata-wp-bind--hidden=\"state.isCardNotInspected\"\n\t\t\t\t\thidden\n\t\t\t\t>\n\t\t\t\t\t<h2 id=\"core-ai-map-fixture-panel-provider-plugin-title\" class=\"core-ai-map__sr-only\">AI provider plugin</h2>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div\n\t\t\t\t\t\t\tclass=\"core-ai-map__details-context\"\n\t\t\t\t\t\t\tdata-test-context=\"{&quot;storyId&quot;:&quot;uses-ai&quot;}\"\t\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isStoryNotSelected\"\n\t\t\t\t\t\t\thidden\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__breadcrumb\">\n\t\t\t\t\t\t\t\t<span>WordPress uses AI</span>\n\t\t\t\t\t\t\t\t<span class=\"core-ai-map__breadcrumb-arrow\" aria-hidden=\"true\">&rarr;</span>\n\t\t\t\t\t\t\t\t<span>AI provider plugin</span>\n\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Its role in this flow</h3>\n\t\t\t\t\t\t\t<dl class=\"core-ai-map__role\">\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Receives</dt>\n\t\t\t\t\t\t\t\t\t<dd>The routed request from the AI Client.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Does</dt>\n\t\t\t\t\t\t\t\t\t<dd>Speaks one external service’s protocol, using the credentials Connectors resolved.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t<dt>Passes on</dt>\n\t\t\t\t\t\t\t\t\t<dd>That service’s reply, handed back to the AI Client.</dd>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</dl>\n\t\t\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">Why that matters</h3>\n\t\t\t\t\t\t\t<p class=\"core-ai-map__details-lesson\">The provider-specific part is a plugin. Swapping providers does not change the feature that asked.</p>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<p class=\"core-ai-map__details-badge\">WordPress plugin</p>\n\t\t\t\t\t<p class=\"core-ai-map__details-title\" aria-hidden=\"true\">AI provider plugin</p>\n\t\t\t\t\t<h3 class=\"core-ai-map__details-heading\">What it is</h3>\n\t\t\t\t\t<p class=\"core-ai-map__details-lede\">A provider-specific integration installed as a WordPress plugin. It speaks one external service’s protocol using the credentials Connectors resolved for it.</p>\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t</aside>\n\n\t\t\t\t<section\n\t\t\tclass=\"core-ai-map__bench\"\n\t\t\tdata-core-ai-screen=\"bench\"\n\t\t\tdata-screen-label=\"WP-Bench run loop\"\n\t\t\taria-label=\"WP-Bench run loop\"\n\t\t\tdata-wp-bind--hidden=\"state.isNotBench\"\n\t\t\thidden\n\t\t>\n\t\t\t<header class=\"core-ai-map__bench-heading\">\n\t\t\t\t<div>\n\t\t\t\t\t<h2>The run loop</h2>\n\t\t\t\t\t<p>Five stages, in the same three bands as the map. Tap a stage for the detail. Nothing here touches a live site.</p>\n\t\t\t\t</div>\n\t\t\t\t<button type=\"button\" data-wp-on--click=\"actions.closeBench\"><span aria-hidden=\"true\">&larr;</span>Back to map</button>\n\t\t\t</header>\n\n\t\t\t<p class=\"core-ai-map__bench-zone core-ai-map__bench-zone--harness\">Outside · the harness</p>\n\t\t\t<p class=\"core-ai-map__bench-zone core-ai-map__bench-zone--sandbox\">Inside WordPress · sandboxed</p>\n\t\t\t<p class=\"core-ai-map__bench-zone core-ai-map__bench-zone--model\">Outside · the model</p>\n\n\t\t\t<svg class=\"core-ai-map__bench-wires\" viewBox=\"0 0 1366 1024\" aria-hidden=\"true\" focusable=\"false\">\n\t\t\t\t<defs>\n\t\t\t\t\t<marker id=\"core-ai-map-fixture-bench-tip\" viewBox=\"0 0 10 10\" refX=\"8.5\" refY=\"5\" markerWidth=\"4.6\" markerHeight=\"4.6\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 5 L0 10 z\"></path></marker>\n\t\t\t\t</defs>\n\t\t\t\t<path class=\"core-ai-map__bench-boundary\" d=\"M240 148 L240 512\"></path>\n\t\t\t\t<path class=\"core-ai-map__bench-boundary\" d=\"M1030 148 L1030 512\"></path>\n\t\t\t\t<path class=\"core-ai-map__bench-divider\" d=\"M24 552 L1342 552\"></path>\n\t\t\t\t<g class=\"core-ai-map__bench-flow\" data-core-ai-bench-flow>\n\t\t\t\t\t<path d=\"M204 200 C420 132 940 128 1148 194\" marker-end=\"url(#core-ai-map-fixture-bench-tip)\"></path>\n\t\t\t\t\t<path d=\"M1240 286 C1240 348 1088 322 986 300\" marker-end=\"url(#core-ai-map-fixture-bench-tip)\"></path>\n\t\t\t\t\t<path d=\"M654 266 L626 266\" marker-end=\"url(#core-ai-map-fixture-bench-tip)\"></path>\n\t\t\t\t\t<path d=\"M330 358 C296 418 254 438 208 462\" marker-end=\"url(#core-ai-map-fixture-bench-tip)\"></path>\n\t\t\t\t</g>\n\t\t\t</svg>\n\n\t\t\t<nav class=\"core-ai-map__bench-stages\" aria-label=\"WP-Bench stages\">\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\tclass=\"core-ai-map__bench-stage core-ai-map__bench-stage--task\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tdata-core-ai-stage=\"task\"\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-bench-panel-task\"\n\t\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;task&quot;}\"\t\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-on--click=\"actions.selectBenchStage\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-number\" aria-hidden=\"true\">01</span>\n\t\t\t\t\t\t<small>The harness</small>\n\t\t\t\t\t\t<strong>The task</strong>\n\t\t\t\t\t\t<em>One prompt, one set of requirements</em>\n\t\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\tclass=\"core-ai-map__bench-stage core-ai-map__bench-stage--model\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tdata-core-ai-stage=\"model\"\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-bench-panel-model\"\n\t\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;model&quot;}\"\t\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-on--click=\"actions.selectBenchStage\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-number\" aria-hidden=\"true\">02</span>\n\t\t\t\t\t\t<small>Not WordPress</small>\n\t\t\t\t\t\t<strong>The model answers</strong>\n\t\t\t\t\t\t<em>PHP, parsed out of the reply</em>\n\t\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\tclass=\"core-ai-map__bench-stage core-ai-map__bench-stage--sandbox\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tdata-core-ai-stage=\"sandbox\"\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-bench-panel-sandbox\"\n\t\t\t\t\t\taria-pressed=\"true\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;sandbox&quot;}\"\t\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-on--click=\"actions.selectBenchStage\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-number\" aria-hidden=\"true\">03</span>\n\t\t\t\t\t\t<small>Inside WordPress</small>\n\t\t\t\t\t\t<strong>WordPress runs it</strong>\n\t\t\t\t\t\t<em>A real 7.0, thrown away after</em>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step\">setup</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-arrow\" aria-hidden=\"true\">&rarr;</span>\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step is-accent\">the model’s code</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-arrow\" aria-hidden=\"true\">&rarr;</span>\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step\">assertions</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-arrow\" aria-hidden=\"true\">&rarr;</span>\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step\">teardown</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\tclass=\"core-ai-map__bench-stage core-ai-map__bench-stage--checks\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tdata-core-ai-stage=\"checks\"\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-bench-panel-checks\"\n\t\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;checks&quot;}\"\t\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-on--click=\"actions.selectBenchStage\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-number\" aria-hidden=\"true\">04</span>\n\t\t\t\t\t\t<small>Inside WordPress</small>\n\t\t\t\t\t\t<strong>WordPress checks it</strong>\n\t\t\t\t\t\t<em>WordPress code inspects WordPress state</em>\n\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step is-accent\">every assertion</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-arrow\" aria-hidden=\"true\">&rarr;</span>\t\t\t\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-flow-step\">pass</span>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t\t\t<button\n\t\t\t\t\t\tclass=\"core-ai-map__bench-stage core-ai-map__bench-stage--evidence\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tdata-core-ai-stage=\"evidence\"\t\t\t\t\t\taria-controls=\"core-ai-map-fixture-bench-panel-evidence\"\n\t\t\t\t\t\taria-pressed=\"false\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;evidence&quot;}\"\t\t\t\t\t\tdata-wp-bind--aria-pressed=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-class--is-active=\"state.isBenchStageSelected\"\n\t\t\t\t\t\tdata-wp-on--click=\"actions.selectBenchStage\"\n\t\t\t\t\t>\n\t\t\t\t\t\t<span class=\"core-ai-map__bench-stage-number\" aria-hidden=\"true\">05</span>\n\t\t\t\t\t\t<small>Back to the harness</small>\n\t\t\t\t\t\t<strong>The verdict</strong>\n\t\t\t\t\t\t<em>Pass or fail. Never a percentage</em>\n\t\t\t\t\t\t\t\t\t\t\t</button>\n\t\t\t\t\t\t\t</nav>\n\n\t\t\t<div class=\"core-ai-map__bench-details\">\n\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\t\tid=\"core-ai-map-fixture-bench-panel-task\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;task&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isBenchStageNotSelected\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-copy\">\n\t\t\t\t\t\t\t<p>Stage 01 · outside the site</p>\n\t\t\t\t\t\t\t<h3>One task, one message</h3>\n\t\t\t\t\t\t\t<p>A prompt and its requirements, handed to the model as a single message. Every model gets exactly the same text, so a difference in the result is a difference in the model.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-facts\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>prompt</code><span>Write the code that does this. One task, one message.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>requirements</code><span>Named functions and hooks, and the shape of what they return.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>never sent</code><span>No conversation, no follow-up, no hint about the assertions.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\t\tid=\"core-ai-map-fixture-bench-panel-model\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;model&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isBenchStageNotSelected\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-copy\">\n\t\t\t\t\t\t\t<p>Stage 02 · outside the site</p>\n\t\t\t\t\t\t\t<h3>Whatever the model wrote</h3>\n\t\t\t\t\t\t\t<p>The harness takes the reply and parses the PHP out of it. If the answer does not parse, that is the answer — nothing is repaired on the way in.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-facts\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>reply</code><span>Whatever the model wrote, in full.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>parsed out</code><span>The PHP the harness could find in it.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>not repaired</code><span>Nothing is patched and nothing is retried before it runs.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\t\tid=\"core-ai-map-fixture-bench-panel-sandbox\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;sandbox&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isBenchStageNotSelected\"\n\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-copy\">\n\t\t\t\t\t\t\t<p>Stage 03 · inside WordPress</p>\n\t\t\t\t\t\t\t<h3>A real WordPress, thrown away after</h3>\n\t\t\t\t\t\t\t<p>The code runs inside a WordPress that exists only for this one test. That makes the result a fact about WordPress rather than a fact about a fixture.</p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-facts\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>the install</code><span>A real WordPress 7.0, created for this one test.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>the run</code><span>Setup, then the model’s code, then the assertions, then teardown.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>afterwards</code><span>The install is thrown away. No live site is ever involved.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\t\tid=\"core-ai-map-fixture-bench-panel-checks\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;checks&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isBenchStageNotSelected\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-copy\">\n\t\t\t\t\t\t\t<p>Stage 04 · inside WordPress</p>\n\t\t\t\t\t\t\t<h3>WordPress is the grader</h3>\n\t\t\t\t\t\t\t<p>The assertions are WordPress code inspecting WordPress state — not a model judging another model’s answer. Passing is all or nothing.</p>\n\t\t\t\t\t\t\t<aside>Two of three assertions is a fail. A number between 0 and 1 is a bug in the harness, not partial credit.</aside>\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-facts\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>3 of 3</code><span>Pass.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>2 of 3</code><span>Fail. There is no partial credit.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>static analysis</code><span>A diagnostic only — unless the code trips a forbidden pattern, which fails the test outright.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t\t\t\t\t\t<article\n\t\t\t\t\t\tid=\"core-ai-map-fixture-bench-panel-evidence\"\n\t\t\t\t\t\tdata-test-context=\"{&quot;stageId&quot;:&quot;evidence&quot;}\"\t\t\t\t\t\tdata-wp-bind--hidden=\"state.isBenchStageNotSelected\"\n\t\t\t\t\t\thidden\t\t\t\t\t>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-copy\">\n\t\t\t\t\t\t\t<p>Stage 05 · back in the harness</p>\n\t\t\t\t\t\t\t<h3>Pass or fail. Never a percentage</h3>\n\t\t\t\t\t\t\t<p>Three inputs go through the same verifier, and each one proves a different thing. Run them in this order.</p>\n\t\t\t\t\t\t\t<aside>A broken grader still reports a number. If the sandbox never started, every test scores zero and the run still exits clean — which looks exactly like a model that failed everything.</aside>\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"core-ai-map__bench-facts\">\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>--check-reference-solution</code><span>Proves the grader works. The canonical solution goes in, no model is called. Run it first: if this fails, no other number means anything.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>a normal run</code><span>Proves the model works. What the model actually wrote goes in — the only number worth reporting, and only once the other two hold.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<p><code>--check-exploits</code><span>Proves the test is specified. An empty function goes in, then a bare return. Every one must fail — a test a stub can pass was checking a fixture, not WordPress.</span></p>\n\t\t\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t</article>\n\t\t\t\t\t\t\t</div>\n\t\t</section>\n\n\t\t<div class=\"core-ai-map__home-indicator\" aria-hidden=\"true\"></div>\n\t</div>\n\n\t<p class=\"core-ai-map__sr-only\" aria-live=\"polite\" data-wp-text=\"state.announcement\"></p>\n</section>\n"
+}
