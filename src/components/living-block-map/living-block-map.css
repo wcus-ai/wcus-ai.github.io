@@ -125,6 +125,34 @@ body.core-ai-kiosk-active {
 .core-ai-map [data-map-hidden] {
   display: none !important;
 }
+.core-ai-map [data-map-fallback],
+.core-ai-map noscript {
+  background: var(--core-ai-surface);
+  border: 1px solid var(--core-ai-line-strong);
+  border-radius: 8px;
+  bottom: 20px;
+  box-shadow: 0 12px 36px rgba(30, 30, 30, 0.18);
+  left: 50%;
+  max-height: calc(100% - 40px);
+  overflow: auto;
+  padding: 18px 20px;
+  position: absolute;
+  transform: translateX(-50%);
+  user-select: text;
+  width: min(720px, calc(100% - 40px));
+  z-index: 100;
+}
+.core-ai-map [data-map-fallback] p,
+.core-ai-map noscript p {
+  margin: 0 0 12px;
+}
+.core-ai-map [data-map-fallback] a,
+.core-ai-map noscript a {
+  color: var(--core-ai-blue-dark);
+  display: inline-block;
+  margin: 4px 16px 4px 0;
+  text-decoration: underline;
+}
 .core-ai-map__stage {
   background: var(--core-ai-canvas);
   height: 1024px;

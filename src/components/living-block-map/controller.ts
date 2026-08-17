@@ -1,5 +1,11 @@
 import { MAP_MODEL } from './model.ts';
-import { INITIAL_MAP_STATE, animationDuration, deriveView, transition } from './state.ts';
+import {
+  INITIAL_MAP_STATE,
+  animationDuration,
+  deriveView,
+  inactivityDelay,
+  transition,
+} from './state.ts';
 import type {
   AbilityTabId,
   AttractPreview,
@@ -21,6 +27,11 @@ export interface LivingBlockMapController {
 export interface ControllerOptions {
   kiosk?: boolean;
   reducedMotion?: boolean;
+}
+
+interface AttributeSnapshot {
+  readonly name: string;
+  readonly value: string | null;
 }
 
 const FLOW_SETTLE_DELAY = 2_900;
@@ -46,6 +57,16 @@ const orderedStageIds = Object.keys(MAP_MODEL.bench.stages) as BenchStageId[];
 const tabIds = new Set<AbilityTabId>(orderedTabIds);
 const stageIds = new Set<BenchStageId>(orderedStageIds);
 const rovingKeys = new Set(['ArrowLeft', 'ArrowRight', 'Home', 'End']);
+
+const captureAttributes = (element: Element, names: readonly string[]): AttributeSnapshot[] =>
+  names.map((name) => ({ name, value: element.getAttribute(name) }));
+
+const restoreAttributes = (element: Element, snapshots: readonly AttributeSnapshot[]): void => {
+  for (const { name, value } of snapshots) {
+    if (value === null) element.removeAttribute(name);
+    else element.setAttribute(name, value);
+  }
+};
 
 const toggleHidden = (element: HTMLElement, hidden: boolean): void => {
   element.hidden = hidden;
@@ -430,18 +451,27 @@ export function initializeLivingBlockMap(
 ): LivingBlockMapController {
   activeControllers.get(root)?.dispose();
 
-  const viewWindow = root.ownerDocument.defaultView;
+  const mapDocument = root.ownerDocument;
+  const viewWindow = mapDocument.defaultView;
   if (!viewWindow) throw new Error('Living Block Map requires a browser window.');
+  const kiosk =
+    new URL(viewWindow.location.href).searchParams.get('kiosk') === '1' && options.kiosk !== false;
   const reducedMotion =
     options.reducedMotion ??
     viewWindow.matchMedia?.('(prefers-reduced-motion: reduce)').matches ??
     false;
   const abortController = new AbortController();
   const timers = new Set<number>();
-  const previousScale = root.style.getPropertyValue('--cai-scale');
+  const rootAttributes = captureAttributes(root, ['class', 'style', 'data-map-state']);
+  const bodyAttributes = captureAttributes(mapDocument.body, ['class', 'style']);
+  const initialScroll = { x: viewWindow.scrollX, y: viewWindow.scrollY };
   let state: MapState = { ...INITIAL_MAP_STATE };
   let disposed = false;
+  let documentStateRestored = false;
   let pendingFocusTimer: number | null = null;
+  let inactivityTimer: number | null = null;
+  let wakeLock: WakeLockSentinel | null = null;
+  let wakeLockRequest: Promise<void> | null = null;
   let lastCardTrigger: HTMLElement | null = null;
   let lastAboutTrigger: HTMLElement | null = null;
   let lastBenchTrigger: HTMLElement | null = null;
@@ -450,6 +480,12 @@ export function initializeLivingBlockMap(
     timers.forEach((timer) => viewWindow.clearTimeout(timer));
     timers.clear();
     pendingFocusTimer = null;
+    inactivityTimer = null;
+  };
+  const cancelTimer = (timer: number | null): void => {
+    if (timer === null) return;
+    viewWindow.clearTimeout(timer);
+    timers.delete(timer);
   };
   const setTimer = (callback: () => void, delay: number): number => {
     const timer = viewWindow.setTimeout(() => {
@@ -458,6 +494,61 @@ export function initializeLivingBlockMap(
     }, delay);
     timers.add(timer);
     return timer;
+  };
+  const restoreDocumentState = (): void => {
+    if (documentStateRestored) return;
+    documentStateRestored = true;
+    restoreAttributes(root, rootAttributes);
+    if (!kiosk) return;
+    restoreAttributes(mapDocument.body, bodyAttributes);
+    viewWindow.scrollTo(initialScroll.x, initialScroll.y);
+  };
+  const applyDocumentState = (): void => {
+    if (!kiosk) return;
+    const body = mapDocument.body;
+    body.classList.add('core-ai-kiosk-active');
+    body.style.setProperty('overflow', 'hidden');
+    body.style.setProperty('position', 'fixed');
+    body.style.setProperty('width', '100%');
+    body.style.setProperty('top', `${-initialScroll.y}px`);
+  };
+  const releaseWakeLock = (): void => {
+    const heldLock = wakeLock;
+    wakeLock = null;
+    if (heldLock) void heldLock.release().catch(() => undefined);
+  };
+  const requestWakeLock = (): void => {
+    if (
+      !kiosk ||
+      disposed ||
+      mapDocument.visibilityState !== 'visible' ||
+      wakeLock ||
+      wakeLockRequest
+    ) {
+      return;
+    }
+    const manager = viewWindow.navigator.wakeLock;
+    if (!manager) return;
+    wakeLockRequest = manager
+      .request('screen')
+      .then(async (requestedLock) => {
+        wakeLockRequest = null;
+        if (disposed || mapDocument.visibilityState !== 'visible') {
+          await requestedLock.release();
+          return;
+        }
+        wakeLock = requestedLock;
+        requestedLock.addEventListener?.(
+          'release',
+          () => {
+            if (wakeLock === requestedLock) wakeLock = null;
+          },
+          { once: true },
+        );
+      })
+      .catch(() => {
+        wakeLockRequest = null;
+      });
   };
   const performFocus = (element: HTMLElement | null): void => {
     if (!disposed && element?.isConnected) element.focus({ preventScroll: true });
@@ -500,6 +591,23 @@ export function initializeLivingBlockMap(
   const dispatch = (event: MapEvent): void => {
     state = transition(state, event);
     render(root, state, deriveView(state, MAP_MODEL), reducedMotion);
+    scheduleInactivity();
+  };
+  const scheduleInactivity = (): void => {
+    cancelTimer(inactivityTimer);
+    inactivityTimer = null;
+    if (!kiosk || mapDocument.visibilityState !== 'visible') return;
+    const delay = inactivityDelay(state, true);
+    if (delay === null) return;
+    inactivityTimer = setTimer(() => {
+      inactivityTimer = null;
+      if (disposed || mapDocument.visibilityState !== 'visible') return;
+      dispatch({ type: 'reset', reason: 'inactivity' });
+      scheduleAttract();
+      focusElement(
+        root.querySelector<HTMLElement>('[data-map-screen="attract"] [data-action="start"]'),
+      );
+    }, delay);
   };
   const settleFlow = (): void => {
     const delay = animationDuration(2_900, reducedMotion);
@@ -670,6 +778,7 @@ export function initializeLivingBlockMap(
   };
 
   const handleKeydown = (event: KeyboardEvent): void => {
+    scheduleInactivity();
     if (event.key === 'Escape') {
       if (state.screen === 'inspect') closeInspect();
       else if (state.screen === 'about') closeAbout();
@@ -709,12 +818,16 @@ export function initializeLivingBlockMap(
     );
   };
 
-  root.addEventListener('click', handleClick, { signal: abortController.signal });
-  root.addEventListener('keydown', handleKeydown, { signal: abortController.signal });
-  viewWindow.addEventListener('resize', scaleStage, { signal: abortController.signal });
-  viewWindow.addEventListener('orientationchange', scaleStage, {
-    signal: abortController.signal,
-  });
+  const handleVisibilityChange = (): void => {
+    if (mapDocument.visibilityState !== 'visible') {
+      cancelTimer(inactivityTimer);
+      inactivityTimer = null;
+      releaseWakeLock();
+      return;
+    }
+    scheduleInactivity();
+    requestWakeLock();
+  };
 
   const controller: LivingBlockMapController = {
     dispose(): void {
@@ -722,18 +835,55 @@ export function initializeLivingBlockMap(
       disposed = true;
       abortController.abort();
       clearTimers();
-      if (previousScale) root.style.setProperty('--cai-scale', previousScale);
-      else root.style.removeProperty('--cai-scale');
+      releaseWakeLock();
+      restoreDocumentState();
       if (activeControllers.get(root) === controller) activeControllers.delete(root);
     },
   };
-  activeControllers.set(root, controller);
-  scaleStage();
-  render(root, state, deriveView(state, MAP_MODEL), reducedMotion);
-  scheduleAttract();
-  void options.kiosk;
-  return controller;
+  try {
+    applyDocumentState();
+    root.addEventListener('click', handleClick, { signal: abortController.signal });
+    root.addEventListener('keydown', handleKeydown, { signal: abortController.signal });
+    root.addEventListener('pointerdown', scheduleInactivity, { signal: abortController.signal });
+    viewWindow.addEventListener('resize', scaleStage, { signal: abortController.signal });
+    viewWindow.addEventListener('orientationchange', scaleStage, {
+      signal: abortController.signal,
+    });
+    mapDocument.addEventListener('visibilitychange', handleVisibilityChange, {
+      signal: abortController.signal,
+    });
+    activeControllers.set(root, controller);
+    scaleStage();
+    render(root, state, deriveView(state, MAP_MODEL), reducedMotion);
+    scheduleAttract();
+    scheduleInactivity();
+    requestWakeLock();
+    return controller;
+  } catch (error) {
+    controller.dispose();
+    throw error;
+  }
 }
+
+const revealInitializationFallback = (root: HTMLElement, error: unknown): void => {
+  const fallback = root.querySelector<HTMLElement>('[data-map-fallback]');
+  if (fallback) toggleHidden(fallback, false);
+
+  const introduction = root.querySelector<HTMLElement>('[data-map-introduction]');
+  if (introduction) {
+    toggleHidden(introduction, false);
+    introduction.removeAttribute('aria-hidden');
+  }
+  const canvas = root.querySelector<HTMLElement>('[data-map-surface="canvas"]');
+  if (canvas) {
+    canvas.inert = true;
+    canvas.setAttribute('aria-hidden', 'true');
+  }
+  root.querySelectorAll<HTMLButtonElement>('[data-action]').forEach((control) => {
+    control.disabled = true;
+  });
+  root.ownerDocument.defaultView?.console.error('Living Block Map failed to initialize.', error);
+};
 
 export function installLivingBlockMapLifecycle(doc: Document = document): () => void {
   const existing = lifecycleInstallations.get(doc);
@@ -748,7 +898,13 @@ export function installLivingBlockMapLifecycle(doc: Document = document): () => 
   const mount = (): void => {
     disposeActive();
     const root = doc.querySelector<HTMLElement>('[data-living-block-map]');
-    if (root) active = initializeLivingBlockMap(root);
+    if (!root) return;
+    try {
+      active = initializeLivingBlockMap(root);
+    } catch (error) {
+      active = null;
+      revealInitializationFallback(root, error);
+    }
   };
   const beforeSwap = (): void => disposeActive();
   const uninstall = (): void => {

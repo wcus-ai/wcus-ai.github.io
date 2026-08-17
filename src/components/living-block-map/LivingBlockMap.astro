@@ -451,7 +451,12 @@ const roleEntries = (panel: MapPanel) =>
       <button class="core-ai-map__about-trigger" type="button" aria-controls={`${instanceId}-about`} aria-expanded="false" data-action="open-about">About this exhibit</button>
     </footer>
 
-    <div class="core-ai-map__attract" data-map-screen="attract" aria-label="Living Block Map welcome">
+    <div
+      class="core-ai-map__attract"
+      data-map-screen="attract"
+      data-map-introduction
+      aria-label="Living Block Map welcome"
+    >
       <p class="core-ai-map__eyebrow">{content.eyebrow}</p>
       <h1>{content.title}</h1>
       <div class="core-ai-map__orientation">
