@@ -1,0 +1,36 @@
+---
+import ebGaramondUrl from '../../assets/living-block-map/fonts/eb-garamond-latin-wght-normal.woff2?url';
+import ibmPlex400Url from '../../assets/living-block-map/fonts/ibm-plex-mono-latin-400-normal.woff2?url';
+import ibmPlex500Url from '../../assets/living-block-map/fonts/ibm-plex-mono-latin-500-normal.woff2?url';
+import ibmPlex600Url from '../../assets/living-block-map/fonts/ibm-plex-mono-latin-600-normal.woff2?url';
+import ibmPlex700Url from '../../assets/living-block-map/fonts/ibm-plex-mono-latin-700-normal.woff2?url';
+import interUrl from '../../assets/living-block-map/fonts/inter-latin-wght-normal.woff2?url';
+import LivingBlockMap from '../../components/living-block-map/LivingBlockMap.astro';
+import '../../components/living-block-map/living-block-map.css';
+import { MAP_MODEL } from '../../components/living-block-map/model.ts';
+import Base from '../../layouts/Base.astro';
+
+const fontUrls = [
+  interUrl,
+  ebGaramondUrl,
+  ibmPlex400Url,
+  ibmPlex500Url,
+  ibmPlex600Url,
+  ibmPlex700Url,
+];
+---
+
+<Base
+  title="Living Block Map — WordPress Core AI"
+  description="Explore how WordPress Core AI building blocks connect across four interactive flows."
+  accentColor="#3858e9"
+>
+  <Fragment slot="head">
+    {
+      fontUrls.map((href) => (
+        <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+      ))
+    }
+  </Fragment>
+  <LivingBlockMap model={MAP_MODEL} />
+</Base>

@@ -10,9 +10,10 @@ src/
   content.config.ts          Zod schema for project frontmatter
   content/projects/          one .md per project (source of truth)
   layouts/Base.astro         shared <head>, PWA meta, view transitions
-  components/                UI: ProjectCard, ShareFeedback, header, footer, Hero
+  components/                shared UI and native Living Block Map feature
   pages/
     index.astro              landing: hero + 6-card grid
+    living-block-map/        native full-screen Living Block Map exhibit
     p/[slug]/index.astro     project detail page
     privacy.astro
   styles/global.css          design tokens and all component styles
@@ -92,7 +93,6 @@ Target vocabulary (group by this in SQL):
 | `click_outbound` | `team-blog`                                           | footer "Core AI Team", home "Team blog" |
 | `click_outbound` | `handbook`                                            | home "Handbook"                         |
 | `click_outbound` | `building-blocks-post`                                | home inline "building blocks" link      |
-| `click_outbound` | `living-block-map`                                    | home Living Block Map teaser            |
 | `click_outbound` | `slack` `meetings` `contribute`                       | home Slack CTA section                  |
 | `click_outbound` | `schedule` `code-of-conduct`                          | footer                                  |
 | `click_outbound` | `mdn-sendbeacon` `worker-source` `cloudflare-privacy` | privacy page                            |
@@ -101,6 +101,7 @@ Target vocabulary (group by this in SQL):
 | `click_internal` | `home`                                                | header brand                            |
 | `click_internal` | `share-feedback`                                      | header "Share Feedback →" anchor        |
 | `click_internal` | `privacy`                                             | footer "Privacy"                        |
+| `click_internal` | `living-block-map`                                    | home Living Block Map teaser            |
 | `click_feedback` | `form`                                                | ShareFeedback CTA                       |
 
 Skip links (`#main`) are intentionally untracked — accessibility mechanism, not engagement.

@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
+import { withAstroBuildLock } from './helpers/astro-build-lock.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const dist = new URL('../dist/', import.meta.url);
@@ -17,11 +18,13 @@ const astro = fileURLToPath(new URL('../node_modules/astro/bin/astro.mjs', impor
  */
 
 async function buildPreview(): Promise<void> {
-  execFileSync(process.execPath, [astro, 'build', '--base', '/pr-preview/pr-99/'], {
-    cwd: root,
-    stdio: 'pipe',
-    env: { ...process.env }, // deliberately no PUBLIC_TRACKING_ENDPOINT
-  });
+  await withAstroBuildLock(() =>
+    execFileSync(process.execPath, [astro, 'build', '--base', '/pr-preview/pr-99/'], {
+      cwd: root,
+      stdio: 'pipe',
+      env: { ...process.env }, // deliberately no PUBLIC_TRACKING_ENDPOINT
+    }),
+  );
 }
 
 test('preview build: all internal links respect the base path', async () => {
@@ -48,6 +51,10 @@ test('preview build: all internal links respect the base path', async () => {
     index.includes('/pr-preview/pr-99/sw.js'),
     'service worker must register under the base',
   );
+  assert.ok(
+    index.includes('href="/pr-preview/pr-99/living-block-map/"'),
+    'Living Block Map teaser must link under the base path',
+  );
 
   assert.ok(!index.includes('href="/p/'), 'no root-absolute project links may remain');
   assert.ok(!index.includes('href="/privacy/"'), 'no root-absolute privacy link may remain');
@@ -63,6 +70,35 @@ test('preview build: canonical URLs stay on production, not the preview path', a
   const canonical = /rel="canonical" href="([^"]+)"/.exec(index)?.[1];
   assert.ok(canonical, 'canonical link must exist');
   assert.ok(!canonical.includes('pr-preview'), 'canonical must not point at the preview');
+});
+
+test('preview build: Living Block Map assets respect the base while canonical stays public', async () => {
+  const map = await readFile(new URL('living-block-map/index.html', dist), 'utf8');
+  assert.ok(
+    map.includes('<link rel="canonical" href="https://wcus-ai.github.io/living-block-map"'),
+    'map canonical must omit the preview base',
+  );
+
+  const fontPreloads = map.match(/<link rel="preload"[^>]*type="font\/woff2"[^>]*>/g) ?? [];
+  assert.equal(fontPreloads.length, 6);
+  assert.ok(
+    fontPreloads.every((link) => link.includes('href="/pr-preview/pr-99/_astro/')),
+    'every font preload must use the preview base',
+  );
+
+  const qrImages = map.match(/<img[^>]*data-map-qr[^>]*>/g) ?? [];
+  assert.equal(qrImages.length, 7);
+  assert.ok(
+    qrImages.every((image) => image.includes('src="/pr-preview/pr-99/_astro/')),
+    'every QR image must use the preview base',
+  );
+
+  for (const asset of map.matchAll(/(?:href|src)="([^"]+\.(?:css|js))"/g)) {
+    assert.ok(
+      asset[1].startsWith('/pr-preview/pr-99/_astro/'),
+      `built asset must use preview base: ${asset[1]}`,
+    );
+  }
 });
 
 test('preview build: tracking beacon is absent from the client bundle', async () => {

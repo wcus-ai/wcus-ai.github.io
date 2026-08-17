@@ -1,0 +1,613 @@
+---
+import iconUrl from '../../assets/living-block-map/icon.svg?url';
+import abilitiesQrUrl from '../../assets/living-block-map/qr/abilities.svg?url';
+import benchQrUrl from '../../assets/living-block-map/qr/bench.svg?url';
+import clientQrUrl from '../../assets/living-block-map/qr/client.svg?url';
+import connectorsQrUrl from '../../assets/living-block-map/qr/connectors.svg?url';
+import mcpQrUrl from '../../assets/living-block-map/qr/mcp.svg?url';
+import pluginQrUrl from '../../assets/living-block-map/qr/plugin.svg?url';
+import skillsQrUrl from '../../assets/living-block-map/qr/skills.svg?url';
+import { base } from '../../lib/config.ts';
+import type { CardId, FlowId, MapModel, MapPanel } from './types.ts';
+
+interface Props {
+  model: MapModel;
+}
+
+const { model } = Astro.props;
+const { content, layouts, previews, neutral, loose, about, bench, abilityTabs } = model;
+const instanceId = 'living-block-map';
+const initialPreview = previews[0];
+const blockIds = content.blocks.map(({ id }) => id);
+const cardOrder: readonly CardId[] = [
+  'assistant',
+  'skills',
+  'agent',
+  'task',
+  'plugin',
+  'client',
+  'provider-plugin',
+  'provider',
+  'connectors',
+  'mcp',
+  'abilities',
+  'bench',
+];
+const blocks = Object.fromEntries(content.blocks.map((card) => [card.id, card]));
+const actors = Object.fromEntries(content.actors.map((card) => [card.id, card]));
+const flows = Object.fromEntries(content.flows.map((flow) => [flow.id, flow]));
+const qrUrls: Readonly<Record<string, string>> = {
+  abilities: abilitiesQrUrl,
+  bench: benchQrUrl,
+  client: clientQrUrl,
+  connectors: connectorsQrUrl,
+  mcp: mcpQrUrl,
+  plugin: pluginQrUrl,
+  skills: skillsQrUrl,
+};
+const contextOnlyPanels = new Set<CardId>([
+  'assistant',
+  'agent',
+  'provider',
+  'task',
+  'provider-plugin',
+]);
+const initialMembers = new Set(initialPreview.ids);
+const initialSidecars = new Set(initialPreview.sidecars ?? []);
+const initialStep = (id: CardId): string => {
+  if (id === 'provider-plugin') return String(initialPreview.providerPlugin?.step ?? '');
+  return String(
+    initialPreview.steps?.[id] ??
+      (initialPreview.ids.includes(id) ? initialPreview.ids.indexOf(id) + 1 : ''),
+  );
+};
+const initialTransform = (id: CardId): string => {
+  const [neutralX, neutralY] = neutral[id];
+  if (id === 'provider-plugin' && initialPreview.providerPlugin) {
+    const [x, y] = initialPreview.providerPlugin.position;
+    return `translate(${x - neutralX}px, ${y - neutralY}px) scale(${initialPreview.providerPlugin.scale})`;
+  }
+  const previewPosition = initialPreview.at[id];
+  if (previewPosition) {
+    return `translate(${previewPosition[0] - neutralX}px, ${previewPosition[1] - neutralY}px) scale(${initialPreview.scale})`;
+  }
+  const restingPosition = loose[id];
+  return restingPosition
+    ? `translate(${restingPosition[0]}px, ${restingPosition[1]}px) rotate(${restingPosition[2]}deg)`
+    : '';
+};
+const cardStyle = (id: CardId): string => {
+  const [x, y] = neutral[id];
+  const transform = initialTransform(id);
+  return `--cai-x: ${x}px; --cai-y: ${y}px;${transform ? ` transform: ${transform};` : ''}`;
+};
+const panelQrUrl = (panel: MapPanel): string | undefined => qrUrls[panel.id];
+const storyNumber = (index: number): string => String(index + 1).padStart(2, '0');
+const roleEntries = (panel: MapPanel) =>
+  Object.entries(panel.roles) as Array<
+    [FlowId, NonNullable<MapPanel['roles'][FlowId]>]
+  >;
+---
+
+<main
+  class="core-ai-map is-attract"
+  aria-label="WordPress Core AI Living Block Map"
+  data-map-root
+  data-map-state="attract"
+>
+  <h1 class="core-ai-map__sr-only" data-map-persistent-heading hidden>{content.title}</h1>
+
+  <div class="core-ai-map__stage" data-map-stage>
+    <div class="core-ai-map__grid" aria-hidden="true"></div>
+
+    <header class="core-ai-map__topbar">
+      <div class="core-ai-map__brand">
+        <img class="core-ai-map__mark" src={iconUrl} alt="" width="30" height="30" />
+        <span>{content.eyebrow}</span>
+        <span class="core-ai-map__brand-separator" aria-hidden="true"></span>
+        <strong>Living Block Map</strong>
+      </div>
+      <p class="core-ai-map__guidance" data-map-guidance hidden>{content.guidance.attract}</p>
+      <div class="core-ai-map__topbar-actions">
+        <button class="core-ai-map__browse" type="button" data-action="browse" hidden>
+          {content.labels.browseLabel}
+        </button>
+        <button class="core-ai-map__reset" type="button" data-action="reset" hidden>
+          Start over
+        </button>
+      </div>
+    </header>
+
+    <div
+      class="core-ai-map__canvas"
+      data-map-surface="canvas"
+      aria-label="Living Block Map canvas"
+      aria-hidden="true"
+      inert
+    >
+      <div class="core-ai-map__plate" aria-hidden="true"></div>
+      <p class="core-ai-map__zone core-ai-map__zone--outside">Outside · assistants</p>
+      <p class="core-ai-map__zone core-ai-map__zone--inside">Inside WordPress</p>
+      <p class="core-ai-map__zone core-ai-map__zone--providers">Outside · AI providers</p>
+      <div class="core-ai-map__legend core-ai-map__legend--map" aria-label="How to read the map">
+        <ul role="list">
+          <li class="core-ai-map__legend-item">
+            <span class="core-ai-map__legend-sample core-ai-map__legend-sample--solid" aria-hidden="true"></span>
+            <span><strong>Solid arrow:</strong> active request or work</span>
+          </li>
+          <li class="core-ai-map__legend-item">
+            <span class="core-ai-map__legend-sample core-ai-map__legend-sample--dashed" aria-hidden="true"></span>
+            <span><strong>Dashed line:</strong> configuration or supporting information</span>
+          </li>
+          <li class="core-ai-map__legend-item">
+            <span class="core-ai-map__legend-sample core-ai-map__legend-sample--dimmed" aria-hidden="true"></span>
+            <span><strong>Dimmed component:</strong> not part of this flow</span>
+          </li>
+        </ul>
+      </div>
+      <p class="core-ai-map__zone core-ai-map__zone--runtime">Below the runtime · evaluation</p>
+      <p class="core-ai-map__shelf-label" hidden>Also part of the ecosystem</p>
+
+      <svg class="core-ai-map__wires" viewBox="0 0 1366 1024" aria-hidden="true" focusable="false">
+        <defs>
+          <marker
+            id={`${instanceId}-tip`}
+            viewBox="0 0 10 10"
+            refX="8.5"
+            refY="5"
+            markerWidth="4.6"
+            markerHeight="4.6"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z"></path>
+          </marker>
+        </defs>
+        <g class="core-ai-map__rules">
+          <path class="core-ai-map__rule core-ai-map__rule--left" d="M240 112 L240 600" data-map-boundary="left"></path>
+          <path class="core-ai-map__rule core-ai-map__rule--right" d="M1030 112 L1030 600" data-map-boundary="right"></path>
+          <path class="core-ai-map__rule core-ai-map__rule--bottom" d="M240 628 L1030 628" data-map-boundary="bottom"></path>
+        </g>
+        <g class="core-ai-map__hairlines is-hidden">
+          <path d="M504 234 L556 234"></path>
+          <path d="M792 234 L912 234"></path>
+          <path d="M674 308 L674 400"></path>
+          <path d="M358 474 L556 474"></path>
+        </g>
+        {
+          previews.map((preview, previewIndex) => (
+            <g
+              class="core-ai-map__preview-flow"
+              data-preview-id={String(previewIndex)}
+              data-story-id={preview.storyId}
+              data-map-hidden={previewIndex !== 0 ? '' : undefined}
+            >
+              {preview.paths.map((path) => (
+                <path d={path} marker-end={`url(#${instanceId}-tip)`}></path>
+              ))}
+              {preview.sidecarPaths?.map((path) => (
+                <path class="core-ai-map__config-path core-ai-map__preview-config" d={path}></path>
+              ))}
+              <circle class="core-ai-map__preview-signal" r="5.5" cx="0" cy="0"></circle>
+            </g>
+          ))
+        }
+        <g class="core-ai-map__flow">
+          {
+            content.flows.flatMap((flow) =>
+              (['edges', 'rest'] as const).flatMap((variant) =>
+                layouts[flow.id][variant].map((path) => (
+                  <path
+                    d={path}
+                    data-story-id={flow.id}
+                    data-variant={variant}
+                    marker-end={`url(#${instanceId}-tip)`}
+                    data-map-hidden
+                  ></path>
+                )),
+              ),
+            )
+          }
+        </g>
+        {
+          content.flows.flatMap((flow) =>
+            (['edges', 'rest'] as const).flatMap((variant) => {
+              const paths =
+                variant === 'edges'
+                  ? (layouts[flow.id].sidecarEdges ?? [])
+                  : (layouts[flow.id].sidecarRest ?? []);
+              return paths.map((path) => (
+                <path
+                  class="core-ai-map__config-path"
+                  d={path}
+                  data-story-id={flow.id}
+                  data-variant={variant}
+                  data-map-hidden
+                ></path>
+              ));
+            }),
+          )
+        }
+      </svg>
+
+      <div class="core-ai-map__sparks" aria-hidden="true">
+        {
+          content.flows.flatMap((flow) =>
+            (['edges', 'rest'] as const).flatMap((variant) =>
+              layouts[flow.id][variant].map((path, edge) => (
+                <span
+                  class="core-ai-map__spark"
+                  data-story-id={flow.id}
+                  data-variant={variant}
+                  style={`offset-path: path('${path}'); animation-duration: ${layouts[flow.id].dur[edge] ?? '2s'}; animation-delay: ${['0s', '0.55s', '1s'][edge] ?? '0s'};`}
+                  hidden
+                ></span>
+              )),
+            ),
+          )
+        }
+      </div>
+      <div class="core-ai-map__tokens" aria-hidden="true">
+        <span class="core-ai-map__token core-ai-map__token--call">tools/call</span>
+        <span class="core-ai-map__token core-ai-map__token--ability">ability</span>
+      </div>
+      <div class="core-ai-map__learns-explanation" data-story-id="learns" hidden>
+        <span class="core-ai-map__learns-label core-ai-map__learns-label--skills">attaches guidance</span>
+        <span class="core-ai-map__learns-label core-ai-map__learns-label--task">starts the work</span>
+        <div class="core-ai-map__learns-site">
+          <small>Inside WordPress</small>
+          <strong>Nothing here runs</strong>
+          <p>The guidance travels with the agent. The site is not involved until a person installs what the agent wrote.</p>
+        </div>
+      </div>
+
+      {
+        cardOrder.map((cardId) => {
+          const actor = actors[cardId];
+          const block = blocks[cardId];
+          const member = initialMembers.has(cardId);
+          const sidecar = initialSidecars.has(cardId);
+          if (actor) {
+            return (
+              <div
+                class:list={[
+                  'core-ai-map__actor',
+                  `core-ai-map__actor--${cardId}`,
+                  { 'is-preview-member': member },
+                ]}
+                style={`${cardStyle(cardId)}${member ? '' : ' opacity: 0.2;'}`}
+                data-card-id={cardId}
+              >
+                <div class="core-ai-map__actor-float">
+                  {cardId === 'skills' && (
+                    <>
+                      <span class="core-ai-map__actor-ghost core-ai-map__actor-ghost--far" aria-hidden="true"></span>
+                      <span class="core-ai-map__actor-ghost core-ai-map__actor-ghost--near" aria-hidden="true"></span>
+                    </>
+                  )}
+                  <button
+                    class="core-ai-map__actor-body"
+                    type="button"
+                    aria-controls={`${instanceId}-panel-${cardId}`}
+                    aria-expanded="false"
+                    aria-label={`${actor.name} — open its details.`}
+                    data-action="inspect"
+                  >
+                    <span class="core-ai-map__step" aria-hidden="true">{initialStep(cardId)}</span>
+                    <span class="core-ai-map__actor-badge">{actor.badge}</span>
+                    <strong>{actor.name}</strong>
+                    <small>{actor.tagline}</small>
+                    <span class="core-ai-map__tap-cue" aria-hidden="true" hidden>{content.labels.tapCue}</span>
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          if (cardId === 'provider-plugin') {
+            return (
+              <div
+                class="core-ai-map__provider-plugin is-active"
+                style={cardStyle(cardId)}
+                data-card-id={cardId}
+              >
+                <button
+                  class="core-ai-map__provider-plugin-body"
+                  type="button"
+                  aria-controls={`${instanceId}-panel-provider-plugin`}
+                  aria-expanded="false"
+                  aria-label="AI provider plugin — open its details."
+                  data-action="inspect"
+                >
+                  <span class="core-ai-map__step" aria-hidden="true">{initialStep(cardId)}</span>
+                  <span class="core-ai-map__provider-plugin-badge">WordPress plugin</span>
+                  <strong>AI provider plugin</strong>
+                  <small>Provider-specific integration</small>
+                  <span class="core-ai-map__tap-cue" aria-hidden="true" hidden>{content.labels.tapCue}</span>
+                </button>
+              </div>
+            );
+          }
+          if (!block) return null;
+          return (
+            <div
+              class:list={[
+                'core-ai-map__block',
+                `core-ai-map__block--${cardId}`,
+                {
+                  'is-preview-member': member,
+                  'is-sidecar': sidecar,
+                  'is-preview-sidecar': sidecar,
+                },
+              ]}
+              style={cardStyle(cardId)}
+              data-card-id={cardId}
+            >
+              <div class="core-ai-map__block-float">
+                <button
+                  class="core-ai-map__block-body"
+                  type="button"
+                  style={`opacity: ${member ? '1' : sidecar ? '0.86' : '0.2'};`}
+                  aria-controls={`${instanceId}-panel-${cardId}`}
+                  aria-expanded="false"
+                  aria-label={`${block.name} — open its details.`}
+                  data-action="inspect"
+                >
+                  <span class="core-ai-map__step" aria-hidden="true">{initialStep(cardId)}</span>
+                  <span class="core-ai-map__block-head">
+                    <svg class="core-ai-map__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+                      {cardId === 'plugin' && <><rect x="4" y="6" width="24" height="20" rx="2"></rect><path d="M9 13h9m-9 5h14"></path></>}
+                      {cardId === 'client' && <><path d="M5 6h22v15H15l-6 5v-5H5V6Z"></path><path d="M10 12h12m-12 4h8"></path></>}
+                      {cardId === 'connectors' && <><path d="M13 4h6v7h5v6h-5v4a7 7 0 0 1-14 0v-4h8V4Z"></path><path d="M8 17v-5m10-1V6"></path></>}
+                      {cardId === 'abilities' && <><rect x="4" y="5" width="10" height="9" rx="1.5"></rect><rect x="18" y="18" width="10" height="9" rx="1.5"></rect><path d="M14 9.5h5a4 4 0 0 1 4 4V18M18 22.5h-5a4 4 0 0 1-4-4V14"></path></>}
+                      {cardId === 'mcp' && <><path d="M11 5v7m10-7v7M8 12h16v3a8 8 0 0 1-8 8v4"></path><path d="M12 17h8"></path></>}
+                      {cardId === 'bench' && <><path d="M5 27V14m7 13V8m7 19V17m7 10V4"></path><path d="M3 27h26"></path></>}
+                    </svg>
+                    <span class="core-ai-map__block-badge">{block.badge}</span>
+                  </span>
+                  <span class="core-ai-map__block-name">
+                    <strong>{block.name}</strong>
+                    <small>{block.tagline}</small>
+                  </span>
+                  <span class="core-ai-map__tap-cue" aria-hidden="true" hidden>{content.labels.tapCue}</span>
+                </button>
+                {cardId === 'connectors' && <span class="core-ai-map__sidecar-label">Setup · discovery · credentials</span>}
+              </div>
+            </div>
+          );
+        })
+      }
+
+      {
+        blockIds.map((blockId) => (
+          <div
+            class={`core-ai-map__strip-anchor core-ai-map__strip-anchor--${blockId}`}
+            style={cardStyle(blockId)}
+            data-strip-id={blockId}
+          >
+            <div
+              class={`core-ai-map__strip core-ai-map__strip--${blockId}`}
+              aria-hidden={blockId === 'plugin' ? undefined : 'true'}
+              hidden
+            >
+              {blockId === 'plugin' && (
+                <div class="core-ai-map__workbench">
+                  <div class="core-ai-map__workbench-head">
+                    <span data-map-suggestion-label>{content.suggestions[0]?.label}</span>
+                    <em class="core-ai-map__workbench-phase" data-map-suggestion-phase>Needs review</em>
+                  </div>
+                  <p class="core-ai-map__workbench-text" data-map-suggestion-text>{content.suggestions[0]?.text}</p>
+                  <div class="core-ai-map__workbench-actions">
+                    <span class="core-ai-map__workbench-review">A person reviews</span>
+                    <button class="core-ai-map__workbench-apply" type="button" data-action="apply-suggestion">Apply</button>
+                  </div>
+                  <p class="core-ai-map__workbench-note" data-map-suggestion-note hidden>A person chose Apply. Nothing is applied without that tap.</p>
+                </div>
+              )}
+              {blockId === 'client' && <div class="core-ai-map__router"><div class="core-ai-map__router-row"><span>text</span><span>image</span><span>json</span><span class="core-ai-map__router-arrow" aria-hidden="true">→</span><span class="core-ai-map__router-result">result</span></div><p>route · select · normalize</p></div>}
+              {blockId === 'connectors' && <div class="core-ai-map__sockets"><div class="core-ai-map__sockets-row"><span class="core-ai-map__socket core-ai-map__socket--connected">Connected</span><span class="core-ai-map__socket core-ai-map__socket--available">Available</span></div><span class="core-ai-map__socket core-ai-map__socket--credentials">Needs credentials</span></div>}
+              {blockId === 'abilities' && <div class="core-ai-map__ports"><span>Input</span><span class="is-accent">Permission ✓</span><span>Run</span><span>Output</span></div>}
+              {blockId === 'mcp' && <div class="core-ai-map__bridge"><span class="core-ai-map__bridge-outside">tools · resources</span><span class="core-ai-map__bridge-inside">abilities</span></div>}
+              {blockId === 'bench' && <div class="core-ai-map__meters"><div class="core-ai-map__meter"><span class="core-ai-map__meter-label">suite</span><span class="core-ai-map__meter-value">wp-core-v1</span></div><div class="core-ai-map__meter"><span class="core-ai-map__meter-label">tests</span><span class="core-ai-map__meter-value">185</span></div><div class="core-ai-map__meter"><span class="core-ai-map__meter-label">pass</span><span class="core-ai-map__meter-value">boolean</span></div><div class="core-ai-map__meter"><span class="core-ai-map__meter-label">grader</span><span class="core-ai-map__meter-value">WordPress</span></div></div>}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div data-map-screen="map" hidden inert>
+      <div class="core-ai-map__story-copy" data-map-story-band>
+        <div class="core-ai-map__browse-note" data-map-browse-note hidden>
+          <p><strong>{content.labels.browseLabel}</strong><span>{content.labels.browseDescription}</span></p>
+        </div>
+        {
+          content.flows.map((flow) => (
+            <div class="core-ai-map__story-flow" data-story-id={flow.id} hidden>
+              <div class="core-ai-map__story-lessons">
+                <p class="core-ai-map__situation"><strong>Situation</strong><span>{flow.situation}</span></p>
+                <p class="core-ai-map__takeaway" hidden><strong>{content.labels.takeawayHeading}</strong><span>{flow.takeaway}</span></p>
+              </div>
+              <div class="core-ai-map__story-actions">
+                {flow.id === 'tests' && <button class="core-ai-map__run-loop-link" type="button" data-action="open-bench">See the run loop<span aria-hidden="true">→</span></button>}
+                <button class="core-ai-map__replay" type="button" data-action="replay-flow"><span aria-hidden="true">↻</span>Replay</button>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <nav class="core-ai-map__rail" aria-labelledby={`${instanceId}-rail-label`}>
+        <p class="core-ai-map__rail-label" id={`${instanceId}-rail-label`}>{content.labels.railEmptyLabel}</p>
+        {
+          content.flows.map((flow, index) => (
+            <button type="button" aria-pressed="false" data-action="select-flow" data-story-id={flow.id}>
+              <span class="core-ai-map__rail-number" aria-hidden="true">{storyNumber(index)}</span>
+              <span class="core-ai-map__rail-copy"><strong>{flow.title}</strong><small class="core-ai-map__rail-outcome">{flow.outcome}</small></span>
+            </button>
+          ))
+        }
+      </nav>
+    </div>
+
+    <footer class="core-ai-map__colophon">
+      <button class="core-ai-map__about-trigger" type="button" aria-controls={`${instanceId}-about`} aria-expanded="false" data-action="open-about">About this exhibit</button>
+    </footer>
+
+    <div class="core-ai-map__attract" data-map-screen="attract" aria-label="Living Block Map welcome">
+      <p class="core-ai-map__eyebrow">{content.eyebrow}</p>
+      <h1>{content.title}</h1>
+      <div class="core-ai-map__orientation">
+        {content.intro.map((paragraph) => <p class="core-ai-map__intro">{paragraph}</p>)}
+      </div>
+      <ol class="core-ai-map__welcome-steps" role="list">
+        <li><span>1</span><strong>Choose a flow</strong></li>
+        <li><span>2</span><strong>Follow the numbered path</strong></li>
+        <li><span>3</span><strong>Tap a highlighted component to see its role</strong></li>
+      </ol>
+      <div class="core-ai-map__legend core-ai-map__legend--welcome" aria-label="How to read the map">
+        <ul role="list">
+          <li class="core-ai-map__legend-item"><span class="core-ai-map__legend-sample core-ai-map__legend-sample--solid" aria-hidden="true"></span><span><strong>Solid arrow:</strong> active request or work</span></li>
+          <li class="core-ai-map__legend-item"><span class="core-ai-map__legend-sample core-ai-map__legend-sample--dashed" aria-hidden="true"></span><span><strong>Dashed line:</strong> configuration or supporting information</span></li>
+          <li class="core-ai-map__legend-item"><span class="core-ai-map__legend-sample core-ai-map__legend-sample--dimmed" aria-hidden="true"></span><span><strong>Dimmed component:</strong> not part of this flow</span></li>
+        </ul>
+      </div>
+      <div class="core-ai-map__attract-actions">
+        <button class="core-ai-map__prompt" type="button" data-action="start">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"></path></svg>
+          Explore the first flow
+        </button>
+        <button class="core-ai-map__attract-browse" type="button" data-action="browse">{content.labels.browseLabel}</button>
+      </div>
+      <div class="core-ai-map__attract-story">
+        {previews.map((preview, index) => <p data-preview-id={String(index)} data-story-id={preview.storyId} hidden={index !== 0}><span>{flows[preview.storyId].title}</span><em>{flows[preview.storyId].copy}</em></p>)}
+      </div>
+    </div>
+
+    <aside
+      id={`${instanceId}-about`}
+      class="core-ai-map__about"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={`${instanceId}-about-title`}
+      data-map-screen="about"
+      hidden
+      inert
+    >
+      <div class="core-ai-map__about-content">
+        <button class="core-ai-map__about-close" type="button" data-action="close-about"><span aria-hidden="true">←</span>{about.backLabel}</button>
+        <p class="core-ai-map__details-badge">{about.badge}</p>
+        <h2 id={`${instanceId}-about-title`}>{about.title}</h2>
+        <dl class="core-ai-map__about-disclosure">
+          {about.disclosures.map((item) => <div><dt>{item.term}</dt><dd>{item.description}</dd></div>)}
+        </dl>
+        <p>{about.responsibility}</p>
+        <p class="core-ai-map__about-reviewed">{content.reviewedDate}</p>
+      </div>
+    </aside>
+
+    <aside
+      class="core-ai-map__details"
+      role="region"
+      aria-label="Block details"
+      data-map-screen="inspect"
+      hidden
+      inert
+    >
+      <button class="core-ai-map__details-close" type="button" data-action="close-inspect"><span aria-hidden="true">←</span><span data-map-details-back>Back to the map</span></button>
+      <p class="core-ai-map__details-guidance" data-map-details-guidance hidden></p>
+      <p class="core-ai-map__details-continuation" aria-hidden="true"><span>Scroll or swipe for Under the hood and Keep exploring</span><span>↓</span></p>
+
+      {
+        content.panels.map((panel) => (
+          <article
+            id={`${instanceId}-panel-${panel.id}`}
+            aria-labelledby={`${instanceId}-panel-${panel.id}-title`}
+            data-map-panel={panel.id}
+            data-card-id={panel.id}
+            hidden
+            inert
+          >
+            <h2 id={`${instanceId}-panel-${panel.id}-title`} class="core-ai-map__sr-only">{panel.title}</h2>
+            {roleEntries(panel).map(([flowId, role]) => (
+              <div class="core-ai-map__details-context" data-story-id={flowId} hidden>
+                <p class="core-ai-map__breadcrumb"><span>{flows[flowId].title}</span><span class="core-ai-map__breadcrumb-arrow" aria-hidden="true">→</span><span>{panel.title}</span></p>
+                <h3 class="core-ai-map__details-heading">{content.labels.roleHeading}</h3>
+                <dl class="core-ai-map__role">
+                  <div><dt>{content.labels.receivesLabel}</dt><dd>{role.receives}</dd></div>
+                  <div><dt>{content.labels.doesLabel}</dt><dd>{role.does}</dd></div>
+                  <div><dt>{content.labels.returnsLabel}</dt><dd>{role.returns}</dd></div>
+                </dl>
+                <h3 class="core-ai-map__details-heading">{content.labels.lessonHeading}</h3>
+                <p class="core-ai-map__details-lesson">{role.lesson}</p>
+              </div>
+            ))}
+            <p class="core-ai-map__details-badge">{panel.badge}</p>
+            <p class="core-ai-map__details-title" aria-hidden="true">{panel.title}</p>
+            <h3 class="core-ai-map__details-heading">{content.labels.definitionHeading}</h3>
+            <p class="core-ai-map__details-lede">{panel.lede}</p>
+            {!contextOnlyPanels.has(panel.id) && <h3 class="core-ai-map__details-heading core-ai-map__details-section">{content.labels.technicalHeading}</h3>}
+            {panel.id === 'bench' && <button class="core-ai-map__run-loop-link" type="button" data-action="open-bench">Open the run loop<span aria-hidden="true">→</span></button>}
+
+            {panel.id === 'abilities' ? (
+              <>
+                <div class="core-ai-map__ability-tabs" role="tablist" aria-label="Abilities API detail">
+                  {abilityTabs.map((tab, index) => <button type="button" role="tab" tabindex={index === 0 ? 0 : -1} id={`${instanceId}-abilities-tab-${tab.id}`} aria-controls={`${instanceId}-abilities-panel-${tab.id}`} aria-selected={index === 0 ? 'true' : 'false'} class:list={{ 'is-active': index === 0 }} data-action="select-ability-tab" data-tab-id={tab.id}>{tab.label}</button>)}
+                </div>
+                <div id={`${instanceId}-abilities-panel-overview`} role="tabpanel" aria-labelledby={`${instanceId}-abilities-tab-overview`} data-tab-panel="overview">
+                  <h4 class="core-ai-map__details-heading">How it connects</h4>
+                  <div class="core-ai-map__chain"><span class="core-ai-map__chain-step">Input</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step">Permission</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step">Run</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step is-accent">Typed output</span></div>
+                  <p class="core-ai-map__details-note">{panel.notes?.[0]?.text}</p>
+                  <p class="core-ai-map__details-note"><strong>Reached from both directions.</strong> An outside assistant is not the only caller. A request made by the AI Client inside WordPress can name registered abilities a model is allowed to call, and every one of those calls still passes the same permission check.</p>
+                  {panelQrUrl(panel) && <><h3 class="core-ai-map__details-heading">{content.labels.exploreHeading}</h3><div class="core-ai-map__qr" data-map-qr-container={panel.id} data-qr-url={panel.href}><img class="core-ai-map__qr-image" src={panelQrUrl(panel)} alt={`QR code for ${panel.title}: ${panel.href}`} width="112" height="112" data-map-qr /><span><small>Open the canonical project page</small><strong class="core-ai-map__qr-url">{panel.href}</strong><em>Keep exploring on your own device.</em></span></div></>}
+                </div>
+                <div id={`${instanceId}-abilities-panel-anatomy`} role="tabpanel" aria-labelledby={`${instanceId}-abilities-tab-anatomy`} data-tab-panel="anatomy" hidden inert>
+                  <h4 class="core-ai-map__details-heading">One registration, annotated</h4>
+                  <div class="core-ai-map__ability-code">
+                    <p><b>A</b><code>wp_register_ability( 'bookings/get-availability', [</code></p><p><b>B</b><code>  'label'               =&gt; 'Get availability',</code></p><p><i aria-hidden="true"></i><code>  'description'         =&gt; 'Open slots in a range.',</code></p><p><i aria-hidden="true"></i><code>  'category'            =&gt; 'bookings',</code></p><p><i aria-hidden="true"></i><code>  'input_schema'        =&gt; $schema,</code></p><p><b>C</b><code>  'permission_callback' =&gt; $can_book,</code></p><p><i aria-hidden="true"></i><code>  'execute_callback'    =&gt; $handler,</code></p><p><i aria-hidden="true"></i><code>  'meta'                =&gt; [</code></p><p><b>D</b><code>    'public'      =&gt; true,</code></p><p><b>E</b><code>    'annotations' =&gt; [ 'readonly' =&gt; true ],</code></p><p><i aria-hidden="true"></i><code>  ],</code></p><p><i aria-hidden="true"></i><code>] );</code></p>
+                  </div>
+                  <ul class="core-ai-map__ability-notes"><li><b>A</b><span><strong>Two segments, lowercase.</strong> The name is public API. Renaming it later breaks every caller.</span></li><li><b>B</b><span><strong>This is the part an agent reads.</strong> It picks the ability from these two lines alone. If the description needs an “and”, it is two abilities.</span></li><li><b>C</b><span><strong>Checked on every call.</strong> An editor button, a REST client and an outside assistant all pass through the same gate.</span></li><li><b>D</b><span><strong>One public default, per-channel control. New in 7.1.</strong> Public seeds outside channels such as REST, MCP adapters, and agents; each channel can still be turned off independently.</span></li><li><b>E</b><span><strong>Hints to clients about behavior — and the verb core requires.</strong> Read-only tells a client this ability changes nothing; over REST it also makes GET the only way to call it. What it never does is decide who may call it.</span></li></ul>
+                  <p class="core-ai-map__details-warning"><strong>Validation is not sanitization.</strong> The schema checks types and required fields. It does not clean input, and it does not fill in the defaults you wrote. Whatever arrives is raw.</p>
+                </div>
+                <div id={`${instanceId}-abilities-panel-permissions`} role="tabpanel" aria-labelledby={`${instanceId}-abilities-tab-permissions`} data-tab-panel="permissions" hidden inert>
+                  <h4 class="core-ai-map__details-heading">Three gates, one call</h4>
+                  <div class="core-ai-map__chain"><span class="core-ai-map__chain-step">Assistant</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step">Transport</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step">Meta-tool</span><span class="core-ai-map__chain-arrow" aria-hidden="true">→</span><span class="core-ai-map__chain-step is-accent">Your callback</span></div>
+                  <ol class="core-ai-map__permission-gates"><li><strong>The endpoint lets you in</strong><span>The adapter’s default transport check is only whether someone is logged in. On a stock install a subscriber clears this gate.</span></li><li><strong>The tool lets you ask</strong><span>On the default server abilities are not listed one by one. Three adapter tools stand in front of them — discover, inspect, execute — and each carries its own capability.</span></li><li><strong>The ability decides</strong><span>Only the last gate sees what is actually being asked — which booking, which date, on whose behalf. This is the one you write.</span></li></ol>
+                  <p class="core-ai-map__details-warning"><strong>All three must pass.</strong> The first two default to little more than “someone is logged in”. A permission check only ever tried as an administrator has not been tested.</p>
+                  <p class="core-ai-map__details-note">An assistant acts as a real logged-in user. An ability that is too generous hands an outside service that user’s reach. Exposure is not authorization: public decides what a client may see, never what it may run.</p>
+                </div>
+              </>
+            ) : (
+              <>
+                {panel.connect?.length && <><h4 class="core-ai-map__details-heading">{panel.connectHeading}</h4><div class:list={['core-ai-map__chain', { 'core-ai-map__chain--grid': panel.connectLayout === 'grid' }]}>{panel.connect.map((link, index) => <>{panel.connectLayout !== 'grid' && index > 0 && <span class="core-ai-map__chain-arrow" aria-hidden="true">→</span>}<span class:list={['core-ai-map__chain-step', { 'is-accent': link.accent, 'is-warning': link.tone === 'warning' }]}>{link.label}</span></>)}</div></>}
+                {panel.notes?.map((note) => <>{note.heading !== content.labels.technicalHeading && <h4 class="core-ai-map__details-heading">{note.heading}</h4>}<p class="core-ai-map__details-note">{note.text}</p></>)}
+                {panelQrUrl(panel) && <><h3 class="core-ai-map__details-heading">{content.labels.exploreHeading}</h3><div class="core-ai-map__qr" data-map-qr-container={panel.id} data-qr-url={panel.href}><img class="core-ai-map__qr-image" src={panelQrUrl(panel)} alt={`QR code for ${panel.title}: ${panel.href}`} width="112" height="112" data-map-qr /><span><small>Open the canonical project page</small><strong class="core-ai-map__qr-url">{panel.href}</strong><em>Keep exploring on your own device.</em></span></div></>}
+              </>
+            )}
+          </article>
+        ))
+      }
+    </aside>
+
+    <section class="core-ai-map__bench" aria-label="WP-Bench run loop" data-map-screen="bench" hidden inert>
+      <header class="core-ai-map__bench-heading"><div><h2>The run loop</h2><p>Five stages, in the same three bands as the map. Tap a stage for the detail. Nothing here touches a live site.</p></div><button type="button" data-action="close-bench"><span aria-hidden="true">←</span>Back to map</button></header>
+      <p class="core-ai-map__bench-zone core-ai-map__bench-zone--harness">Outside · the harness</p><p class="core-ai-map__bench-zone core-ai-map__bench-zone--sandbox">Inside WordPress · sandboxed</p><p class="core-ai-map__bench-zone core-ai-map__bench-zone--model">Outside · the model</p>
+      <svg class="core-ai-map__bench-wires" viewBox="0 0 1366 1024" aria-hidden="true" focusable="false"><defs><marker id={`${instanceId}-bench-tip`} viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="4.6" markerHeight="4.6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z"></path></marker></defs><path class="core-ai-map__bench-boundary" d="M240 148 L240 512"></path><path class="core-ai-map__bench-boundary" d="M1030 148 L1030 512"></path><path class="core-ai-map__bench-divider" d="M24 552 L1342 552"></path><g class="core-ai-map__bench-flow" data-map-bench-flow>{bench.paths.map((path) => <path d={path} marker-end={`url(#${instanceId}-bench-tip)`}></path>)}</g></svg>
+      <nav class="core-ai-map__bench-stages" aria-label="WP-Bench stages">
+        {Object.entries(bench.stages).map(([stageId, stage]) => <button class:list={['core-ai-map__bench-stage', `core-ai-map__bench-stage--${stageId}`, { 'is-active': stageId === 'sandbox' }]} type="button" data-action="select-bench-stage" data-stage-id={stageId} aria-controls={`${instanceId}-bench-panel-${stageId}`} aria-pressed={stageId === 'sandbox' ? 'true' : 'false'} tabindex={stageId === 'sandbox' ? 0 : -1}><span class="core-ai-map__bench-stage-number" aria-hidden="true">{stage.number}</span><small>{stage.badge}</small><strong>{stage.label}</strong><em>{stage.summary}</em>{stage.flow && <span class="core-ai-map__bench-stage-flow">{stage.flow.map((step, index) => <>{index > 0 && <span class="core-ai-map__bench-stage-flow-arrow" aria-hidden="true">→</span>}<span class:list={['core-ai-map__bench-stage-flow-step', { 'is-accent': step.accent }]}>{step.label}</span></>)}</span>}</button>)}
+      </nav>
+      <div class="core-ai-map__bench-details">
+        {Object.entries(bench.stages).map(([stageId, stage]) => <article id={`${instanceId}-bench-panel-${stageId}`} data-stage-panel={stageId} hidden={stageId !== 'sandbox'} inert={stageId !== 'sandbox'}><div class="core-ai-map__bench-copy"><p>{stage.kicker}</p><h3>{stage.title}</h3><p>{stage.body}</p>{stage.note && <aside>{stage.note}</aside>}</div><div class="core-ai-map__bench-facts">{stage.rows.map((row) => <p><code>{row[0]}</code><span>{row[1]}</span></p>)}</div></article>)}
+      </div>
+    </section>
+
+    <div class="core-ai-map__home-indicator" aria-hidden="true"></div>
+  </div>
+
+  <p class="core-ai-map__sr-only" aria-live="polite" data-map-live>Core AI Living Block Map ready. Choose a flow to begin, or open the first flow.</p>
+  <nav data-map-fallback hidden aria-label="Living Block Map fallback">
+    <p>The interactive map could not start. You can still visit the Core AI project pages.</p>
+    <a href={`${base}/`}>Back to the WCUS Core AI projects</a>
+    {content.panels.filter((panel) => panel.href).map((panel) => <a href={panel.href}>{panel.title}</a>)}
+  </nav>
+  <noscript>
+    <p>The Living Block Map requires JavaScript for its interactive flows.</p>
+    <a href={`${base}/`}>Back to the WCUS Core AI projects</a>
+  </noscript>
+</main>

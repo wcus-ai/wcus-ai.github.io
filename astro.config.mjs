@@ -5,6 +5,10 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   site: 'https://wcus-ai.github.io',
   vite: {
+    build: {
+      // QR codes must remain standalone scan targets instead of data-URI payloads.
+      assetsInlineLimit: 0,
+    },
     resolve: {
       alias: {
         '@lib': fileURLToPath(new URL('./src/lib', import.meta.url)),
