@@ -465,12 +465,15 @@ in the same Chromium process at 1366 x 1024 and device scale 1, and writes
 reference/candidate/diff PNGs plus JSON.
 
 This parity command is a release gate: any capture error or any state above a
-`0.005` differing-pixel ratio exits nonzero. The value is shared with the
-report helper, but the existing report itself is not the gate. The parity
-report and command output are retained as migration evidence before the old
-deployment is retired. After retirement, the blocking MAP browser suite and
-accepted native screenshots become the regression contract; the external
-side-by-side command is not run in ordinary CI.
+`0.005` differing-pixel ratio exits nonzero. The named threshold is exported
+from the report helper module for the parity command. After this design was
+approved, the ordinary two-viewport report adopted an independent, stricter
+`0.0002` default; integrating current `main` preserves that protection rather
+than weakening it to the map release threshold. The parity report and command
+output are retained as migration evidence before the old deployment is
+retired. After retirement, the blocking MAP browser suite and accepted native
+screenshots become the regression contract; the external side-by-side command
+is not run in ordinary CI.
 
 ### Full gates
 

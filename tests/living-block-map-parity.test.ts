@@ -53,12 +53,16 @@ test('parity registry contains exactly one of each approved VIS identifier', () 
   assert.equal(new Set(VISUAL_STATES.map(({ id }) => id)).size, 15);
 });
 
-test('the shared diff threshold passes at 0.005 and fails above it', () => {
+test('the map parity threshold stays at 0.005 without weakening the report default', () => {
   assert.equal(DIFF_RATIO_THRESHOLD, 0.005);
-  assert.equal(diffStatus({ diffRatio: 0.005 }), 'identical');
   assert.equal(parityStatus(0.005), 'pass');
-  assert.equal(diffStatus({ diffRatio: 0.005_000_1 }), 'changed');
   assert.equal(parityStatus(0.005_000_1), 'fail');
+  assert.equal(diffStatus({ diffRatio: 0.005 }, { threshold: DIFF_RATIO_THRESHOLD }), 'identical');
+  assert.equal(
+    diffStatus({ diffRatio: 0.005_000_1 }, { threshold: DIFF_RATIO_THRESHOLD }),
+    'changed',
+  );
+  assert.equal(diffStatus({ diffRatio: 0.000_35 }), 'changed');
 });
 
 test('strict parity rejects screenshots with different dimensions', () => {

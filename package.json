@@ -20,7 +20,7 @@
     "worker:deploy": "wrangler deploy --config worker/wrangler.toml"
   },
   "dependencies": {
-    "astro": "^6.4.8"
+    "astro": "^7.2.1"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
