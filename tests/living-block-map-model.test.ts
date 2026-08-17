@@ -91,8 +91,12 @@ test('model owns the Abilities tabs, WP-Bench stages, and canonical QR destinati
   const qrManifest = JSON.parse(await readFile(qrManifestPath, 'utf8'));
 
   assert.deepEqual(
-    model.abilityTabs.map(({ id }: { id: string }) => id),
-    ['overview', 'anatomy', 'permissions'],
+    model.abilityTabs.map(({ id, label }: { id: string; label: string }) => [id, label]),
+    [
+      ['overview', 'Overview'],
+      ['anatomy', 'Anatomy'],
+      ['permissions', 'Who is allowed'],
+    ],
   );
   assert.deepEqual(Object.keys(model.bench.stages), [
     'task',

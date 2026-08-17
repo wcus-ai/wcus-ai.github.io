@@ -893,7 +893,7 @@ export const MAP_MODEL = {
     },
     {
       id: 'permissions',
-      label: 'Permissions',
+      label: 'Who is allowed',
     },
   ],
 } as const satisfies MapModel;

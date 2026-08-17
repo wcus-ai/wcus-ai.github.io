@@ -4,8 +4,8 @@
 
 import { PNG } from 'pngjs';
 
-// Less than this the diff is considered identical.
-const DEFAULT_THRESHOLD = 0.005;
+// Ratios at or below this boundary are considered identical.
+export const DIFF_RATIO_THRESHOLD = 0.005;
 
 export interface PageResult {
   name: string;
@@ -31,7 +31,7 @@ export interface ReportContext {
 /** Classify a page result against the diff threshold. */
 export function diffStatus(
   result: Pick<PageResult, 'diffRatio'>,
-  { threshold = DEFAULT_THRESHOLD }: { threshold?: number } = {},
+  { threshold = DIFF_RATIO_THRESHOLD }: { threshold?: number } = {},
 ): 'changed' | 'identical' {
   return result.diffRatio > threshold ? 'changed' : 'identical';
 }

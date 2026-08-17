@@ -83,6 +83,21 @@ test('native route builds a complete semantic first paint', async () => {
     ]) {
       assert.match(sourceCss, neutralizer);
     }
+    assert.match(
+      sourceCss,
+      /\.core-ai-map\s*\{[\s\S]*?font-weight: 300;[\s\S]*?letter-spacing: -0\.1px;/,
+    );
+    assert.match(
+      sourceCss,
+      /\.core-ai-map :where\(h1, h2, h3, h4, h5, h6, p\)\s*\{[\s\S]*?letter-spacing: inherit;/,
+    );
+    const buttonNeutralizer = sourceCss.match(/\.core-ai-map button\s*\{([^}]*)\}/)?.[1] ?? '';
+    assert.doesNotMatch(
+      buttonNeutralizer,
+      /margin:/,
+      'button neutralization must preserve authored component margins',
+    );
+    assert.match(sourceCss, /\.core-ai-map__details-heading\s*\{[\s\S]*?line-height: 1\.125;/);
     assert.match(sourceCss, /--cai-scale: 1;/);
     assert.match(
       sourceCss,
