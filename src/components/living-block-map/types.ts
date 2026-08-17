@@ -216,3 +216,69 @@ export interface MapModel {
   readonly bench: BenchContent;
   readonly abilityTabs: readonly AbilityTab[];
 }
+
+export type FlowPhase = 'assembling' | 'settled';
+export type PreviewPhase = 'assembling' | 'drawing' | 'signalling' | 'settled' | 'releasing';
+
+export interface MapState {
+  readonly screen: Screen;
+  readonly flow: FlowId | null;
+  readonly inspectedCard: CardId | null;
+  readonly abilityTab: AbilityTabId;
+  readonly benchStage: BenchStageId;
+  readonly aboutReturnScreen: 'attract' | 'map' | null;
+  readonly flowPhase: FlowPhase;
+  readonly pendingTakeawayFlow: FlowId | null;
+  readonly previewIndex: number;
+  readonly previewPhase: PreviewPhase;
+  readonly suggestionIndex: number;
+  readonly suggestionApplied: boolean;
+  readonly announcement: string;
+}
+
+export type MapEvent =
+  | { readonly type: 'start' }
+  | { readonly type: 'browse' }
+  | { readonly type: 'select-flow'; readonly flow: FlowId }
+  | { readonly type: 'settle-flow' }
+  | { readonly type: 'inspect'; readonly card: CardId }
+  | { readonly type: 'close-inspect' }
+  | { readonly type: 'replay-flow' }
+  | { readonly type: 'open-about' }
+  | { readonly type: 'close-about' }
+  | { readonly type: 'select-ability-tab'; readonly tab: AbilityTabId }
+  | { readonly type: 'open-bench' }
+  | { readonly type: 'close-bench' }
+  | { readonly type: 'select-bench-stage'; readonly stage: BenchStageId }
+  | { readonly type: 'apply-suggestion' }
+  | { readonly type: 'advance-preview' }
+  | { readonly type: 'set-preview-phase'; readonly phase: PreviewPhase }
+  | { readonly type: 'reset'; readonly reason: 'visitor' | 'inactivity' };
+
+export interface DerivedCardView {
+  readonly active: boolean;
+  readonly dimmed: boolean;
+  readonly disabled: boolean;
+  readonly inspected: boolean;
+  readonly parked: boolean;
+  readonly sidecar: boolean;
+  readonly step: string;
+  readonly transform: string;
+  readonly opacity: string;
+  readonly accessibleName: string;
+}
+
+export interface DerivedMapView {
+  readonly rootClasses: readonly string[];
+  readonly screens: Readonly<Record<Screen, { readonly hidden: boolean; readonly inert: boolean }>>;
+  readonly selectedFlow: FlowId | null;
+  readonly cards: Readonly<Record<CardId, DerivedCardView>>;
+  readonly abilityTabs: Readonly<
+    Record<AbilityTabId, { readonly selected: boolean; readonly tabIndex: 0 | -1 }>
+  >;
+  readonly benchStages: Readonly<
+    Record<BenchStageId, { readonly selected: boolean; readonly tabIndex: 0 | -1 }>
+  >;
+  readonly guidance: string;
+  readonly announcement: string;
+}
