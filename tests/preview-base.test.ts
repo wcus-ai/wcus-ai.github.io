@@ -72,52 +72,28 @@ test('preview build: canonical URLs stay on production, not the preview path', a
   assert.ok(!canonical.includes('pr-preview'), 'canonical must not point at the preview');
 });
 
-test('preview build: Living Block Map assets respect the base while canonical stays public', async () => {
+test('preview build: the vendored Living Block Map is base-agnostic', async () => {
   const map = await readFile(new URL('living-block-map/index.html', dist), 'utf8');
+
   assert.ok(
-    map.includes('<link rel="canonical" href="https://wcus-ai.github.io/living-block-map"'),
+    map.includes('<link rel="canonical" href="https://wcus-ai.github.io/living-block-map/"'),
     'map canonical must omit the preview base',
   );
 
+  // The kiosk ships as a static page copied verbatim out of `public/`, so Astro
+  // never rewrites its URLs for the preview base. It stays correct under any
+  // base by referencing its assets relatively instead.
   const fontPreloads = map.match(/<link rel="preload"[^>]*type="font\/woff2"[^>]*>/g) ?? [];
   assert.equal(fontPreloads.length, 6);
   assert.ok(
-    fontPreloads.every((link) => link.includes('href="/pr-preview/pr-99/_astro/')),
-    'every font preload must use the preview base',
+    fontPreloads.every((link) => link.includes('href="fonts/')),
+    'every font preload must resolve relative to the page',
   );
 
-  const qrImages = map.match(/<img[^>]*data-map-qr[^>]*>/g) ?? [];
-  assert.equal(qrImages.length, 7);
-  assert.ok(
-    qrImages.every((image) => image.includes('src="/pr-preview/pr-99/_astro/')),
-    'every QR image must use the preview base',
-  );
-
-  const stylesheetHrefs = [...map.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(
-    (match) => match[1],
-  );
-  const compiledCss = (
-    await Promise.all(
-      stylesheetHrefs.map((href) =>
-        readFile(new URL(`_astro/${href.split('/').at(-1)}`, dist), 'utf8'),
-      ),
-    )
-  ).join('\n');
-  const builtMapFonts = [
-    ...compiledCss.matchAll(
-      /url\(([^)]*(?:inter-latin-wght-normal|eb-garamond-latin-wght-normal|ibm-plex-mono-latin-(?:400|500|600|700)-normal)\.[A-Za-z0-9_-]+\.woff2)\)/g,
-    ),
-  ].map((match) => match[1].replaceAll('"', ''));
-  assert.equal(builtMapFonts.length, 6);
-  assert.ok(
-    builtMapFonts.every((url) => url.startsWith('/pr-preview/pr-99/_astro/')),
-    'compiled map fonts must use the preview base',
-  );
-
-  for (const asset of map.matchAll(/(?:href|src)="([^"]+\.(?:css|js))"/g)) {
+  for (const asset of map.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)) {
     assert.ok(
-      asset[1].startsWith('/pr-preview/pr-99/_astro/'),
-      `built asset must use preview base: ${asset[1]}`,
+      !asset[1].startsWith('/') && !/^https?:/.test(asset[1]),
+      `map image must resolve relative to the page: ${asset[1]}`,
     );
   }
 });
