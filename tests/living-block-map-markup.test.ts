@@ -104,9 +104,20 @@ test('native route builds a complete semantic first paint', async () => {
     }
     for (const tab of ['overview', 'anatomy', 'permissions']) {
       assert.ok(html.includes(`data-tab-id="${tab}"`), `missing ${tab} ability tab`);
+      const tabMarkup = new RegExp(`<button[^>]*data-tab-id="${tab}"[^>]*>`).exec(html)?.[0];
+      assert.ok(tabMarkup, `missing ${tab} tab control`);
+      assert.match(tabMarkup, /role="tab"/);
+      assert.match(tabMarkup, /aria-selected="(?:true|false)"/);
+      assert.match(tabMarkup, /aria-controls="[^"]+"/);
+      assert.match(tabMarkup, /tabindex="(?:0|-1)"/);
     }
     for (const stage of ['task', 'model', 'sandbox', 'checks', 'evidence']) {
       assert.ok(html.includes(`data-stage-id="${stage}"`), `missing ${stage} bench stage`);
+      const stageMarkup = new RegExp(`<button[^>]*data-stage-id="${stage}"[^>]*>`).exec(html)?.[0];
+      assert.ok(stageMarkup, `missing ${stage} stage control`);
+      assert.match(stageMarkup, /aria-pressed="(?:true|false)"/);
+      assert.match(stageMarkup, /aria-controls="[^"]+"/);
+      assert.match(stageMarkup, /tabindex="(?:0|-1)"/);
     }
 
     const qrImages = html.match(/<img[^>]*data-map-qr[^>]*>/g) ?? [];

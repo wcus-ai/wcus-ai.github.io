@@ -69,6 +69,22 @@ test('lifecycle installation is singleton-safe across Astro page navigation', as
   assert.deepEqual(removed, ['astro:page-load', 'astro:before-swap']);
 });
 
+test('one keyboard surface owns Escape, roving controls, and focus restoration', async () => {
+  assert.ok(existsSync(controllerPath), 'native controller module must exist');
+  const source = await readFile(controllerPath, 'utf8');
+
+  assert.equal((source.match(/root\.addEventListener\(\s*['"]keydown['"]/g) ?? []).length, 1);
+  for (const key of ['Escape', 'ArrowLeft', 'ArrowRight', 'Home', 'End']) {
+    assert.ok(source.includes(`'${key}'`), `controller must handle ${key}`);
+  }
+  for (const opener of ['lastCardTrigger', 'lastAboutTrigger', 'lastBenchTrigger']) {
+    assert.match(source, new RegExp(`let ${opener}: HTMLElement \\| null`));
+  }
+  assert.match(source, /focus\(\{ preventScroll: true \}\)/);
+  assert.match(source, /focusFirstStep/);
+  assert.match(source, /restoreFocus/);
+});
+
 test('built route installs only the standalone native controller', async () => {
   const outDir = await mkdtemp(join(tmpdir(), 'wcus-living-map-controller-'));
   try {

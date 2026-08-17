@@ -90,11 +90,15 @@ test('inspect and About close to their exact return state', async () => {
 
   const aboutFromMap = transition(map, { type: 'open-about' });
   assert.equal(aboutFromMap.aboutReturnScreen, 'map');
-  assert.equal(transition(aboutFromMap, { type: 'close-about' }).screen, 'map');
+  const closedAboutFromMap = transition(aboutFromMap, { type: 'close-about' });
+  assert.equal(closedAboutFromMap.screen, 'map');
+  assert.equal(closedAboutFromMap.announcement, 'About this exhibit closed.');
 
   const aboutFromAttract = transition(INITIAL_MAP_STATE, { type: 'open-about' });
   assert.equal(aboutFromAttract.aboutReturnScreen, 'attract');
-  assert.equal(transition(aboutFromAttract, { type: 'close-about' }).screen, 'attract');
+  const closedAboutFromAttract = transition(aboutFromAttract, { type: 'close-about' });
+  assert.equal(closedAboutFromAttract.screen, 'attract');
+  assert.equal(closedAboutFromAttract.announcement, 'About this exhibit closed.');
 });
 
 test('replay advances the AI suggestion and Apply changes it exactly once', async () => {
@@ -135,6 +139,10 @@ test('Abilities and WP-Bench selection stay typed and return to the map', async 
   const closed = transition(evidence, { type: 'close-bench' });
   assert.equal(closed.screen, 'map');
   assert.equal(closed.flow, 'tests');
+  assert.equal(
+    closed.announcement,
+    "WP-Bench run loop closed. Back on the map. What this flow shows: The generated code runs in a disposable WordPress environment and is judged by WordPress tests, not by another model's opinion.",
+  );
 });
 
 test('timing helpers enforce public and explicit kiosk contracts', async () => {

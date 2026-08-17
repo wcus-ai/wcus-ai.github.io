@@ -41,8 +41,11 @@ const cardIds = new Set<CardId>([
   ...MAP_MODEL.content.actors.map(({ id }) => id),
   'provider-plugin',
 ]);
-const tabIds = new Set<AbilityTabId>(MAP_MODEL.abilityTabs.map(({ id }) => id));
-const stageIds = new Set<BenchStageId>(Object.keys(MAP_MODEL.bench.stages) as BenchStageId[]);
+const orderedTabIds = MAP_MODEL.abilityTabs.map(({ id }) => id);
+const orderedStageIds = Object.keys(MAP_MODEL.bench.stages) as BenchStageId[];
+const tabIds = new Set<AbilityTabId>(orderedTabIds);
+const stageIds = new Set<BenchStageId>(orderedStageIds);
+const rovingKeys = new Set(['ArrowLeft', 'ArrowRight', 'Home', 'End']);
 
 const toggleHidden = (element: HTMLElement, hidden: boolean): void => {
   element.hidden = hidden;
@@ -102,9 +105,21 @@ const renderScreens = (
   const reset = root.querySelector<HTMLElement>('.core-ai-map__topbar [data-action="reset"]');
   if (reset) reset.hidden = state.screen !== 'map';
   const about = root.querySelector<HTMLElement>('[data-action="open-about"]');
-  if (about)
+  if (about) {
     about.hidden =
       state.screen === 'about' || state.screen === 'inspect' || state.screen === 'bench';
+    about.setAttribute('aria-expanded', String(state.screen === 'about'));
+  }
+};
+
+const rovingSelection = <Id extends string>(ids: readonly Id[], current: Id, key: string): Id => {
+  const currentIndex = Math.max(ids.indexOf(current), 0);
+  let nextIndex = currentIndex;
+  if (key === 'Home') nextIndex = 0;
+  else if (key === 'End') nextIndex = ids.length - 1;
+  else if (key === 'ArrowLeft') nextIndex = (currentIndex - 1 + ids.length) % ids.length;
+  else if (key === 'ArrowRight') nextIndex = (currentIndex + 1) % ids.length;
+  return ids[nextIndex] ?? current;
 };
 
 const renderCards = (root: HTMLElement, state: Readonly<MapState>, view: DerivedMapView): void => {
@@ -426,10 +441,15 @@ export function initializeLivingBlockMap(
   const previousScale = root.style.getPropertyValue('--cai-scale');
   let state: MapState = { ...INITIAL_MAP_STATE };
   let disposed = false;
+  let pendingFocusTimer: number | null = null;
+  let lastCardTrigger: HTMLElement | null = null;
+  let lastAboutTrigger: HTMLElement | null = null;
+  let lastBenchTrigger: HTMLElement | null = null;
 
   const clearTimers = (): void => {
     timers.forEach((timer) => viewWindow.clearTimeout(timer));
     timers.clear();
+    pendingFocusTimer = null;
   };
   const setTimer = (callback: () => void, delay: number): number => {
     const timer = viewWindow.setTimeout(() => {
@@ -439,6 +459,44 @@ export function initializeLivingBlockMap(
     timers.add(timer);
     return timer;
   };
+  const performFocus = (element: HTMLElement | null): void => {
+    if (!disposed && element?.isConnected) element.focus({ preventScroll: true });
+  };
+  const focusElement = (element: HTMLElement | null, delay = 80): void => {
+    if (pendingFocusTimer !== null) {
+      viewWindow.clearTimeout(pendingFocusTimer);
+      timers.delete(pendingFocusTimer);
+    }
+    pendingFocusTimer = setTimer(
+      () => {
+        pendingFocusTimer = null;
+        performFocus(element);
+      },
+      animationDuration(delay, reducedMotion),
+    );
+  };
+  const focusFirstStep = (): void => {
+    if (pendingFocusTimer !== null) {
+      viewWindow.clearTimeout(pendingFocusTimer);
+      timers.delete(pendingFocusTimer);
+    }
+    pendingFocusTimer = setTimer(
+      () => {
+        pendingFocusTimer = null;
+        const cards = [
+          ...root.querySelectorAll<HTMLButtonElement>(
+            '[data-map-surface="canvas"] button[data-action="inspect"]:not(:disabled)',
+          ),
+        ];
+        const firstStep = cards.find(
+          (card) => card.querySelector('.core-ai-map__step')?.textContent?.trim() === '1',
+        );
+        performFocus(firstStep ?? cards[0] ?? null);
+      },
+      animationDuration(80, reducedMotion),
+    );
+  };
+  const restoreFocus = (element: HTMLElement | null): void => focusElement(element);
   const dispatch = (event: MapEvent): void => {
     state = transition(state, event);
     render(root, state, deriveView(state, MAP_MODEL), reducedMotion);
@@ -489,6 +547,42 @@ export function initializeLivingBlockMap(
     dispatch(event);
     settleFlow();
   };
+  const openInspect = (trigger: HTMLElement, card: CardId): void => {
+    lastCardTrigger = trigger;
+    dispatch({ type: 'inspect', card });
+    focusElement(root.querySelector<HTMLElement>('.core-ai-map__details-close'));
+  };
+  const closeInspect = (): void => {
+    const trigger = lastCardTrigger;
+    dispatch({ type: 'close-inspect' });
+    lastCardTrigger = null;
+    restoreFocus(trigger);
+  };
+  const openAbout = (trigger: HTMLElement): void => {
+    lastAboutTrigger = trigger;
+    dispatch({ type: 'open-about' });
+    focusElement(root.querySelector<HTMLElement>('.core-ai-map__about-close'));
+  };
+  const closeAbout = (): void => {
+    const trigger = lastAboutTrigger;
+    dispatch({ type: 'close-about' });
+    lastAboutTrigger = null;
+    restoreFocus(trigger);
+  };
+  const openBench = (trigger: HTMLElement): void => {
+    lastBenchTrigger = trigger;
+    selectFlow({ type: 'open-bench' });
+    focusElement(
+      root.querySelector<HTMLElement>('.core-ai-map__bench-heading [data-action="close-bench"]'),
+    );
+  };
+  const closeBench = (): void => {
+    const trigger = lastBenchTrigger;
+    clearTimers();
+    dispatch({ type: 'close-bench' });
+    lastBenchTrigger = null;
+    restoreFocus(trigger);
+  };
   const scaleStage = (): void => {
     const widthScale = root.clientWidth / 1_366;
     const heightScale = root.clientHeight / 1_024;
@@ -506,14 +600,19 @@ export function initializeLivingBlockMap(
     switch (actionElement.getAttribute('data-action')) {
       case 'start':
         selectFlow({ type: 'start' });
+        focusFirstStep();
         break;
       case 'browse':
         clearTimers();
         dispatch({ type: 'browse' });
+        focusFirstStep();
         break;
       case 'select-flow': {
         const flow = asFlowId(actionElement.getAttribute('data-story-id'));
-        if (flow) selectFlow({ type: 'select-flow', flow });
+        if (flow) {
+          selectFlow({ type: 'select-flow', flow });
+          focusFirstStep();
+        }
         break;
       }
       case 'inspect': {
@@ -521,26 +620,32 @@ export function initializeLivingBlockMap(
           actionElement.closest('[data-card-id]')?.getAttribute('data-card-id') ?? null,
         );
         if (card && !deriveView(state, MAP_MODEL).cards[card].disabled) {
-          dispatch({ type: 'inspect', card });
+          openInspect(actionElement, card);
         }
         break;
       }
       case 'close-inspect':
-        dispatch({ type: 'close-inspect' });
+        closeInspect();
         break;
       case 'replay-flow':
-        if (state.flow) selectFlow({ type: 'replay-flow' });
+        if (state.flow) {
+          selectFlow({ type: 'replay-flow' });
+          focusFirstStep();
+        }
         break;
       case 'reset':
         clearTimers();
         dispatch({ type: 'reset', reason: 'visitor' });
         scheduleAttract();
+        focusElement(
+          root.querySelector<HTMLElement>('[data-map-screen="attract"] [data-action="start"]'),
+        );
         break;
       case 'open-about':
-        dispatch({ type: 'open-about' });
+        openAbout(actionElement);
         break;
       case 'close-about':
-        dispatch({ type: 'close-about' });
+        closeAbout();
         break;
       case 'select-ability-tab': {
         const tab = asTabId(actionElement.getAttribute('data-tab-id'));
@@ -548,11 +653,10 @@ export function initializeLivingBlockMap(
         break;
       }
       case 'open-bench':
-        selectFlow({ type: 'open-bench' });
+        openBench(actionElement);
         break;
       case 'close-bench':
-        clearTimers();
-        dispatch({ type: 'close-bench' });
+        closeBench();
         break;
       case 'select-bench-stage': {
         const stage = asStageId(actionElement.getAttribute('data-stage-id'));
@@ -565,7 +669,48 @@ export function initializeLivingBlockMap(
     }
   };
 
+  const handleKeydown = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      if (state.screen === 'inspect') closeInspect();
+      else if (state.screen === 'about') closeAbout();
+      else if (state.screen === 'bench') closeBench();
+      else return;
+      event.preventDefault();
+      return;
+    }
+    if (!rovingKeys.has(event.key) || !(event.target instanceof viewWindow.Element)) return;
+
+    const abilityTab = event.target.closest<HTMLElement>('[data-action="select-ability-tab"]');
+    if (abilityTab && root.contains(abilityTab)) {
+      const current = asTabId(abilityTab.getAttribute('data-tab-id'));
+      if (!current) return;
+      const tab = rovingSelection(orderedTabIds, current, event.key);
+      event.preventDefault();
+      dispatch({ type: 'select-ability-tab', tab });
+      focusElement(
+        root.querySelector<HTMLElement>(`[data-action="select-ability-tab"][data-tab-id="${tab}"]`),
+        0,
+      );
+      return;
+    }
+
+    const benchStage = event.target.closest<HTMLElement>('[data-action="select-bench-stage"]');
+    if (!benchStage || !root.contains(benchStage)) return;
+    const current = asStageId(benchStage.getAttribute('data-stage-id'));
+    if (!current) return;
+    const stage = rovingSelection(orderedStageIds, current, event.key);
+    event.preventDefault();
+    dispatch({ type: 'select-bench-stage', stage });
+    focusElement(
+      root.querySelector<HTMLElement>(
+        `[data-action="select-bench-stage"][data-stage-id="${stage}"]`,
+      ),
+      0,
+    );
+  };
+
   root.addEventListener('click', handleClick, { signal: abortController.signal });
+  root.addEventListener('keydown', handleKeydown, { signal: abortController.signal });
   viewWindow.addEventListener('resize', scaleStage, { signal: abortController.signal });
   viewWindow.addEventListener('orientationchange', scaleStage, {
     signal: abortController.signal,
