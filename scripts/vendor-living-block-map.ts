@@ -47,6 +47,12 @@ interface WebpackRunner {
 
 const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 const outputDirectory = path.join(repositoryRoot, 'public', 'living-block-map');
+const fixturePath = path.join(
+  repositoryRoot,
+  'tests',
+  'fixtures',
+  'living-block-map-effective-render.json',
+);
 
 const fontFiles = [
   'inter-latin-wght-normal.woff2',
@@ -171,6 +177,120 @@ echo ob_get_clean();
   }
 
   return rendered.trim();
+}
+
+/**
+ * Capture the same render as structured content, for the browser suite to
+ * assert against. It is emitted from this script rather than a separate one so
+ * the oracle can never describe a different render than the page ships.
+ *
+ * This fixture states what the source *says*; the browser test proves the
+ * served page hydrates and reveals it. Whether the copy itself is correct stays
+ * the plugin repository's contract tests to decide.
+ */
+function renderFixture(sourceRoot: string, metadata: BlockMetadata): unknown {
+  const renderPath = path.join(sourceRoot, 'src', 'core-ai-map', 'render.php');
+
+  const attributes: Record<string, unknown> = Object.fromEntries(
+    Object.entries(metadata.attributes).flatMap(([key, value]) =>
+      Object.hasOwn(value, 'default') ? [[key, value.default]] : [],
+    ),
+  );
+  attributes.offlineEnabled = false;
+
+  const harness = String.raw`
+define( 'ABSPATH', __DIR__ );
+define( 'CORE_AI_MAP_URL', 'https://example.test/plugin/' );
+function __( $text ) { return $text; }
+function sanitize_key( $key ) { return strtolower( $key ); }
+function absint( $number ) { return abs( (int) $number ); }
+function wp_unique_id( $prefix = '' ) { return $prefix . 'fixture'; }
+function add_query_arg( $key, $value, $url ) { return $url; }
+function home_url( $path = '/' ) { return 'https://example.test' . $path; }
+function get_permalink() { return 'https://example.test/living-block-map/'; }
+function core_ai_map_get_kiosk_scope( $url ) { return '/living-block-map/'; }
+function core_ai_map_sign_kiosk_scope( $scope ) { return 'fixture-token'; }
+function wp_json_encode( $value ) { return json_encode( $value ); }
+function esc_attr( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES ); }
+function esc_html( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES ); }
+function esc_url( $value ) { return htmlspecialchars( (string) $value, ENT_QUOTES ); }
+function esc_attr_e( $value ) { echo esc_attr( $value ); }
+function esc_html_e( $value ) { echo esc_html( $value ); }
+function get_block_wrapper_attributes( $attributes ) {
+  return implode( ' ', array_map(
+    static function ( $key, $value ) { return esc_attr( $key ) . '="' . esc_attr( $value ) . '"'; },
+    array_keys( $attributes ),
+    array_values( $attributes )
+  ) );
+}
+function wp_interactivity_data_wp_context( $context ) {
+  return 'data-test-context="' . esc_attr( json_encode( $context ) ) . '"';
+}
+class CoreAiMapFixtureModules { public function get_registered( $id ) { return null; } }
+function wp_script_modules() { return new CoreAiMapFixtureModules(); }
+$attributes = json_decode( base64_decode( getenv( 'CORE_AI_MAP_FIXTURE_ATTRIBUTES' ) ), true );
+$schemas = json_decode( base64_decode( getenv( 'CORE_AI_MAP_FIXTURE_SCHEMAS' ) ), true );
+$block = (object) array( 'block_type' => (object) array( 'attributes' => $schemas ) );
+ob_start();
+require ${JSON.stringify(renderPath)};
+$rendered_html = ob_get_clean();
+$fixture = array(
+  'sourceVersion' => ${JSON.stringify(metadata.version)},
+  'runtimeOverrides' => array( 'offlineEnabled' => false ),
+  'content' => array(
+    'title' => $map_title,
+    'eyebrow' => $eyebrow,
+    'reviewedDate' => $reviewed_date,
+    'intro' => $intro_paragraphs,
+    'labels' => $labels,
+    'guidance' => $guidance,
+    'announcements' => $announcement_defaults,
+    'blocks' => array_values( $blocks ),
+    'actors' => array_values( $actors ),
+    'flows' => array_values( $stories ),
+    'panels' => array_values( $panels ),
+    'suggestions' => array_values( $suggestions ),
+  ),
+  'layouts' => $story_layout,
+  'previews' => $attract_previews,
+  'neutral' => $neutral,
+  'loose' => $loose,
+  'shelfX' => $shelf_x,
+  'about' => array(
+    'badge' => 'Transparency',
+    'title' => 'About this exhibit',
+    'backLabel' => 'Back to the exhibit',
+    'disclosures' => array(
+      array( 'term' => 'AI assistance:', 'description' => 'Yes' ),
+      array( 'term' => 'Tool:', 'description' => 'OpenAI Codex' ),
+      array( 'term' => 'Used for:', 'description' => 'implementation, tests, and deployment preparation.' ),
+    ),
+    'responsibility' => 'Final work was human-reviewed and tested; the human contributor remains responsible for it.',
+  ),
+  'bench' => array(
+    'titles' => $context['benchTitles'],
+    'paths' => $bench_paths,
+    'stages' => $bench_stages,
+  ),
+  'renderedHtml' => $rendered_html,
+);
+echo json_encode( $fixture, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+`;
+
+  const captured = execFileSync('php', ['-r', harness], {
+    cwd: sourceRoot,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024,
+    env: {
+      ...process.env,
+      CORE_AI_MAP_FIXTURE_ATTRIBUTES: Buffer.from(JSON.stringify(attributes)).toString('base64'),
+      CORE_AI_MAP_FIXTURE_SCHEMAS: Buffer.from(JSON.stringify(metadata.attributes)).toString(
+        'base64',
+      ),
+    },
+  });
+
+  return JSON.parse(captured) as unknown;
 }
 
 /**
@@ -356,6 +476,9 @@ ${script}
     path.join(outputDirectory, 'manifest.json'),
     `${JSON.stringify(manifest, null, 2)}\n`,
   );
+
+  const fixture = renderFixture(args.source, metadata);
+  await writeFile(fixturePath, `${JSON.stringify(fixture, null, 2)}\n`);
 
   process.stdout.write(
     `Vendored Living Block Map ${manifest.sourceVersion} from ${sourceCommit.slice(0, 7)}` +
