@@ -210,3 +210,17 @@ test('reset and preview events return to a deterministic attract state', async (
   assert.equal(reset.previewIndex, 0);
   assert.equal(reset.announcement, 'The map reset after a period of inactivity.');
 });
+
+test('attract release returns every card to its loose resting presentation', async () => {
+  const { INITIAL_MAP_STATE, deriveView, transition } = await loadStateModule();
+  const releasing = transition(INITIAL_MAP_STATE, {
+    type: 'set-preview-phase',
+    phase: 'releasing',
+  });
+  const view = deriveView(releasing, MAP_MODEL);
+
+  const cards = Object.values(view.cards as Record<string, { active: boolean; opacity: string }>);
+  assert.ok(cards.every((card) => !card.active));
+  assert.ok(cards.every((card) => card.opacity === '0.62'));
+  assert.match(view.cards.plugin.transform, /rotate\(/);
+});

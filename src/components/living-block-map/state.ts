@@ -336,9 +336,12 @@ const deriveCard = (
   const parked = Boolean(layout?.park.includes(cardId) && !participant);
   const preview = model.previews[state.previewIndex % model.previews.length];
   const previewMember = Boolean(
-    preview?.ids.includes(cardId) || (cardId === 'provider-plugin' && preview?.providerPlugin),
+    state.previewPhase !== 'releasing' &&
+    (preview?.ids.includes(cardId) || (cardId === 'provider-plugin' && preview?.providerPlugin)),
   );
-  const previewSidecar = Boolean(preview?.sidecars?.includes(cardId));
+  const previewSidecar = Boolean(
+    state.previewPhase !== 'releasing' && preview?.sidecars?.includes(cardId),
+  );
   const opacity =
     state.screen === 'attract'
       ? previewMember
