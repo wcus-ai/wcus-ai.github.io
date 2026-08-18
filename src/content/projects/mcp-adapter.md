@@ -10,7 +10,5 @@ order: 3
 
 The Model Context Protocol (MCP) is the open standard for letting AI tools talk to
 external systems. The MCP Adapter exposes WordPress abilities — registered via the
-Abilities API — to any MCP-compatible AI tool, so Claude Desktop, Cursor, or any other
+<a href="../abilities-api" data-track-event="click_internal" data-track-project="mcp-adapter" data-track-target="abilities-api">Abilities API</a> — to any MCP-compatible AI tool, so Claude Desktop, Cursor, or any other
 MCP client can interact with your WordPress site in a standardized way.
-
-No more per-tool integration code; one adapter, any MCP consumer.

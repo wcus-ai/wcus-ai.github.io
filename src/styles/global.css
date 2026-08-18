@@ -905,12 +905,15 @@ h2 {
   max-width: var(--prose-width);
 }
 .project-detail__body {
+  display: flex;
+  flex-direction: column;
   padding-block: var(--space-2xl);
   max-width: var(--prose-width);
   margin: 0 auto;
   padding-inline: var(--container-padding);
 }
 .project-detail__description {
+  display: contents;
   font-size: 1.1rem;
   line-height: 1.75;
 }
@@ -956,6 +959,43 @@ h2 {
 .project-detail__link--secondary:hover {
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   text-decoration: none;
+}
+.talk-promo {
+  order: 1;
+  margin-top: var(--space-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  overflow: hidden;
+}
+.talk-promo__image-link {
+  display: block;
+  line-height: 0;
+}
+.talk-promo__image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.talk-promo__cta {
+  margin: 0;
+  padding: var(--space-md) var(--space-md) 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.talk-promo__cta a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.talk-promo__cta a:hover {
+  color: var(--color-accent-bright);
+}
+.talk-promo__meta {
+  margin: 0;
+  padding: var(--space-sm) var(--space-md) var(--space-md);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
 /* ==========================================================================

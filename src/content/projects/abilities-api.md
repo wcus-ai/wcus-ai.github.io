@@ -1,7 +1,7 @@
 ---
 slug: abilities-api
 name: Abilities API
-tagline: A central registry that lets a WordPress site describe what it can do.
+tagline: A central registry that that lets external integrations discover and use site functionality regardless of implementation details.
 links:
   - { type: repo, label: Trac, url: 'https://core.trac.wordpress.org/component/abilities-api' }
 accent_color: '#9d246b'
@@ -12,7 +12,30 @@ The Abilities API gives WordPress a single, discoverable place to declare what t
 site can do — enabling AI tools, external integrations, and other plugins to find and
 call those capabilities without bespoke wiring for each one.
 
-Before this, every plugin that wanted to expose capabilities to AI had to invent its
-own discovery mechanism. The Abilities API provides one standard registry so that any
-MCP client, AI assistant, or external tool can ask "what can this site do?" and get a
-consistent answer.
+Available since WordPress 6.9, Abilities are _not_ AI-specific, but meant to help stabilize fragile plugin ecostems. The Core AI Team uses Abilities in the <a href="../mcp-adapter" data-track-event="click_internal" data-track-project="abilities-api" data-track-target="mcp-adapter">MCP Adapter</a> - a narrow compatibility shim that allows AI tools to call Abilities via the MCP protocol - and in our other canonical plugins to ensure ecosystem stability for users while iterating quickly on implementation details.
+
+<section class="talk-promo">
+  <a
+    href="https://us.wordcamp.org/2026/session/abilities-api-for-humans/"
+    class="talk-promo__image-link"
+    data-track-event="click_outbound"
+    data-track-project="abilities-api"
+    data-track-target="wcus-talk"
+  >
+    <img
+      src="https://us.wordcamp.org/2026/files/2026/07/Nik-McLaughlin-16X9.png"
+      alt="Nik McLaughlin"
+      class="talk-promo__image"
+      loading="lazy"
+    />
+  </a>
+  <p class="talk-promo__cta">
+    Learn more about the Abilities API at Nik McLaughlin's talk: <a
+      href="https://us.wordcamp.org/2026/session/abilities-api-for-humans/"
+      data-track-event="click_outbound"
+      data-track-project="abilities-api"
+      data-track-target="wcus-talk"
+    >"Abilities API for Humans"</a>
+  </p>
+  <p class="talk-promo__meta">Tuesday (today!), August 18, 2026 · 1:45 PM MST · North 222, Phoenix Convention Center, Phoenix, AZ</p>
+</section>
