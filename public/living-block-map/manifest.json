@@ -1,8 +1,8 @@
 {
   "sourceCommit": "3a5f2275f97d1fd0fdadc142baf9873c7530e60d",
   "sourceCommitted": false,
-  "sourceVersion": "3.2.4",
-  "compiledCssSha256": "b294d562a864ef1a40cdb2d18f25dc1dfc0bccd2c4ce6b529f6cf1ee0cef73f5",
+  "sourceVersion": "3.2.5",
+  "compiledCssSha256": "0c361dbff726c10adc6c042372215a165f00b50ee274464fcc2639241a1f525b",
   "files": [
     {
       "path": "fonts/eb-garamond-latin-wght-normal.woff2",
@@ -46,7 +46,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "45d28c1f116a5c0031ab8861b1a483da5eb3254f29c826519111c0e738fc2397"
+      "sha256": "48c86155c513fd5eb8494c47eec9a9d6679e35eaa162b6105e275fe060ea9d71"
     },
     {
       "path": "qr/abilities.svg",
