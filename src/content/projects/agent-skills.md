@@ -1,18 +1,16 @@
 ---
 slug: agent-skills
 name: Agent Skills
-tagline: Portable bundles that teach AI coding assistants how to build WordPress correctly.
+tagline: Portable bundles of context that instruct AI Agents and coding assistants how to work better with WordPress.
 links:
   - { type: repo, label: GitHub, url: 'https://github.com/WordPress/agent-skills' }
 accent_color: '#5b2a8c'
 order: 5
 ---
 
-AI coding assistants are powerful, but they often generate outdated WordPress patterns,
-miss critical security considerations, and skip block deprecations.
+AI coding assistants are powerful, but are only as good as their context and training data.
 
 Agent Skills solve this by giving AI assistants — Claude, Copilot, Codex, Cursor, and
-others — expert-level WordPress knowledge in a portable format they can actually use.
+others — contextual WordPress knowledge on specific tasks and workflows.
 Each skill is a self-contained folder with instructions, references, and validation
-scripts. Install them per-project so the whole team benefits, or globally for personal
-use across every repo.
+scripts. There are currently 17 experimental skills available, with more in development.
