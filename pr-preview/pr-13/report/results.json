@@ -28,20 +28,20 @@
     "path": "/p/abilities-api/",
     "urlPath": "/p/abilities-api/",
     "dir": "p-abilities-api",
-    "diffRatio": 0.21713253470241492,
-    "diffPixels": 148447,
+    "diffRatio": 0.21732853569704683,
+    "diffPixels": 148581,
     "viewports": [
       {
         "name": "mobile",
-        "diffRatio": 0.21713253470241492,
-        "diffPixels": 148447,
+        "diffRatio": 0.21732853569704683,
+        "diffPixels": 148581,
         "width": 390,
         "height": 1753
       },
       {
         "name": "desktop",
-        "diffRatio": 0.11808977088402271,
-        "diffPixels": 279561,
+        "diffRatio": 0.11835124357934577,
+        "diffPixels": 280180,
         "width": 1440,
         "height": 1644
       }
