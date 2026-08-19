@@ -6,6 +6,8 @@ on:
     paths:
       - worker/**
       - pnpm-lock.yaml
+      - package.json
+      - .github/workflows/deploy-worker.yml
   workflow_dispatch:
 
 permissions:
