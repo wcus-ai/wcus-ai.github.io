@@ -4,6 +4,9 @@
 
 import { PNG } from 'pngjs';
 
+// Dedicated Living Block Map release-parity boundary.
+export const DIFF_RATIO_THRESHOLD = 0.005;
+
 // Cutoff between identical and changed: measured noise is 0 px, and the
 // smallest real change so far (a one-word heading edit) diffs at 0.035%.
 const DEFAULT_THRESHOLD = 0.0002;
