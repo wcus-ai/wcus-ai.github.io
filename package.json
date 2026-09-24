@@ -22,15 +22,15 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
-    "@types/node": "^24.13.4",
+    "@types/node": "^24.13.6",
     "@types/pngjs": "^6.0.5",
-    "oxfmt": "^0.67.0",
-    "oxlint": "^1.82.0",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.63.0",
     "pngjs": "^7.0.0",
     "typescript": "^6.0.3",
-    "wrangler": "^4.131.2",
+    "wrangler": "^4.135.0",
     "yaml": "^2.9.1"
   }
 }
