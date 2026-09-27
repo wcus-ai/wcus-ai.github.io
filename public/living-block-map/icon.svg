@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+	<title id="title">Core AI Living Map</title>
+	<rect width="512" height="512" rx="96" fill="#3858e9"/>
+	<circle cx="256" cy="256" r="150" fill="none" stroke="#fff" stroke-width="18"/>
+	<path d="M154 174h56l46 164 36-110-18-54h58l-62 174h-57L154 174Zm176 0h34l-14 38-20-38Z" fill="#fff"/>
+	<circle cx="116" cy="116" r="28" fill="#ffb7a7"/>
+	<circle cx="396" cy="116" r="28" fill="#9ad9db"/>
+	<circle cx="396" cy="396" r="28" fill="#f2d675"/>
+	<circle cx="116" cy="396" r="28" fill="#c6b9ff"/>
+</svg>
