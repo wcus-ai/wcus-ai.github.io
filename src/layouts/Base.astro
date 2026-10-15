@@ -43,6 +43,7 @@ const canonical = Astro.site
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <slot name="head" />
     <ClientRouter />
     <script is:inline define:vars={{ swPath: `${base}/sw.js` }}>
       // Service worker registration — fire and forget.
