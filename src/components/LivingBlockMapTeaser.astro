@@ -1,0 +1,36 @@
+---
+import { base } from '@lib/config';
+---
+
+<section class="living-map-teaser" aria-labelledby="living-map-heading">
+  <div class="living-map-teaser__preview">
+    <img
+      src={`${base}/images/living-block-map-preview.webp`}
+      alt="Simplified Living Block Map path from AI Plugin through AI Client and a provider layer to an external AI service."
+      width="1366"
+      height="1024"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+
+  <div class="living-map-teaser__content">
+    <h3 id="living-map-heading">See how WordPress and AI connect</h3>
+    <p>
+      Choose from four interactive flows. Follow the numbered path, then tap a highlighted component
+      to understand the role it plays.
+    </p>
+  </div>
+
+  <div class="living-map-teaser__action">
+    <a
+      class="living-map-teaser__link"
+      href={`${base}/living-block-map/`}
+      data-track-event="click_internal"
+      data-track-project="site"
+      data-track-target="living-block-map"
+    >
+      Explore the Living Block Map <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</section>

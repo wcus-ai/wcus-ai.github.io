@@ -9,8 +9,8 @@
  *   - Network-only for /r/*, /feedback/*, /stats (must hit edge).
  */
 
-const SHELL = ['.', 'privacy/'];
-const VERSION = 'v3';
+const SHELL = ['.', 'privacy/', 'living-block-map/'];
+const VERSION = 'v4';
 const CACHE = `wcus-core-ai-${VERSION}`;
 
 self.addEventListener('install', (event) => {
