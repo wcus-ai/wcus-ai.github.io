@@ -57,6 +57,13 @@ to a root origin, and absolute paths assume root.
 
 ### Worker (Cloudflare)
 
+Pushes to `main` that touch `worker/**` deploy automatically via
+`.github/workflows/deploy-worker.yml`, using `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID` repo secrets. Trigger it manually from the Actions tab
+(`workflow_dispatch`) if you need to redeploy without a worker change.
+
+To deploy locally instead:
+
 ```bash
 pnpm exec wrangler deploy --config worker/wrangler.toml
 ```
@@ -66,7 +73,7 @@ The `--config` flag is required. The Wrangler config lives at
 the repo root fails to find it. The `pnpm worker:deploy` script wraps this
 exact command.
 
-Run `wrangler login` once before the first deploy.
+Run `wrangler login` once before the first local deploy.
 
 ## Tracking (Analytics Engine)
 
