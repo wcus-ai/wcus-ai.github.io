@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Home",
+    "path": "/",
+    "urlPath": "/",
+    "dir": "home",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 3559
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 3574
+      }
+    ]
+  },
+  {
+    "name": "Abilities Api",
+    "path": "/p/abilities-api/",
+    "urlPath": "/p/abilities-api/",
+    "dir": "p-abilities-api",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 2265
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 2378
+      }
+    ]
+  },
+  {
+    "name": "Agent Skills",
+    "path": "/p/agent-skills/",
+    "urlPath": "/p/agent-skills/",
+    "dir": "p-agent-skills",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1611
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1637
+      }
+    ]
+  },
+  {
+    "name": "Ai Client",
+    "path": "/p/ai-client/",
+    "urlPath": "/p/ai-client/",
+    "dir": "p-ai-client",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1708
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1668
+      }
+    ]
+  },
+  {
+    "name": "Ai Plugin",
+    "path": "/p/ai-plugin/",
+    "urlPath": "/p/ai-plugin/",
+    "dir": "p-ai-plugin",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1633
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1661
+      }
+    ]
+  },
+  {
+    "name": "Mcp Adapter",
+    "path": "/p/mcp-adapter/",
+    "urlPath": "/p/mcp-adapter/",
+    "dir": "p-mcp-adapter",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1503
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1552
+      }
+    ]
+  },
+  {
+    "name": "Wp Bench",
+    "path": "/p/wp-bench/",
+    "urlPath": "/p/wp-bench/",
+    "dir": "p-wp-bench",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 1559
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 1576
+      }
+    ]
+  },
+  {
+    "name": "Privacy",
+    "path": "/privacy/",
+    "urlPath": "/privacy/",
+    "dir": "privacy",
+    "diffRatio": 0,
+    "diffPixels": 0,
+    "viewports": [
+      {
+        "name": "mobile",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 390,
+        "height": 3362
+      },
+      {
+        "name": "desktop",
+        "diffRatio": 0,
+        "diffPixels": 0,
+        "width": 1440,
+        "height": 2850
+      }
+    ]
+  }
+]
